@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript">
+    $('.flip').hover(function(){
+    $(this).find('.card').toggleClass('flipped');
+    });
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid" id="users">
+      <div class="title">
+        <h1>Users</h1>
+        <a href="#addCustomerModal" class="icon" data-toggle="modal">
+          <i class="fa fa-user-plus" title="add new user"></i>
+        </a>
+        <a href="#users" class="icon">
+          <i class="fa fa-refresh" title="refresh" onclick="loadUsers()"></i>
+        </a>
+      </div>
+      <div class="row">
+        <% usersArray.forEach(function(user) { %>
+        <div class="col-sm-3">
+          <div class="flip">
+            <div class="card">
+              <div class="face front">
+                <div class="inner card-header">
+                  <img id="user-img" src="images/cute2.png"></img>
+                  <h3 class="card-title"><%= user.fullname.fname + " " + user.fullname.lname %></h3>
+                  <h5 class="text-muted"><%= user.category %></h5>
+                </div>
+              </div>
+              <div class="face back">
+                <div class="inner">
+                  <h5><%= user.address.street + ", " + user.address.city + ", " + user.address.state %></h5>
+                  <h5><%= user.mail %></h5>
+                  <h5><%= user.phone %></h5>
+                  <h6><strong>User Name: </strong><%= user.user_name %></h6>
+                  <a href="#updateCustomerModal" class="card-link" data-toggle="modal" data-username-id="<%= user.user_name %>"
+																					   data-password-id="<%= user.password %>"
+																					   data-first-id="<%= user.fullname.fname %>"
+																					   data-last-id="<%= user.fullname.lname %>"
+																				       data-street-id="<%= user.address.street %>"
+																				       data-city-id="<%= user.address.city %>"
+																				       data-state-id="<%= user.address.state %>"
+																				       data-phone-id="<%= user.phone %>"
+																				       data-mail-id="<%= user.mail %>">
+                    <i class="fa fa-edit" title="update user details"></i>
+                  </a>
+                  <a href="#deleteCustomerModal" class="card-link" data-toggle="modal" data-first-id="<%= user.fullname.fname %>"
+																					   data-last-id="<%= user.fullname.lname %>">
+                    <i class="fa fa-trash" title="delete user"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+	<!-- Modal HTML -->
+			<div id="addCustomerModal" class="modal fade">
+				<div class="modal-dialog modal-login">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Add Customer</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									<input type="text" class="form-control" id="user_name_customer" placeholder="User Name" required="required" autofocus>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="password_customer" placeholder="Password" required="required" style="text-security:disc; -webkit-text-security:disc;">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="fname_customer" placeholder="First Name" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="lname_customer" placeholder="Last Name" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="street_customer" placeholder="Street" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="city_customer" placeholder="City" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="state_customer" placeholder="State" required="required">
+								</div>
+								<div class="form-group">
+									<input type="tel" class="form-control" id="phone_customer" placeholder="Phone" required="required"
+									pattern="[0-9]{3}-[0-9]{7}">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="mail_customer" placeholder="Mail" required="required">
+								</div>
+								<div class="form-group">
+									<button id="addCustomerButton" type="button" class="btn btn-primary btn-lg btn-block login-btn" onclick="addCustomer()">Add</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="updateCustomerModal" class="modal fade">
+				<div class="modal-dialog modal-login">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Update Customer</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									<input type="text" class="form-control" id="user_name_customer_update" placeholder="User Name" required="required" autofocus>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="password_customer_update" placeholder="Password" required="required" style="text-security:disc; -webkit-text-security:disc;">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="fname_customer_update" disabled>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="lname_customer_update" disabled>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="street_customer_update" placeholder="Street" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="city_customer_update" placeholder="City" required="required">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="state_customer_update" placeholder="State" required="required">
+								</div>
+								<div class="form-group">
+									<input type="tel" class="form-control" id="phone_customer_update" placeholder="Phone Number" required="required"
+									pattern="[0-9]{3}-[0-9]{7}">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="mail_customer_update" placeholder="Mail Address" required="required">
+								</div>
+								<div class="form-group">
+									<button id="updateCustomerButton" type="button" class="btn btn-primary btn-lg btn-block login-btn" onclick="updateCustomer()">Update</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="deleteCustomerModal" class="modal fade">
+				<div class="modal-dialog modal-login">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Delete Customer</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									Are you sure you want to delete that Customer?<br><br>
+									<button id="deleteCustomerButton" type="button" class="btn btn-primary btn-lg btn-block login-btn" onclick="deleteCustomer()">Delete</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+  </body>
+</html>

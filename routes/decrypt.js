@@ -1,0 +1,23 @@
+var jsdecrypt = require('jsdecrypt');
+let priv_key = `-----BEGIN RSA PRIVATE KEY-----
+AAABAGetp+ZzOLJY+0FfVdz3PRTl8OB28sOq7UNGgRoI1AoavVvI+m2tg9kSg3z2
+Oc6lLwppUQHsAW23wFMpVYGeMmG6VyMlhHg9GguX2gEvlDwStQscOo/pgAEMqGkL
+zC2GJhEq19bRDLtgMCili0r9BWg3oT350DB5rxc8GoLkMHHxPU8vqfa9xjcegboW
+goUM15skPLFk4BJS42ktyIsIeiKkU/LwIBEUK/IGzhuE7g5Syvj1fVebTeMObiBb
+LcXv4O3LpjKupTX18ieCPooZbg3r1okd58CpVZM3oEvsooH7OzKzzbQkn/3f7UTO
+JgjFHt1vmGct0GEGkau+RIUAH20AAACBAPfNwrFmAy1/LqyRRbmtUkwQmyIuoTuK
+aDqKgf5BDRk9RcvlxVZbn9iIzvkqibmcu+KkyJtHR4MGwceNN0Yi5S7mAbxJiUoo
+fq5s2Yul1PkhtTazhGImTu/9wsdPjb8XE7X4Ijmx1LsngXhzU/eWXE0foLXnVfr6
+XRGKCmhu/gkJAAAAgQCIp4vCTox+MOrZJsjg71E8wfbG43WDVDSFSUalpUMpSaHW
+rW2HbvdiV6QLAOsdRLVoyZvhzyLPUeg1kAQxnIZd8hqCeggCMvffINlV9FAXQmuW
+BMisLp0sKwCjsXeX92aphybvcKOf44A+jp6ZcZ2UqcfrJBvCnBSJHFmy5aeIOQAA
+AIEAiYadkDcZCyORWLVAAvEamT6+wjbnks3BXsJU8cohb5wPTfv6ouDNqd0LQWF2
+THlzLwHPHrH5Uk/PM3zrXwEPp8bzS4LSb5Iim8FATnNXi7WS1Dp3Lgx7olyb+zIy
+TXKEfjbiVHaaClAgj5L5dk8RbGpc7CKugEobzuw8rkIA8So=
+-----END RSA PRIVATE KEY-----`
+
+async function decrypt(str) {
+    return await jsdecrypt.dec(priv_key, str);
+}
+
+module.exports = decrypt;
