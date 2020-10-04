@@ -4,16 +4,25 @@ const mongo = require("mongoose");
 module.exports = db => {
     // create a schema
     let schema = new mongo.Schema({
+        _id:String,
 		msg : String,
-        username : String,
-        date : Date
+        e_mail:String,
+        fullname: {
+            fname: String,
+            lname : String
+        },
+        date : Date,
+        active:Boolean
     }, { autoIndex: true });
 
     schema.statics.CREATE = async function(message) {
         return this.create({
-            username : message[0],
+            _id : message[0],
             msg : message[1],
-            date : message[2]
+            e_mail:message[2],
+            fullname:message[3],
+            date : message[4],
+            active:true
         });
     };
 	
@@ -61,7 +70,33 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-
+    schema.statics.FIND_ONE_MESSAGE= async function (_id) {
+        return this.findOne({_id:_id}).exec();
+    };
+    schema.statics.DELETE = async function (message) {
+        const filter = { _id: message._id };
+        const update = { active: false };
+        // `doc` is the document _before_ `update` was applied
+        let doc = await this.findOneAndUpdate(filter, update);
+        await doc.save();
+        debug("massage deleted");
+    };
+    schema.statics.UPDATE = async function (updatedMessage) {
+        let queryForUpdate;
+        queryForUpdate= this.FIND_ONE_MESSAGE(updatedMessage._id);
+        let messageToUpdate;
+        [messageToUpdate]=await Promise.all([queryForUpdate]);
+        if(messageToUpdate) {
+            messageToUpdate.fullname.fname= updatedMessage.fullname.fname;
+            messageToUpdate.fullname.lname= updatedMessage.fullname.lname;
+          messageToUpdate.msg=updatedMessage.msg;
+            messageToUpdate.e_mail= updatedMessage.e_mail;
+            messageToUpdate.date= updatedMessage.date;
+            messageToUpdate.save();
+        }
+        else
+            console.log("Can't update: user does not exist!");
+    };
     // the schema is useless so far
     // we need to create a model using it
     // db.model('User', schema, 'User'); // (model, schema, collection)

@@ -4,20 +4,33 @@ const mongo = require("mongoose");
 module.exports = db => {
     // create a schema
     let schema = new mongo.Schema({
-        name: { type: String, required: true, unique: true},
+        _id:String,
+        name: { type: String, required: true},
         creator: String,
 		img: Buffer,
         type_of_image:String,
-		price: Number
+		price: Number,
+        measurement:{
+            width:Number,
+            length:Number
+        },
+        tagList:Array,
+        amount:Number,
+        active:Boolean
     }, { autoIndex: false });
 
     schema.statics.CREATE = async function(poster) {
         return this.create({
-            name: poster.name,
-            creator: poster.creator,
-			img: poster.img,
-            type_of_image:poster.type_of_image,
-            price: poster.price
+            _id:poster[0],
+            name: poster[1],
+            creator:poster[2],
+			img: poster[3],
+            type_of_image:poster[4],
+            price: poster[5],
+            measurement:poster[6],
+            tagList:poster[7],
+            amount:poster[8],
+            active:true
         });
     };
 	
@@ -64,29 +77,36 @@ module.exports = db => {
         debug(`request: without callback: ${JSON.stringify(args)}`);
         return this.find(...args).exec();
     };
-    schema.statics.FIND_ONE_FLOWER = async function (fName) {
+    schema.statics.FIND_ONE_POSTER = async function (_id) {
         let poster={
-            name:fName
+            _id:_id
         };
         return this.findOne(poster).exec();
     };
-    schema.statics.DELETE = async function (fName) {
-        let queryForDelete;
-        queryForDelete= this.FIND_ONE_FLOWER(fName);
-        let posterToDelete;
-        [posterToDelete]=await Promise.all([queryForDelete]);
-        if(posterToDelete)
-            posterToDelete.remove();
-        else
-            console.log("Can't delete: poster does not exist!"+fName);
+    schema.statics.DELETE = async function (poster) {
+        const filter = { _id: poster._id };
+        const update = { active: false };
+        // `doc` is the document _before_ `update` was applied
+        let doc = await this.findOneAndUpdate(filter, update);
+        await doc.save();
+        debug("poster deleted");
     };
     schema.statics.UPDATE = async function (updatedPoster) {
         let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_FLOWER(updatedPoster.name);
+        queryForUpdate= this.FIND_ONE_POSTER(updatedPoster._id);
         let posterToUpdate;
         [posterToUpdate]=await Promise.all([queryForUpdate]);
         if(posterToUpdate) {
+            posterToUpdate.name=updatedPoster.name;
+            posterToUpdate.creator = updatedPoster.creator;
+            posterToUpdate.img= updatedPoster.img;
+            posterToUpdate.type_of_image=updatedPoster.type_of_image;
             posterToUpdate.price=updatedPoster.price;
+            posterToUpdate.measurement.width=updatedPoster.measurement.width;
+            posterToUpdate.measurement.length=updatedPoster.measurement.length;
+            posterToUpdate.tagList=updatedPoster.tagList;
+            posterToUpdate.amount=updatedPoster.amount;
+
             posterToUpdate.save();
         }
         else

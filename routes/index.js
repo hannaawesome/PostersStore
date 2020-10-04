@@ -1,23 +1,21 @@
 var express = require('express');
 var router = express.Router();
-const checksession = require('./checksession');
 
 const debug = require('debug')('TheProject:index');
 /* GET home page. */
 
-router.get('/', checksession,async (req, res)=> {
-    debug('requested');
-        req.session.count++;
-    res.render('index', {
-        count: req.session.count,username: req.session.username });
-
+router.get('/',function (req, res,next) {
+    res.render('index');
 });
-// router.get('/logout', async (req, res) => {
-//     debug('logging out');
-//     req.session.regenerate(err => {
-//         debug('logged out');
-//         res.redirect('/');
-//     });
-// });
+
+router.post('/', function (req, res, next) {
+    res.render('index');
+});
+// function SessionConstructor(userId, catagory, details) {
+//     this.userId = userId;
+//     this.catagory = catagory;
+//     this.details = details;
+// }
+
 
 module.exports = router;

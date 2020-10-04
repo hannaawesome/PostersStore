@@ -12,9 +12,8 @@ debug('Pending DB connection');
 require("./user")(db);
 require("./branch")(db);
 require("./poster")(db);
-require("./cart")(db);
+require("./order")(db);
 require("./message")(db);
-require("./itemInCart")(db);
 
 
 module.exports = model => db.model(model);

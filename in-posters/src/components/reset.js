@@ -108,4 +108,4 @@ qIKzoqlBGEA4aWlKew3Ca2ODw7eWaFgc3ojh7uy+b9tGnTvLAQ==
             debug("error");
         }
     }
-</script>
+</script>;

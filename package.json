@@ -3,10 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "client-install": "npm install --prefix in-posters",
+    "server": "nodemon ./bin/www",
+    "client": "npm start --prefix in-posters",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "debug": "node ./bin/www && SET DEBUG=TheProject:*"
   },
   "dependencies": {
     "async": "^3.2.0",
+    "body-parser": "latest",
+    "concurrently": "^5.3.0",
+    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "ejs": "^2.6.2",
@@ -17,15 +25,14 @@
     "mongoose": "^5.9.9",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
+    "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
-    "serve-favicon": "^2.5.0",
-    "body-parser": "latest"
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "connect-mongo": "^3.2.0",
     "express-session": "^1.17.1",
-    "jsdecrypt": "^1.0.4",
     "nodemailer": "^6.4.10",
     "passport-local-mongoose": "^6.0.1",
     "socket.io": "^2.3.0"

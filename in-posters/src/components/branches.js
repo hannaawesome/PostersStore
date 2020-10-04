@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<;;!DOCTYPE html>
 <html lang="en">
-  </head>
+  </head>;;
   <body>
     <div class="container-fluid" id="branches">
       <div class="title">
@@ -50,7 +50,7 @@
         </div>
         <% }); %>
       </div>
-    </div>
+    </div>;;
 	<!-- Modal HTML -->
 			<div id="addBranchModal" class="modal fade">
 				<div class="modal-dialog modal-login">
@@ -93,7 +93,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div>;;
 	<div id="deleteBranchModal" class="modal fade">
 		<div class="modal-dialog modal-login">
 			<div class="modal-content">
@@ -111,7 +111,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>;;
 	<div id="updateBranchModal" class="modal fade">
 		<div class="modal-dialog modal-login">
 			<div class="modal-content">
@@ -149,6 +149,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>;;
   </body>
 </html>

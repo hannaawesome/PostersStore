@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<;;!DOCTYPE html>
 <html lang="en">
 <head>
-    <% include partials/head %>
+    <% include partials %>
 </head>
 <body>
 <header>
-    <% include partials/header %>
+    <% include partials %>
 </header>
 
     <div id="content"></div>
@@ -39,7 +39,7 @@
 $("#login_modal").modal('show');
 </script>
 <footer>
-    <% include partials/footer %>
+    <% include partials %>
 </footer>
 </body>
-</html>
+</html>;;

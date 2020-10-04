@@ -1,15 +1,15 @@
-<!DOCTYPE html>
+<;;!DOCTYPE html>
 <html lang="en">
 	<head>
-		<% include partials/head %>
+		<% include partials %>
+		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 	</head>
 	<body onload="onLoad()">
 		<header>
-			<% include partials/header %>
+			<% include partials %>
 			<p>Times here: <%= count %></p>
 		</header>
 		<main>
-			<script src="functionality.js"></script>
 
 			<div id="content"></div>
 			<!-- Modal HTML -->
@@ -43,7 +43,7 @@
 
 		</main>
 		<footer>
-			<% include partials/footer %>
+			<% include partials %>
 		</footer>
-	</body>
+	</body>;;
 </html>

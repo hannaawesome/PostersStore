@@ -5,42 +5,44 @@ let passportLocalMongoose = require('passport-local-mongoose');
 module.exports = db => {
     // create a schema
     let schema = new mongo.Schema({
-        user_name: { type: String, required: true, unique: true, index: true },
-        password: { type: String, required: true },
+        _id:String,
+        e_mail: { type: String, required: true, unique: true},
+       // password: { type: String, required: true },
         fullname: {
             fname: String,
             lname : String
         },
-		address: {
-            street: String,
-            city: String,
-			state: String
-        },
         phone: String,
-        mail: String,
         category: String,
         bnumber: String,
+        cartItems:Array,//array of (PosterId,amount,measurement)
+        orderHistory:Array,//array of (OrderId)
+        likedItems:Array,//array of (PostersId)
+        active:Boolean,
         resetPasswordToken: String,
         resetPasswordExpires: Date
     }, { autoIndex: false });
 
-    schema.methods.comparePassword = function(candidatePassword, cb) {
-        bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-            if (err) return cb(err);
-            cb(null, isMatch);
-        });
-    };
+    // schema.methods.comparePassword = function(candidatePassword, cb) {
+    //     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    //         if (err) return cb(err);
+    //         cb(null, isMatch);
+    //     });
+    // };
 
     schema.statics.CREATE = async function(user) {
         return this.create({
-            user_name: user.user_name,
-            password: user.password,
+            _id:user._id,
+           // password: user.password,
             fullname: user.fullname,
-			address: user.address,
             phone: user.phone,
-            mail: user.mail,
+            e_mail: user.e_mail,
             category:user.category,
-            bnumber: user.bnumber
+            bnumber: user.bnumber,
+            cartItems: user.cartItems,
+            orderHistory: user.orderHistory,
+            likedItems: user.likedItems,
+            active:true
         });
     };
 	
@@ -88,34 +90,31 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    schema.statics.FIND_ONE_USER = async function (usrName, pass) {
-        return this.findOne({user_name:usrName,password:pass}).exec();
+    schema.statics.FIND_ONE_USER = async function (_id) {
+        return this.findOne({_id:_id}).exec();
     };
-    schema.statics.DELETE = async function (userName, pass) {
-        let queryForDelete;
-        queryForDelete= this.FIND_ONE_USER(userName, pass);
-        let userToDelete;
-            [userToDelete]=await Promise.all([queryForDelete]);
-            if(userToDelete)
-                userToDelete.remove();
-            else
-                console.log("Can't delete: user does not exist!");
+    schema.statics.DELETE = async function (user) {
+        const filter = { _id: user._id };
+        const update = { active: false };
+        // `doc` is the document _before_ `update` was applied
+        let doc = await this.findOneAndUpdate(filter, update);
+        await doc.save();
+        debug("user deleted");
     };
     schema.statics.UPDATE = async function (updatedUser) {
         let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_USER(updatedUser.user_name, updatedUser.password);
+        queryForUpdate= this.FIND_ONE_USER(updatedUser._id);
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
-            userToUpdate.user_name = updatedUser.user_name;
             userToUpdate.password= updatedUser.password;
             userToUpdate.fullname.fname= updatedUser.fullname.fname;
             userToUpdate.fullname.lname= updatedUser.fullname.lname;
-            userToUpdate.address.street= updatedUser.address.street;
-            userToUpdate.address.city= updatedUser.address.city;
-            userToUpdate.address.state= updatedUser.address.state;
             userToUpdate.phone=updatedUser.phone;
-            userToUpdate.mail= updatedUser.mail;
+            userToUpdate.e_mail= updatedUser.e_mail;
+            userToUpdate.cartItems= updatedUser.cartItems;
+            userToUpdate.orderHistory= updatedUser.orderHistory;
+            userToUpdate.likedItems= updatedUser.likedItems;
             userToUpdate.save();
         }
         else
@@ -123,7 +122,7 @@ module.exports = db => {
     };
     schema.statics.UPDATE_STATUS = async function (updatedUser) {
         let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_USER(updatedUser.user_name, updatedUser.password);
+        queryForUpdate= this.FIND_ONE_USER(updatedUser._id);
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
@@ -138,7 +137,7 @@ module.exports = db => {
             console.log("Can't update: user does not exist!");
 
     };
-    schema.plugin(passportLocalMongoose);
+    schema.plugin(passportLocalMongoose, { username: "e_mail" });
 
     // the schema is useless so far
     // we need to create a model using it

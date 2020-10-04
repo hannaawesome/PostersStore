@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  </head>
+return (
   <body id="myPage" data-target=".navbar" data-offset="60">
     <div id="about" class="container-fluid">
       <h2 id="about-header">About Us</h2>
@@ -20,7 +17,4 @@
 
       </div>
     </div>
-
-
-  </body>
-</html>
+);;

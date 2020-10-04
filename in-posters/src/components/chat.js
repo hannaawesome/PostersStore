@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<;;!DOCTYPE html>
 <html lang="en">
 <head>
     <script>
@@ -75,4 +75,4 @@
 
 </div>
 </body>
-</html>
+</html>;;
