@@ -20,7 +20,7 @@
     {
       "src": "unicorn.svg",
       "type": "image/svg"
-]    }
+    }
   ],
   "start_url": ".",
   "display": "standalone",

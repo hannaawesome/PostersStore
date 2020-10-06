@@ -14,7 +14,6 @@ module.exports = db => {
         },
         phone: String,
         category: String,
-        bnumber: String,
         cartItems:Array,//array of (PosterId,amount,measurement)
         orderHistory:Array,//array of (OrderId)
         likedItems:Array,//array of (PostersId)
@@ -93,21 +92,20 @@ module.exports = db => {
     schema.statics.FIND_ONE_USER = async function (_id) {
         return this.findOne({_id:_id}).exec();
     };
-    schema.statics.DELETE = async function (user) {
-        const filter = { _id: user._id };
+    schema.statics.DELETE = async function (uid) {
+        const filter = { _id: uid };
         const update = { active: false };
         // `doc` is the document _before_ `update` was applied
         let doc = await this.findOneAndUpdate(filter, update);
         await doc.save();
         debug("user deleted");
     };
-    schema.statics.UPDATE = async function (updatedUser) {
+    schema.statics.UPDATE = async function (updatedUser,password) {
         let queryForUpdate;
         queryForUpdate= this.FIND_ONE_USER(updatedUser._id);
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
-            userToUpdate.password= updatedUser.password;
             userToUpdate.fullname.fname= updatedUser.fullname.fname;
             userToUpdate.fullname.lname= updatedUser.fullname.lname;
             userToUpdate.phone=updatedUser.phone;
@@ -115,6 +113,7 @@ module.exports = db => {
             userToUpdate.cartItems= updatedUser.cartItems;
             userToUpdate.orderHistory= updatedUser.orderHistory;
             userToUpdate.likedItems= updatedUser.likedItems;
+            userToUpdate.setPassword(password);
             userToUpdate.save();
         }
         else
@@ -127,10 +126,6 @@ module.exports = db => {
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
             userToUpdate.category=updatedUser.category;
-            userToUpdate.bnumber= updatedUser.bnumber;
-            if(updatedUser.category == "customer") {
-                userToUpdate.bnumber = "null";
-            }
             userToUpdate.save();
         }
         else

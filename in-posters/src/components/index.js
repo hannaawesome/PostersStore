@@ -2,13 +2,12 @@ import React, { useContext, useState } from "react";
 import HomePage from '../pages/home'
 import Header from "./header";
 import About from "./about";
-import Switch from "react-router-dom/es/Switch";
-import Route from "react-router-dom/es/Route";
+import { Route, Switch } from "react-router-dom";
 //import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { useHistory } from "react-router-dom";
 import Account from "../pages/account";
-import {Button, LoginPage} from "tabler-react";
+import {Button, ForgotPasswordPage, LoginPage} from "tabler-react";
 import Liked from "../pages/liked";
 import Contact from "../pages/contact";
 import Cart from "../pages/cart";
@@ -36,11 +35,13 @@ import Checkout from "../pages/checkout";
 import heart from "./components_images/heart.png";
 import exit from "./components_images/exit.png";
 import shoppingCart from "./components_images/shopping-cart.png";
+import Login from "../pages/login";
+import NavigationBar from "./NavigationBar";
 
 
 export default function App(props: Props): React.Node {
     let history = useHistory();
-
+    const [category] = React.useState(localStorage.getItem("userCategory"));
     function redirectStore(e) {
         history.push("/store");
     }
@@ -98,34 +99,18 @@ export default function App(props: Props): React.Node {
         history.push("/");
     }
 
-    function logout(e) {
+    function redirectLogout(e) {
+        if (localStorage.getItem("userId")!==""&&localStorage.getItem("userId")!==null)
+            history.push("/logout");
+        else
+            history.push("/");
     }
     return (
+
         <div>
-
             <Header/>
-
             <Toolbar>
-                <Navbar bg="light" expand="lg">
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
-                            <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
-                            <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
-                            <Nav.Link onClick={redirectLiked}>
-                                <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>
-                            <Nav.Link onClick={redirectCart}>
-                                <img alt="" src={shoppingCart} height={20} width={20}/>
-                            </Nav.Link>
-                            <Nav.Link onClick={logout}>
-                                <img alt="" src={exit} height={20} width={20}/>
-                            </Nav.Link>
-
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+               <NavigationBar/>
             </Toolbar>
             <Switch>
                 <Route exact from="/" render={(props) =><HomePage{...props} />} />
@@ -138,7 +123,7 @@ export default function App(props: Props): React.Node {
                 <Route exact path="/account" render={(props) =><Account{...props} />} />
                 <Route exact from="/register" render={(props) =><Register{...props} />} />
                 <Route exact from="/cart" render={(props) =><Cart{...props} />} />
-                <Route exact from="/login" render={(props) =><LoginPage{...props} />} />
+                <Route exact from="/login" render={(props) =><Login{...props} />} />
                 <Route exact from="/empty_page" render={(props) =><Empty{...props} />} />
                 <Route exact from="/liked" render={(props) =><Liked{...props} />} />
                 <Route exact from="/contact" render={(props) => <Contact {...props} />}/>
@@ -150,6 +135,8 @@ export default function App(props: Props): React.Node {
                 <Route exact from="/stock" render={(props) =><Stock{...props} />} />
                 <Route exact from="/checkout" render={(props) =><Checkout{...props} />} />
                 <Route exact from="/poster" render={(props) =><PosterData{...props} />} />
+                <Route exact from="/forgot_password" render={(props) =><ForgotPasswordPage{...props} />} />
+
                 <Route render={(props) =>Error404} />
             </Switch>
             <About/>

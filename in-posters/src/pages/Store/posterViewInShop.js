@@ -51,7 +51,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     const [liked, setLiked] = React.useState(poster.likedItems);
     const handlePosterChangedSaved = () => {
         var data = {
-            _id: sessionStorage.getItem("userId"),
+            _id: localStorage.getItem("userId"),
             posterId: poster.id,
             state: !liked,
         };
@@ -102,8 +102,9 @@ export default function PosterViewInShop({ poster, renderStore }) {
                     title=""
                 />
             )}
-            <CardContent>
-                title={poster.price}
+            <CardContent title={poster.price}>
+                if(poster.amount==0)
+                    <p>out of stock</p>
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton

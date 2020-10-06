@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const User = require("../models")("User");
 
-const debug = require('debug')('TheProject:register');
+const debug = require('debug')('TheProject:addUser');
 const passport = require("passport");
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -12,17 +12,17 @@ router.post("/", async function (req, res) {
     let user = {
         _id: usersList.length.toString(),
         fullname: {
-            fname: req.body.fname,
-            lname: req.body.lname
+            fname: req.body.fullname.fname,
+            lname: req.body.fullname.lname
         },
         phone:-1,
         e_mail: req.body.e_mail,
-        category: 'Customer',
+        category: req.body.category,
         cartItems: [],
         orderHistory: [],
-        likedItems: []
+        likedItems: [],
+        active:true
     };
-
     try {
         await User.register(user, req.body.password, function (err, user) {
             if (err) {

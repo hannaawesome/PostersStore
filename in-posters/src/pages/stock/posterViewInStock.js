@@ -50,7 +50,7 @@ export default function PosterViewInStock({ poster, renderStore }) {
     const [liked, setLiked] = React.useState(poster.likedItems);
     const handlePosterChangedSaved = () => {
         var data = {
-            _id: sessionStorage.getItem("userId"),
+            _id: localStorage.getItem("userId"),
             posterId: poster.id,
             state: !liked,
         };

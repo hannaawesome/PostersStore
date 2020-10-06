@@ -55,19 +55,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Register() {
+export default function ForgotPassword() {
     const classes = useStyles();
     let history = useHistory();
     const [uId, setUId] = React.useState("");
-    const [fName, setFName] = React.useState("");
-    const [lName, setLName] = React.useState("");
     const [email, setEmail] = React.useState("");
-    const [category, setCategory] = React.useState("");
     const [password, setPassword] = React.useState("");
     const onChangeEmailHandler = (e) => setEmail(e.target.value);
     const onChangePasswordHandler = (e) => setPassword(e.target.value);
-    const onChangeFName = (e) => setFName(e.target.value);
-    const onChangeLName = (e) => setLName(e.target.value);
+
 
     async function fetchUserId() {
         const fullResponse = await fetch(
@@ -75,12 +71,7 @@ export default function Register() {
         const responseJson = await fullResponse.json();
         setUId(responseJson);
     }
-    async function fetchUserCategory() {
-        const fullResponse = await fetch(
-            "/get_user?id=" + uId);
-        const responseJson = await fullResponse.json();
-        setCategory(responseJson.category);
-    }
+
     function onSubmitRegisterHandler(e) {
         e.preventDefault();
 
@@ -95,13 +86,11 @@ export default function Register() {
         // Submit form via jQuery/AJAX
         $.ajax({
             type: "POST",
-            url: "/register",
+            url: "/forgot_password",
             data: data,
         })
             .done(function (data) {
                 fetchUserId();
-                fetchUserCategory();
-                localStorage.setItem("userCategory",category);
                 localStorage.setItem("userId", uId);
                 history.push("/");
             })
@@ -123,42 +112,16 @@ export default function Register() {
                 <LockOutlinedIcon/>
             </Avatar>
             <Typography component="h1" variant="h5">
-                Register
+                Change Password
             </Typography>
 
             <form
                 className={classes.form}
-                onSubmit={onSubmitRegisterHandler}
+                onSubmit={onSubmitChangePasswordHandler}
                 noValidate
             >
                 <Grid container spacing={2}>
 
-                    <Grid item xs={12} sm={6}>
-
-                        <TextField
-                            autoComplete="fname"
-                            name="firstName"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus
-                            onChange={onChangeFName}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            autoComplete="lname"
-                            onChange={onChangeLName}
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             variant="outlined"
@@ -190,12 +153,12 @@ export default function Register() {
                     fullWidth
                     variant="contained"
                     className={classes.submit}>
-                Register
+                    Change Password
                 </Button>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link onClick={redirectLogin} variant="body2">
-                            Already have an account? Login
+                            Cancel
                         </Link>
                     </Grid>
                 </Grid>

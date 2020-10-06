@@ -1,18 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-//import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter } from 'react-router-dom';
 import InPosterApp from "./components";
+import CartContextProvider from "./contexts/CartContext";
 ReactDOM.render(
   <React.StrictMode>
-      <div>
-          <BrowserRouter>
-          <InPosterApp/>
+          <CartContextProvider>
+              <BrowserRouter>
+                  <div>
+                  <InPosterApp/>
+              </div>
           </BrowserRouter>
-      </div>
+          </CartContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

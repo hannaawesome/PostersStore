@@ -6,7 +6,7 @@ const debug = require("debug")("TheProject:get_liked_items");
 const connectEnsureLogin = require("connect-ensure-login");
 router.get("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     let user = await User.findOne({
-        _id: req.body._id,
+        _id: req.query.id,
         active: true,
     }).exec();
     if (user === undefined) {

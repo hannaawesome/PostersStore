@@ -2,7 +2,7 @@ import $ from "jquery";
 
 const handleAddItem = (posterId,amount,width,length) => {
     var data = {
-        _id: sessionStorage.getItem("userId"),
+        _id: localStorage.getItem("userId"),
         posterId: posterId,
         amount,
         measurement:{
@@ -23,7 +23,7 @@ const handleAddItem = (posterId,amount,width,length) => {
 
 const handleRemoveItem = (posterId) => {
     var data = {
-        _id: sessionStorage.getItem("userId"),
+        _id: localStorage.getItem("userId"),
         posterId: posterId,
     };
 
@@ -39,7 +39,7 @@ const handleRemoveItem = (posterId) => {
 
 const handleChangeAmountItem = (posterId, amount) => {
     var data = {
-        _id: sessionStorage.getItem("userId"),
+        _id: localStorage.getItem("userId"),
         posterId: posterId,
         amount: amount,
     };
@@ -47,7 +47,7 @@ const handleChangeAmountItem = (posterId, amount) => {
     // Submit form via jQuery/AJAX
     $.ajax({
         type: "POST",
-        url: "/update_product_cart_amount",
+        url: "/update_poster_cart_amount",
         data: data,
     })
         .done(function(data) {})
@@ -56,7 +56,7 @@ const handleChangeAmountItem = (posterId, amount) => {
 
 const handleChangeSizeItem = (posterId, width,length) => {
     var data = {
-        _id: sessionStorage.getItem("userId"),
+        _id: localStorage.getItem("userId"),
         posterId: posterId,
         measurement:{
             width:width,
@@ -67,7 +67,7 @@ const handleChangeSizeItem = (posterId, width,length) => {
     // Submit form via jQuery/AJAX
     $.ajax({
         type: "POST",
-        url: "/update_product_cart_size",
+        url: "/update_poster_cart_size",
         data: data,
     })
         .done(function(data) {})
@@ -84,17 +84,16 @@ const Storage = (cartItems) => {
 export const sumItems = (cartItems) => {
     Storage(cartItems);
     let itemCount = cartItems.reduce(
-        (total, product) => total + product.quantity,
+        (totalPrice, poster) => totalPrice + poster.quantity,
         0
     );
-    let total = cartItems
-        .reduce((total, product) => total + product.price * product.quantity, 0)
+    let totalPrice = cartItems
+        .reduce((totalPrice, poster) => totalPrice + poster.price * poster.quantity, 0)
         .toFixed(2);
-    return { itemCount, total };
+    return { itemCount, totalPrice };
 };
 
 export const CartReducer = (state, action) => {
-    var amount;
     switch (action.type) {
         case "ADD_ITEM":
             if (!state.cartItems.find((item) => item.id === action.payload.id)) {
@@ -122,20 +121,20 @@ export const CartReducer = (state, action) => {
                 ],
             };
         case "INCREASE":
-            amount=(state.cartItems[
+            state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity++);
-            handleChangeAmountItem(action.payload.id, amount);
+                ].quantity++;
+            handleChangeAmountItem(action.payload.id, action.payload.amount);
             return {
                 ...state,
                 ...sumItems(state.cartItems),
                 cartItems: [...state.cartItems],
             };
         case "DECREASE":
-            amount= (state.cartItems[
+           state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity--);
-            handleChangeAmountItem(action.payload.id,amount );
+                ].quantity--;
+            handleChangeAmountItem(action.payload.id,action.payload.amount );
             return {
                 ...state,
                 ...sumItems(state.cartItems),

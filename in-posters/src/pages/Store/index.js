@@ -85,7 +85,7 @@ postersToShow.filter(function(a) {
     React.useEffect(() => {
         async function fetchPosters() {
             const fullResponse = await fetch(
-                "/Posters?userId=" + sessionStorage.getItem("userId")
+                "/Posters?userId=" + localStorage.getItem("userId")
             );
             const responseJson = await fullResponse.json();
             postersSet(responseJson);

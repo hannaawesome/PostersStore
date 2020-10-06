@@ -2,7 +2,7 @@ const express = require("express");
 const Poster = require("../models/Poster");
 const router = express.Router();
 const User = require("../models")("User");
-const debug = require("debug")("TheProject:UpdateProductCartAmount");
+const debug = require("debug")("TheProject:UpdatePosterCartAmount");
 const connectEnsureLogin = require("connect-ensure-login");
 router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
@@ -15,7 +15,9 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
             res.send(404)
         }
         let posterId = req.body.posterId;
-        let amount = req.body.amount;
+        let width = req.body.measurement.width;
+        let length=req.body.measurement.length;
+
         let poster = await Poster.findOne({
             _id: posterId,
             active: true
@@ -34,7 +36,8 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
                 res.send(404);
             }
             else {
-                cart[poster].amount = amount;
+                cart[poster].measurement.width = width;
+                cart[poster].measurement.length = length;
                 user.cartItems = cart;
                 await User.UPDATE(user);
                 debug("successfully updated in cart");

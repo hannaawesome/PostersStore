@@ -7,8 +7,7 @@ module.exports = db => {
         _id:String,
         name: { type: String, required: true},
         creator: String,
-		img: Buffer,
-        type_of_image:String,
+		img: String,
 		price: Number,
         measurement:{
             width:Number,
@@ -25,11 +24,10 @@ module.exports = db => {
             name: poster[1],
             creator:poster[2],
 			img: poster[3],
-            type_of_image:poster[4],
-            price: poster[5],
-            measurement:poster[6],
-            tagList:poster[7],
-            amount:poster[8],
+            price: poster[4],
+            measurement:poster[5],
+            tagList:poster[6],
+            amount:poster[7],
             active:true
         });
     };
@@ -83,8 +81,8 @@ module.exports = db => {
         };
         return this.findOne(poster).exec();
     };
-    schema.statics.DELETE = async function (poster) {
-        const filter = { _id: poster._id };
+    schema.statics.DELETE = async function (pid) {
+        const filter = { _id: pid };
         const update = { active: false };
         // `doc` is the document _before_ `update` was applied
         let doc = await this.findOneAndUpdate(filter, update);
@@ -100,7 +98,6 @@ module.exports = db => {
             posterToUpdate.name=updatedPoster.name;
             posterToUpdate.creator = updatedPoster.creator;
             posterToUpdate.img= updatedPoster.img;
-            posterToUpdate.type_of_image=updatedPoster.type_of_image;
             posterToUpdate.price=updatedPoster.price;
             posterToUpdate.measurement.width=updatedPoster.measurement.width;
             posterToUpdate.measurement.length=updatedPoster.measurement.length;

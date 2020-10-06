@@ -20,6 +20,10 @@ import Paper from "@material-ui/core/Paper";
 import { Route, Switch } from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
+import {Dropdown} from "react-bootstrap";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,19 +57,35 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    //from internet
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
 }));
 
-export default function Register() {
+
+
+
+export default function RegisterByAdmin() {
     const classes = useStyles();
     let history = useHistory();
+
     const [uId, setUId] = React.useState("");
     const [fName, setFName] = React.useState("");
     const [lName, setLName] = React.useState("");
     const [email, setEmail] = React.useState("");
-    const [category, setCategory] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [category,setCategory] = React.useState("");
     const onChangeEmailHandler = (e) => setEmail(e.target.value);
     const onChangePasswordHandler = (e) => setPassword(e.target.value);
+    const onChangeCategoryHandler = (event) => {
+        setCategory(event.target.value);
+        localStorage.setItem("userCategory",category);
+    };
     const onChangeFName = (e) => setFName(e.target.value);
     const onChangeLName = (e) => setLName(e.target.value);
 
@@ -75,12 +95,7 @@ export default function Register() {
         const responseJson = await fullResponse.json();
         setUId(responseJson);
     }
-    async function fetchUserCategory() {
-        const fullResponse = await fetch(
-            "/get_user?id=" + uId);
-        const responseJson = await fullResponse.json();
-        setCategory(responseJson.category);
-    }
+
     function onSubmitRegisterHandler(e) {
         e.preventDefault();
 
@@ -91,17 +106,32 @@ export default function Register() {
                 fName: fName,
                 lName: lName
             },
+            category:category
         };
         // Submit form via jQuery/AJAX
+
+        // var t = {
+        //     name: "hi",
+        //     creator: password
+        // };
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/add_poster",
+        //     data: t,
+        // })
+        //     .done(function (data) {
+        //         history.push("/");
+        //     })
+        //     .fail(function (jqXhr) {
+        //         alert("Try again!!");
+        //     });
         $.ajax({
             type: "POST",
-            url: "/register",
+            url: "/add_user",
             data: data,
         })
             .done(function (data) {
                 fetchUserId();
-                fetchUserCategory();
-                localStorage.setItem("userCategory",category);
                 localStorage.setItem("userId", uId);
                 history.push("/");
             })
@@ -183,6 +213,24 @@ export default function Register() {
                             autoComplete="current-password"
                             onChange={onChangePasswordHandler}
                         />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl required className={classes.formControl}>
+                            <InputLabel htmlFor="age-native-required">Role</InputLabel>
+                            <Select
+                                native
+                                value={category}
+                                onChange={onChangeCategoryHandler}
+                                inputProps={{
+                                    id: 'age-native-required',
+                                }}
+                            >
+                                <option aria-label="None" value="" />
+                                <option value={"Admin"}>Admin</option>
+                                <option value={"Employee"}>Employee</option>
+                                <option value={"Customer"}>Customer</option>
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Button

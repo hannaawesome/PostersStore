@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
+import ImageUploader from 'react-images-upload';
 
 
 import ButtonUp from "@material-ui/core/Button";
@@ -39,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function generate(element, listItem) {
+
+function fileOrLink(element, listItem) {
     return listItem.map((value) =>
         React.cloneElement(element, {
             key: value,
@@ -71,8 +73,9 @@ const styles = (theme) => ({
     },
 });
 
-class ComplexGrid extends React.Component {
-    static contextType = CartContext;
+class AddPoster extends React.Component {
+
+      static contextType = CartContext;
 
     constructor({match}) {
         super();
@@ -80,9 +83,12 @@ class ComplexGrid extends React.Component {
 
         this.state = {
             full: 0,
+          image:[],
             poster: {},
+
         };
-        this.handleClick = this.handleHeartClick.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.handleClick = this.handleHeartClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -99,15 +105,22 @@ class ComplexGrid extends React.Component {
             console.log(err);
         }
     }
-
+onDrop(picture) {
+    this.setState({
+        pictures: this.state.pictures.concat(picture),
+    });
+}
     handleChange(e, {name, value}) {
         this.setState({commentText: value});
     }
 
     handleChangeRating(e, value) {
         this.setState({rating: value});
-    }handleHeartClick() {
-        const {full, poster} = this.state;
+    }
+
+
+    handleHeartClick() {
+        const {full, isVisible, product} = this.state;
         if (full) this.setState({full: 0});
         else this.setState({full: 1});
     }
@@ -135,7 +148,15 @@ class ComplexGrid extends React.Component {
                             />
                             )}
                         </Grid>
-
+                        <Grid>
+                        <ImageUploader
+                            withIcon={true}
+                            buttonText='Choose images'
+                            onChange={this.onDrop}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880}
+                        />
+                        </Grid>
                         <Grid item xs={3} className="text-left ml-5">
                             <Grid container direction="column">
                                 <Grid container spacing={2}>

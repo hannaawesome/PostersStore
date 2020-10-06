@@ -2,36 +2,35 @@ var express = require('express');
 var router = express.Router();
 const User = require("../models")("User");
 
-const debug = require('debug')('TheProject:register');
+const debug = require('debug')('TheProject:UpdateUser');
 const passport = require("passport");
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 router.post("/", async function (req, res) {
-    let usersList = await User.REQUEST();
     let user = {
-        _id: usersList.length.toString(),
+        _id: req.body._id,
         fullname: {
             fname: req.body.fname,
             lname: req.body.lname
         },
-        phone:-1,
+        phone:req.body.phone,
         e_mail: req.body.e_mail,
-        category: 'Customer',
-        cartItems: [],
-        orderHistory: [],
-        likedItems: []
+        category: req.body.category,
+        cartItems: req.body.cartItems,
+        orderHistory: req.body.orderHistory,
+        likedItems: req.body.likedItems
     };
 
     try {
-        await User.register(user, req.body.password, function (err, user) {
+        await User.UPDATE(user, req.body.password, function (err, user) {
             if (err) {
-                debug("Register error")
+                debug("update error")
             }
         });
-        debug("User was created");
+        debug("User was updated");
     } catch (err) {
-        debug("User created error")
+        debug("User updated error")
     }
     setTimeout((function () {
         res.status(200).send()

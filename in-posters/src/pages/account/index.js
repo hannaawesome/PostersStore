@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import AccountDetails from "../../components/acountDetails";
 import OrderList from "../../components/orderList";
-import {LoginPage} from "tabler-react";
+import Login from "../login";
 
-class Account extends Component {
-    state = {
-        loggedIn: true
-    };
-    render() {
-        if (this.state.loggedIn) {
+export default function Account(){
+    const [uId] = React.useState(
+        localStorage.getItem("userId")
+    );    console.log(uId);
+    if (uId!==""&&uId!==null) {
             return (<div>
                     <h5>MyAccount</h5>
                     <AccountDetails/>
@@ -18,10 +17,8 @@ class Account extends Component {
             );
         } else {
             return (<div>
-                    <LoginPage/>
+                    <Login/>
                 </div>
             );
         }
-    }
 }
-export default Account;
