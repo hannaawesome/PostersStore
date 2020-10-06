@@ -27,10 +27,10 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
             res.send(404);
         } else {
             if (cart === undefined) cart = [];
-            if (
-                cart === [] ||
-                cart.findIndex((item) => item.posterId === posterId) === -1
-            ) {
+            //if (
+            //    cart === [] ||
+             //   cart.findIndex((item) => item.posterId === posterId) === -1
+            //) {
                 cart.push({
                     posterId: posterId,
                     amount: amount,
@@ -40,16 +40,7 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
                 await User.UPDATE(user);
                 debug("successfully added to cart");
                 res.send(200);
-            } else {
-                let poster = cart.findIndex((item) => item.posterId === posterId);
-                cart[poster].amount = amount;
-                cart[poster].measurement.width = measurementChosen.width;
-                cart[poster].measurement.length = measurementChosen.length;
-                user.cartItems = cart;
-                await User.UPDATE(user);
-                debug("successfully added to cart");
-                res.send(200);
-            }
+            //}
         }
     } catch (err) {
         console.log(err);

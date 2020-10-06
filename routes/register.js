@@ -15,15 +15,10 @@ router.post("/", async function (req, res) {
             fname: req.body.fname,
             lname: req.body.lname
         },
-        address: {
-            street: req.body.street,
-            city: req.body.city,
-            state: req.body.state
-        },
-        phone: req.body.phone,
+        phone:-1,
         e_mail: req.body.e_mail,
-        category: req.body.category,
-        bnumber: req.body.bnumber,
+        category: 'Client',
+        bnumber:-1,
         cartItems: [],
         orderHistory: [],
         likedItems: []

@@ -7,7 +7,7 @@ module.exports = db => {
     let schema = new mongo.Schema({
         _id:String,
         user_id: String,
-        itemsInOrder:Array,//array of (poster_id,amount)
+        itemsInOrder:Array,//array of (poster_id,amount,measurement)
         shipmentAddress:{
             street: String,
             city: String,
@@ -23,7 +23,7 @@ module.exports = db => {
         return this.create({
             _id:order[0],
             user_id: order[1],
-            itemsInOrder:order[2],//[poster_id,amount]
+            itemsInOrder:order[2],//[poster_id,amount,measurement]
             shipmentAddress:order[3],
             totalPrice:order[4],
             active:true
@@ -55,6 +55,8 @@ module.exports = db => {
             orderToUpdate.shipmentAddress.street= updatedOrder.shipmentAddress.street;
             orderToUpdate.shipmentAddress.city= updatedOrder.shipmentAddress.city;
             orderToUpdate.shipmentAddress.state= updatedOrder.shipmentAddress.state;
+            orderToUpdate.measurement.width = updatedOrder.width;
+            orderToUpdate.measurement.length = updatedOrder.length;
             orderToUpdate.totalPrice=updatedOrder.totalPrice;
             orderToUpdate.save();
         }

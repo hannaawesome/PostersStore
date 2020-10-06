@@ -83,6 +83,9 @@ let app = express();
     let cancelOrderRoute = require('./routes/cancelOrder');
     let loginRoute = require('./routes/login');
     let registerRoute = require('./routes/register');
+    let updateUserDetailRoute = require('./routes/updateUserDetails');
+    let updateProductCartAmountRoute = require('./routes/updateProductCartAmount');
+    let updateProductCartSizeRoute = require('./routes/updateProductCartSize');
 
 
     app.use('/', indexRoute);
@@ -96,6 +99,9 @@ let app = express();
 	app.use('/cancel_order', cancelOrderRoute);
 	app.use('/login', loginRoute);
 	app.use('/register', registerRoute);
+    app.use('/update_user_detail', updateUserDetailRoute);
+    app.use('/update_product_cart_amount', updateProductCartAmountRoute);
+    app.use('/update_product_cart_size', updateProductCartSizeRoute);
 
 
     app.use(function (req, res, next) {
