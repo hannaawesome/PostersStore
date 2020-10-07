@@ -71,3 +71,11 @@ export default {
         return axios.post('/update_poster', posterData);
     },
 };
+//set PORT=3000 &&
+//"devDependencies": {
+//"connect-mongo": "^3.2.0",
+//"express-session": "^1.17.1",
+//"nodemailer": "^6.4.10",
+//"passport-local-mongoose": "^6.0.1",
+//"socket.io": "^2.3.0"
+//}
