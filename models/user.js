@@ -8,9 +8,9 @@ module.exports = db => {
         _id:String,
         e_mail: { type: String, required: true, unique: true},
        // password: { type: String, required: true },
-        fullname: {
-            fname: String,
-            lname : String
+        fullName: {
+            fName: String,
+            lName : String
         },
         phone: String,
         category: String,
@@ -22,22 +22,14 @@ module.exports = db => {
         resetPasswordExpires: Date
     }, { autoIndex: false });
 
-    // schema.methods.comparePassword = function(candidatePassword, cb) {
-    //     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    //         if (err) return cb(err);
-    //         cb(null, isMatch);
-    //     });
-    // };
-
     schema.statics.CREATE = async function(user) {
         return this.create({
             _id:user._id,
-           // password: user.password,
-            fullname: user.fullname,
+            password: user.password,
+            fullName: user.fullName,
             phone: user.phone,
             e_mail: user.e_mail,
             category:user.category,
-            bnumber: user.bnumber,
             cartItems: user.cartItems,
             orderHistory: user.orderHistory,
             likedItems: user.likedItems,
@@ -106,8 +98,8 @@ module.exports = db => {
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
-            userToUpdate.fullname.fname= updatedUser.fullname.fname;
-            userToUpdate.fullname.lname= updatedUser.fullname.lname;
+            userToUpdate.fullName.fName= updatedUser.fullName.fName;
+            userToUpdate.fullName.lName= updatedUser.fullName.lName;
             userToUpdate.phone=updatedUser.phone;
             userToUpdate.e_mail= updatedUser.e_mail;
             userToUpdate.cartItems= updatedUser.cartItems;

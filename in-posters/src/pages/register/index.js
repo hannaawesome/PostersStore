@@ -78,11 +78,11 @@ class Register extends Component {
     //const [category, setCategory] = React.useState("");
     // const [password, setPassword] = React.useState("");
     onChangeEmailHandler  = email => {
-        this.setState({email});
+        this.setState({email:email.target.value});
     };
     onChangePasswordHandler = (e) => this.setState({password: e.target.value});
-    onChangeFName = (e) => this.setState({fname: e.target.value});
-    onChangeLName = (e) => this.setState({lname: e.target.value});
+    onChangeFName = (e) => this.setState({fName: e.target.value});
+    onChangeLName = (e) => this.setState({lName: e.target.value});
 
     // async function fetchUserId() {
     //     const fullResponse = await fetch(
@@ -150,7 +150,7 @@ class Register extends Component {
                         <Grid item xs={12} sm={6}>
 
                             <TextField
-                                autoComplete="fname"
+                                autoComplete="fName"
                                 name="firstName"
                                 variant="outlined"
                                 required
@@ -169,7 +169,7 @@ class Register extends Component {
                                 id="lastName"
                                 label="Last Name"
                                 name="lastName"
-                                autoComplete="lname"
+                                autoComplete="lName"
                                 onChange={this.onChangeLName}
                             />
                         </Grid>

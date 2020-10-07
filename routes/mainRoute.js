@@ -6,8 +6,9 @@ const Order = require("../models")("Order");
 const Poster = require("../models")("Poster");
 const connectEnsureLogin = require("connect-ensure-login");
 const passport = require("passport");
+const debug = require("debug")("router");
 
-passport.use(User.createStrategy());
+passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -17,9 +18,9 @@ router.post("/add_user", async function (req, res) {
     let usersList = await User.REQUEST();
     let user = {
         _id: usersList.length.toString(),
-        fullname: {
-            fname: req.body.fullname.fname,
-            lname: req.body.fullname.lname
+        fullName: {
+            fName: req.body.fullName.fName,
+            lName: req.body.fullName.lName
         },
         phone:-1,
         e_mail: req.body.e_mail,
@@ -30,13 +31,13 @@ router.post("/add_user", async function (req, res) {
         active:true
     };
     try {
-        User.CREATE(user);
-        // await User.register(user, req.body.password, function (err, user) {
-        //
-        //     if (err) {
-        //         debug("Register error")
-        //     }
-        // });
+        //User.CREATE(user);
+        await User.register(user, req.body.password, function (err, user) {
+
+            if (err) {
+                debug("Register error")
+            }
+        });
         debug("User was created");
     } catch (err) {
         debug("User created error")
@@ -49,24 +50,24 @@ router.post("/register", async function (req, res) {
     let usersList = await User.REQUEST();
     let user = {
         _id: usersList.length.toString(),
-        fullname: {
-            fname: req.body.fname,
-            lname: req.body.lname
+        fullName: {
+            fName: req.body.fName,
+            lName: req.body.lName
         },
         phone:-1,
         e_mail: req.body.e_mail,
-        category: 'Customer',
+        category: usersList.length.toString()?'Customer':"Admin",
         cartItems: [],
         orderHistory: [],
         likedItems: []
     };
 
     try {
-        await User.register(user, req.body.password, function (err, user) {
-            if (err) {
-                debug("Register error")
-            }
-        });
+         await User.register(user, req.body.password, function (err, user) {
+             if (err) {
+                 debug("Register error")
+             }
+         });
         debug("User was created");
     } catch (err) {
         debug("User created error")
@@ -130,7 +131,7 @@ router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (r
         res.send(404);
     }});
 
-router.post('/add_poster',connectEnsureLogin.ensureLoggedIn(), async function(req, res,next) {
+router.post('/add_poster', async function(req, res,next) {
     try {
         let posters = await Poster.REQUEST();
         let posterId = 40000; //first order id is 100, the second will be 101...
@@ -325,7 +326,7 @@ router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async functi
         );
     }
 });
-router.get("/get_orders", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_orders", async function (req, res) {
         let orders = await Order.find({active: true}).exec();
         res.json(
             orders.map((order) => {
@@ -345,7 +346,7 @@ router.get("/get_orders", connectEnsureLogin.ensureLoggedIn(), async function (r
             }));
     }
 );
-router.get("/get_poster", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_poster", async function (req, res) {
         let poster = await Poster.findOne({
             _id: req.query.id,
             active: true,
@@ -378,7 +379,7 @@ router.get("/get_posters", async function (req, res) {
                 }));
     }
 );
-router.get("/get_user", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_user", async function (req, res) {
         let user = await User.findOne({
             _id: req.query.id,
             active: true,
@@ -386,7 +387,7 @@ router.get("/get_user", connectEnsureLogin.ensureLoggedIn(), async function (req
         res.json(user);
     }
 );
-router.get("/get_user_by_email", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_user_id_by_email", async function (req, res) {
         let user = await User.findOne({
             e_mail: req.query.e_mail,
             active: true,
@@ -436,9 +437,9 @@ router.get("/get_users", async function (req, res) {
                     return {
                         _id: user._id,
                         e_mail: user.e_mail,
-                        fullname: {
-                            fname: user.fullName.fName,
-                            lname: user.fullName.lName
+                        fullName: {
+                            fName: user.fullName.fName,
+                            lName: user.fullName.lName
                         },
                         phone: user.phone,
                         category: user.category
@@ -556,9 +557,9 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
 router.post("/update_user", async function (req, res) {
     let user = {
         _id: req.body._id,
-        fullname: {
-            fname: req.body.fname,
-            lname: req.body.lname
+        fullName: {
+            fName: req.body.fName,
+            lName: req.body.lName
         },
         phone:req.body.phone,
         e_mail: req.body.e_mail,

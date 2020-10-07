@@ -63,7 +63,7 @@ const styles = (theme) => ({
 const initialState = {
     fName: 'mmk',
     lName: 'kkl',
-    email: 'mllk@',
+    email: 'fc@',
     category: 'Customer',
     password: 'jkl',
 };
@@ -95,8 +95,8 @@ class RegisterByAdmin extends Component {
     };
     onChangeCategoryHandler = (e) => {this.setState({category: e.target.value}); localStorage.setItem("userCategory",this.state.category);};
 
-    onChangeFName = (e) => this.setState({fname: e.target.value});
-    onChangeLName = (e) => this.setState({lname: e.target.value});
+    onChangeFName = (e) => this.setState({fName: e.target.value});
+    onChangeLName = (e) => this.setState({lName: e.target.value});
 
     // async function fetchUserId() {
     //     const fullResponse = await fetch(
@@ -106,6 +106,8 @@ class RegisterByAdmin extends Component {
     // }
     onSubmitRegisterHandler(e){
         e.preventDefault();
+        const { history } = this.props;
+
         const {fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
@@ -119,14 +121,14 @@ class RegisterByAdmin extends Component {
 
         API.addUser(data)
             .then(res => { console.log("success");
-                // API.getUserByEmail(email)
-                //     .then(res => {
-                //         localStorage.setItem("userCategory", category);
-                //         localStorage.setItem("userId", res.json());
-                const { history } = this.props;
-               history.push("/");
-                //     })
-                //     .catch(err => console.log(err));
+                API.getUserByEmail(email)
+                    .then(res => {
+                        console.log("success");
+                        localStorage.setItem("userCategory", category);
+                        localStorage.setItem("userId", res.json());
+                        history.push("/");
+                     })
+                    .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
 
@@ -161,7 +163,7 @@ class RegisterByAdmin extends Component {
                         <Grid item xs={12} sm={6}>
 
                             <TextField
-                                autoComplete="fname"
+                                autoComplete="fName"
                                 name="firstName"
                                 variant="outlined"
                                 required
@@ -180,7 +182,7 @@ class RegisterByAdmin extends Component {
                                 id="lastName"
                                 label="Last Name"
                                 name="lastName"
-                                autoComplete="lname"
+                                autoComplete="lName"
                                 onChange={this.onChangeLName}
                             />
                         </Grid>

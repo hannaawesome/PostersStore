@@ -107,7 +107,6 @@ export default function Login(){
 
     const onFailure = error => {
         console.log(error && error.response);
-        this.setState({errors: error.response.data, isLoading: false});
     };
     function submitHandler(e) {
         e.preventDefault();
@@ -123,7 +122,7 @@ export default function Login(){
         history.push("/register");
     }
    function redirectForgotPassword(e){
-        history.push("forgot_password");
+        history.push("/forgot_password");
    }
     return (
         <div>
