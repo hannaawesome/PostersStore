@@ -104,7 +104,7 @@ postersToShow.filter(function(a) {
             postersToShowSet(responseJson);
         }
 
-        fetchPosters();
+        fetchPosters().then(r => console.log("got"));
     }, []);
     return (
         <React.Fragment>

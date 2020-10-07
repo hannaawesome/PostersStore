@@ -1,12 +1,15 @@
 const express = require("express");
-const Poster = require("../models/Poster");
+const User = require("../models")("User");
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");
 const router = express.Router();
 const debug = require("debug")("TheProject:GetPoster");
 const connectEnsureLogin = require("connect-ensure-login");
 
 router.get("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
         let poster = await Poster.findOne({
-            _id: req.query.Id,
+            _id: req.query.id,
             active: true,
         }).exec();
         res.json(poster);

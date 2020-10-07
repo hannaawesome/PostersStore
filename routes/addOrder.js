@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const Order = require("../models")("Order");
 const User = require("../models")("User");
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");
 
 const connectEnsureLogin = require("connect-ensure-login");
 const debug = require('debug')('TheProject:addOrder');

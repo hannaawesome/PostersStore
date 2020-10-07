@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const User = require("../models")("User");
-
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");
 const debug = require('debug')('TheProject:register');
 const passport = require("passport");
-passport.use(User.createStrategy());
+
+passport.use("User", User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 router.post("/", async function (req, res) {

@@ -132,7 +132,7 @@ module.exports = db => {
             console.log("Can't update: user does not exist!");
 
     };
-    schema.plugin(passportLocalMongoose, { username: "e_mail" });
+    schema.plugin(passportLocalMongoose, { usernameField: "e_mail" });
 
     // the schema is useless so far
     // we need to create a model using it

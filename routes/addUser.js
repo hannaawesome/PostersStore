@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const User = require("../models")("User");
-
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");
 const debug = require('debug')('TheProject:addUser');
 const passport = require("passport");
 passport.use(User.createStrategy());

@@ -83,7 +83,7 @@ class AddPoster extends React.Component {
 
     async componentDidMount() {
         try {
-            const resp = await fetch("/GetPosterItem?Id=" + this.params.posterId);
+            const resp = await fetch("/getPoster?id=" + this.params.posterId);
             if (!resp.ok) {
                 throw Error(resp.statusText);
             }
@@ -99,14 +99,6 @@ onDrop(picture) {
         pictures: this.state.pictures.concat(picture),
     });
 }
-    handleChange(e, {name, value}) {
-        this.setState({commentText: value});
-    }
-
-    handleChangeRating(e, value) {
-        this.setState({rating: value});
-    }
-
 
     handleHeartClick() {
         const {full, isVisible, product} = this.state;
@@ -222,4 +214,4 @@ onDrop(picture) {
         );
     }
 }
-export default withStyles(styles, { withTheme: true })(ComplexGrid);
+export default withStyles(styles, { withTheme: true })(AddPoster);

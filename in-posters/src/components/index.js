@@ -41,7 +41,6 @@ import NavigationBar from "./NavigationBar";
 
 export default function App(props: Props): React.Node {
     let history = useHistory();
-    const [category] = React.useState(localStorage.getItem("userCategory"));
     function redirectStore(e) {
         history.push("/store");
     }

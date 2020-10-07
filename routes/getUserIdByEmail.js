@@ -1,6 +1,8 @@
 const express = require("express");
-const User = require("../models/User");
-const router = express.Router();
+const User = require("../models")("User");
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");const router = express.Router();
 const debug = require("debug")("TheProject:GetUserIdByEmail");
 const connectEnsureLogin = require("connect-ensure-login");
 

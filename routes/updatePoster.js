@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const Poster = require('../models')("Poster");
+const User = require("../models")("User");
+const Message = require("../models")("Message");
+const Order = require("../models")("Order");
+const Poster = require("../models")("Poster");
 router.post('/', async function(req, res,next) {
     let update_poster = {
         _id:req.body._id,

@@ -6,7 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles, withStyles} from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -26,7 +26,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
     root: {
         width: "100vw",
         height: "100vh",
@@ -58,32 +58,42 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
-const classes = useStyles();
-let history = useHistory();
+});
 
+const initialState = {
+    fName: 'mmk',
+    lName: 'kkl',
+    email: 'mllk@',
+    category: 'Customer',
+    password: 'jkl',
+};
 class RegisterByAdmin extends Component {
-    state = {
-        uId: '',
-        fName: '',
-        lName: '',
-        email: '',
-        category: '',
-        password: ''
-    };
-
+    state = initialState;
+    constructor() {
+        super();
+        this.onChangeEmailHandler = this.onChangeEmailHandler.bind(this);
+        this.onChangePasswordHandler  = this.onChangePasswordHandler.bind(this);
+        this.onChangeCategoryHandler =  this.onChangeCategoryHandler.bind(this);
+        this.onChangeFName =  this.onChangeFName.bind(this);
+        this.onChangeLName = this.onChangeLName.bind(this);
+        this.onSubmitRegisterHandler=this.onSubmitRegisterHandler.bind(this);
+    }
     componentDidMount() {
     }
-
     //const [uId, setUId] = React.useState("");
     //const [fName, setFName] = React.useState("");
     // const [lName, setLName] = React.useState("");
     //const [email, setEmail] = React.useState("");
     //const [category, setCategory] = React.useState("");
     // const [password, setPassword] = React.useState("");
-    onChangeEmailHandler = (e) => this.setState({email: e.target.value});
-    onChangePasswordHandler = (e) => this.setState({password: e.target.value});
-    onChangeCategoryHandler = (e) => {this.setState({password: e.target.value}); localStorage.setItem("userCategory",this.state.category);};
+
+    onChangeEmailHandler = email => {
+        this.setState({email:email.target.value});
+    };
+    onChangePasswordHandler  = password => {
+        this.setState({password:password.target.value});
+    };
+    onChangeCategoryHandler = (e) => {this.setState({category: e.target.value}); localStorage.setItem("userCategory",this.state.category);};
 
     onChangeFName = (e) => this.setState({fname: e.target.value});
     onChangeLName = (e) => this.setState({lname: e.target.value});
@@ -96,7 +106,7 @@ class RegisterByAdmin extends Component {
     // }
     onSubmitRegisterHandler(e){
         e.preventDefault();
-        const {uId, fName, lName, email, category, password} = this.state;
+        const {fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
             password: password,
@@ -108,15 +118,15 @@ class RegisterByAdmin extends Component {
         };
 
         API.registerUser(data)
-            .then(res => {
-                API.getUserByEmail(email)
-                    .then(res => {
-                        this.setState({id: res.json()});
-                        localStorage.setItem("userCategory", category);
-                        localStorage.setItem("userId", uId);
-                        history.push("/");
-                    })
-                    .catch(err => console.log(err));
+            .then(res => { console.log("success");
+                // API.getUserByEmail(email)
+                //     .then(res => {
+                //         localStorage.setItem("userCategory", category);
+                //         localStorage.setItem("userId", res.json());
+                const { history } = this.props;
+               history.push("/");
+                //     })
+                //     .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
 
@@ -124,10 +134,12 @@ class RegisterByAdmin extends Component {
 
     redirectLogin(e) {
         //e.preventDefault();
+        const { history } = this.props;
         history.push("/log_in");
     }
 
     render() {
+        const {classes} = this.props;
         return (
             <div className={classes.paper}>
                 <br/>
@@ -235,7 +247,7 @@ class RegisterByAdmin extends Component {
         );
     }
 }
-export default RegisterByAdmin;
+export default withStyles(styles, { withTheme: true })(RegisterByAdmin);
 
 
 

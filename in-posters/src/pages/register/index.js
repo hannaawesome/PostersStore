@@ -6,7 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles, withStyles} from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,7 +23,7 @@ import { useHistory } from "react-router-dom";
 import API from '../../utils/API';
 import HomePage from "../home";
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
     root: {
         width: "100vw",
         height: "100vh",
@@ -55,19 +55,18 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
-const classes = useStyles();
-let history = useHistory();
-
+});
+//let history = useHistory();
+const initialState = {
+    uId: '',
+    fName: '',
+    lName: '',
+    email: '',
+    category: 'Customer',
+    password: '',
+};
 class Register extends Component {
-    state = {
-        uId: '',
-        fName: '',
-        lName: '',
-        email: '',
-        category: '',
-        password: ''
-    };
+    state = initialState;
 
     componentDidMount() {
     }
@@ -78,7 +77,9 @@ class Register extends Component {
     //const [email, setEmail] = React.useState("");
     //const [category, setCategory] = React.useState("");
     // const [password, setPassword] = React.useState("");
-    onChangeEmailHandler = (e) => this.setState({email: e.target.value});
+    onChangeEmailHandler  = email => {
+        this.setState({email});
+    };
     onChangePasswordHandler = (e) => this.setState({password: e.target.value});
     onChangeFName = (e) => this.setState({fname: e.target.value});
     onChangeLName = (e) => this.setState({lname: e.target.value});
@@ -113,7 +114,7 @@ class Register extends Component {
                             .catch(err => console.log(err));
                         localStorage.setItem("userCategory", category);
                         localStorage.setItem("userId", uId);
-                        history.push("/");
+                       /// history.push("/");
                     })
                     .catch(err => console.log(err));
             })
@@ -123,10 +124,11 @@ class Register extends Component {
 
     redirectLogin(e) {
         //e.preventDefault();
-        history.push("/log_in");
+       /// history.push("/log_in");
     }
 
     render() {
+        const {classes} = this.props;
         return (
             <div className={classes.paper}>
                 <br/>
@@ -216,7 +218,7 @@ class Register extends Component {
         );
     }
 }
-export default Register;
+export default withStyles(styles, { withTheme: true })(Register);
 
 
 

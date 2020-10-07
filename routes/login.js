@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const User = require("../models")("User");
 const passport = require("passport");
 
 const debug = require('debug')('TheProject:login');
