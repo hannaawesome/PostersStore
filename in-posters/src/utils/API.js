@@ -47,6 +47,8 @@ export default {
         return axios.get('/get_poster?id='+id);
     },
     addUser: function(userData) {
+        console.log("here");
+        init().then(r =>console.log("finnally"));
         return axios.post('/add_user', userData);
     },
     addPoster: function(posterData) {
@@ -79,3 +81,27 @@ export default {
 //"passport-local-mongoose": "^6.0.1",
 //"socket.io": "^2.3.0"
 //}
+async function init() {
+    var data = {
+        e_mail: "ghvbjk",
+        password: "hjk",
+        fullName: {
+            fName: "hbjl",
+            lName: "vhbjk"
+        },
+        category: "Admin"
+    };
+    try {
+        let res = null;
+        res = await fetch('/add_user', {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json; charset=utf-8'
+            },
+        });
+    } catch (e) {
+        console.log("did not succeed");
+    }
+}
