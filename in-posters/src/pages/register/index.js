@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, Component} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -55,30 +55,42 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
+const classes = useStyles();
+let history = useHistory();
 
-export default function Register() {
-    const classes = useStyles();
-    let history = useHistory();
-    const [uId, setUId] = React.useState("");
-    const [fName, setFName] = React.useState("");
-    const [lName, setLName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [category, setCategory] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const onChangeEmailHandler = (e) => setEmail(e.target.value);
-    const onChangePasswordHandler = (e) => setPassword(e.target.value);
-    const onChangeFName = (e) => setFName(e.target.value);
-    const onChangeLName = (e) => setLName(e.target.value);
+class Register extends Component {
+    state = {
+        uId: '',
+        fName: '',
+        lName: '',
+        email: '',
+        category: '',
+        password: ''
+    };
 
-    async function fetchUserId() {
-        const fullResponse = await fetch(
-            "/get_user_id_by_email?e_mail=" + email);
-        const responseJson = await fullResponse.json();
-        setUId(responseJson);
+    componentDidMount() {
     }
-    function onSubmitRegisterHandler(e) {
-        e.preventDefault();
 
+    //const [uId, setUId] = React.useState("");
+    //const [fName, setFName] = React.useState("");
+    // const [lName, setLName] = React.useState("");
+    //const [email, setEmail] = React.useState("");
+    //const [category, setCategory] = React.useState("");
+    // const [password, setPassword] = React.useState("");
+    onChangeEmailHandler = (e) => this.setState({email: e.target.value});
+    onChangePasswordHandler = (e) => this.setState({password: e.target.value});
+    onChangeFName = (e) => this.setState({fname: e.target.value});
+    onChangeLName = (e) => this.setState({lname: e.target.value});
+
+    // async function fetchUserId() {
+    //     const fullResponse = await fetch(
+    //         "/get_user_id_by_email?e_mail=" + email);
+    //     const responseJson = await fullResponse.json();
+    //     setUId(responseJson);
+    // }
+    onSubmitRegisterHandler(e){
+        e.preventDefault();
+        const {uId, fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
             password: password,
@@ -88,120 +100,121 @@ export default function Register() {
             },
         };
 
-            API.registerUser(data)
-                .then(res => {
-                    API.getUserByEmail(email)
-                        .then(res => {
-                            setUId(res.json());
-                        })
-                        .catch(err => console.log(err));
-                    API.getUser(uId)
-                        .then(res => {
-                            setCategory(res.json().category);
-                        })
-                        .catch(err => console.log(err));
-                    localStorage.setItem("userCategory", category);
-                    localStorage.setItem("userId", uId);
-                    history.push("/");
-                })
-                .catch(err => console.log(err));
+        API.registerUser(data)
+            .then(res => {
+                API.getUserByEmail(email)
+                    .then(res => {
+                        this.setState({id: res.json()});
+                        API.getUser(uId)
+                            .then(res => {
+                                this.setState({category: res.json().category});
+                            })
+                            .catch(err => console.log(err));
+                        localStorage.setItem("userCategory", category);
+                        localStorage.setItem("userId", uId);
+                        history.push("/");
+                    })
+                    .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
 
     }
 
-    function redirectLogin(e) {
+    redirectLogin(e) {
         //e.preventDefault();
         history.push("/log_in");
     }
 
-    return (
-        <div className={classes.paper}>
-            <br/>
-            <br/>
-            <Avatar className={classes.avatar}>
-                <LockOutlinedIcon/>
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Register
-            </Typography>
+    render() {
+        return (
+            <div className={classes.paper}>
+                <br/>
+                <br/>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Register
+                </Typography>
 
-            <form
-                className={classes.form}
-                onSubmit={onSubmitRegisterHandler}
-                noValidate
-            >
-                <Grid container spacing={2}>
+                <form
+                    className={classes.form}
+                    onSubmit={this.onSubmitRegisterHandler}
+                    noValidate
+                >
+                    <Grid container spacing={2}>
 
-                    <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={6}>
 
-                        <TextField
-                            autoComplete="fname"
-                            name="firstName"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus
-                            onChange={onChangeFName}
-                        />
+                            <TextField
+                                autoComplete="fname"
+                                name="firstName"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="First Name"
+                                autoFocus
+                                onChange={this.onChangeFName}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="lastName"
+                                label="Last Name"
+                                name="lastName"
+                                autoComplete="lname"
+                                onChange={this.onChangeLName}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                onChange={this.onChangeEmailHandler}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={this.onChangePasswordHandler}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            autoComplete="lname"
-                            onChange={onChangeLName}
-                        />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        className={classes.submit}>
+                        Register
+                    </Button>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                            <Link onClick={this.redirectLogin} variant="body2">
+                                Already have an account? Login
+                            </Link>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            onChange={onChangeEmailHandler}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={onChangePasswordHandler}
-                        />
-                    </Grid>
-                </Grid>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    className={classes.submit}>
-                Register
-                </Button>
-                <Grid container justifyContent="flex-end">
-                    <Grid item>
-                        <Link onClick={redirectLogin} variant="body2">
-                            Already have an account? Login
-                        </Link>
-                    </Grid>
-                </Grid>
-            </form>
-        </div>
-    );
+                </form>
+            </div>
+        );
+    }
 }
-
 
 
 

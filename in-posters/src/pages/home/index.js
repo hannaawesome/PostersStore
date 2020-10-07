@@ -7,19 +7,19 @@ class HomePage extends Component {
     state = {
         users: []
     };
-    componentDidMount() {
-        API.getUsers()
-            .then(res => this.setState({ users: res.data }))
-            .catch(err => console.log(err));
-    }
+    // componentDidMount() {
+    //     API.getUsers()
+    //         .then(res => this.setState({ users: res.data }))
+    //         .catch(err => console.log(err));
+    // }
     render() {
-        if(this.state.users.length>0)
+        /*if(this.state.users.length>0)
             return (
                 <div>
                     <PostersGallary/>
                 </div>
             );
-        else
+        else*/
             return (
                 <div>
                     <RegisterByAdmin/>
