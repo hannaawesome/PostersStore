@@ -60,6 +60,18 @@ const Store = () => {
 postersToShow.filter(function(a) {
     return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "cars") === -1;});
                 break;
+            case "people": //low to high
+                postersToShow.filter(function(a) {
+                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "people") === -1;});
+                break;
+            case "music": //low to high
+                postersToShow.filter(function(a) {
+                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "music") === -1;});
+                break;
+            case "view": //low to high
+                postersToShow.filter(function(a) {
+                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "view") === -1;});
+                break;
             default:
                 break;
         }
@@ -85,7 +97,7 @@ postersToShow.filter(function(a) {
     React.useEffect(() => {
         async function fetchPosters() {
             const fullResponse = await fetch(
-                "/Posters?userId=" + localStorage.getItem("userId")
+                "/get_posters"
             );
             const responseJson = await fullResponse.json();
             postersSet(responseJson);

@@ -61,6 +61,9 @@ export default {
     getOrders: function() {
         return axios.get('/get_orders');
     },
+    getPosters: function() {
+        return axios.get('/get_posters');
+    },
     updateUser: function(userData) {
         return axios.post('/update_user', userData);
     },

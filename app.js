@@ -99,6 +99,7 @@ app.use(express.json());
     let updatePosterRoute = require('./routes/updatePoster');
     let getOrdersRoute = require('./routes/getOrders');
     let getUsersRoute = require('./routes/getUsers');
+let getPostersRoute = require('./routes/getPosters');
 
 
 
@@ -125,6 +126,7 @@ app.use(express.json());
     app.use('/get_user_id_by_email', getUserIdByEmailRoute);
     app.use('/get_users', getUsersRoute);
     app.use('/get_orders', getOrdersRoute);
+app.use('/get_posters', getPostersRoute);
 
 app.all('/*', async (req, res, next) => {
     debug('headers');

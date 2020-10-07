@@ -21,6 +21,7 @@ import { Route, Switch } from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import API from '../../utils/API';
+import HomePage from "../home";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -215,6 +216,7 @@ class Register extends Component {
         );
     }
 }
+export default Register;
 
 
 
