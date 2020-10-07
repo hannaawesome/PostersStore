@@ -4,10 +4,13 @@ const router = express.Router();
 const debug = require("debug")("TheProject:GetUsers");
 
 router.get("/", async function (req, res) {
-        let users = await User.find({
-            active: true,
-        }).exec();
-        res.json(
+        let users = await User.find({active: true}).exec();
+    if (users === undefined||users === ""||users===null) {
+        debug("no users found");
+        users=[];
+        await res.json(users);
+    }else
+        await res.json(
             users.map((user) => {
                 return {
                     _id: user._id,
@@ -21,6 +24,5 @@ router.get("/", async function (req, res) {
                 };
             }));
     }
-
 );
 module.exports = router;

@@ -6,7 +6,7 @@ import Login from "../login";
 export default function Account(){
     const [uId] = React.useState(
         localStorage.getItem("userId")
-    );    console.log(uId);
+    );
     if (uId!==""&&uId!==null) {
             return (<div>
                     <h5>MyAccount</h5>

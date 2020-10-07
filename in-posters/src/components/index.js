@@ -63,7 +63,7 @@ export default function App(props: Props): React.Node {
     }
 
     function redirectLogin(e) {
-        history.push("/login");
+        history.push("/log_in");
     }
 
     function redirectRegister(e) {
@@ -113,7 +113,7 @@ export default function App(props: Props): React.Node {
                <NavigationBar/>
             </Toolbar>
             <Switch>
-                <Route exact from="/" render={(props) =><HomePage{...props} />} />
+                <Route exact path="/" component={HomePage} />
                 <Route exact from="/400" render={(props) =><Error400{...props} />} />
                 <Route exact from="/401" render={(props) =><Error401{...props} />} />
                 <Route exact from="/403" render={(props) =><Error403{...props} />} />
@@ -123,7 +123,7 @@ export default function App(props: Props): React.Node {
                 <Route exact path="/account" render={(props) =><Account{...props} />} />
                 <Route exact from="/register" render={(props) =><Register{...props} />} />
                 <Route exact from="/cart" render={(props) =><Cart{...props} />} />
-                <Route exact from="/login" render={(props) =><Login{...props} />} />
+                <Route exact from="/log_in" render={(props) =><Login{...props} />} />
                 <Route exact from="/empty_page" render={(props) =><Empty{...props} />} />
                 <Route exact from="/liked" render={(props) =><Liked{...props} />} />
                 <Route exact from="/contact" render={(props) => <Contact {...props} />}/>

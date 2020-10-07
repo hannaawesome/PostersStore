@@ -7,7 +7,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const debug = require('debug')('TheProject:addOrder');
 router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
-        let user_id = req.body._id;
+        let user_id = req.body.user_id;
         let user = await User.findone({
             _id: user_id,
             active: true
@@ -16,7 +16,7 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
             debug("error in finding user");
             res.send(404)
         }
-        let orderItemList = req.body.cartItems;
+        let orderItemList = user.cartItems;
         let address = req.body.shipmentAddress;
         let totalPrice = req.body.totalPrice;
         //calculate the order id
@@ -29,14 +29,13 @@ router.post("/", connectEnsureLogin.ensureLoggedIn(), async function (req, res) 
         //create the order in the DB
         await Order.CREATE([
             orderId,
-            user._id,
+            user_id,
             orderItemList,
             address,
             totalPrice
         ]);
         user.orderHistory.push({orderId:orderId});
         User.UPDATE(user);
-        res.json(orderId); //need to send the order id to the client?????????????????????????????????????
         debug("order created")
     } catch (err) {
         debug(err);

@@ -142,7 +142,7 @@ export default function RegisterByAdmin() {
 
     function redirectLogin(e) {
         //e.preventDefault();
-        history.push("/login");
+        history.push("/log_in");
     }
 
     return (

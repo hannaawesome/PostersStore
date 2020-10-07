@@ -13,6 +13,7 @@ import Link from "@material-ui/core/Link";
 import React, {useEffect} from "react";
 import Register from "../register";
 import {makeStyles} from "@material-ui/core/styles";
+import API from "../../utils/API";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100vw",
@@ -61,64 +62,63 @@ export default function Login(){
     );
     const classes = useStyles();
 
-    useEffect(() => {
-        fetch("/log_out").then(localStorage.setItem("userId", ""),localStorage.setItem("userCategory","" ));
-    });
-
-    async function fetchUserId() {
-        const fullResponse = await fetch(
-            "/get_user_id_by_email?e_mail=" + email);
-        const responseJson = await fullResponse.json();
-        setUId(responseJson);
-    }
-    async function fetchUserCategory() {
-        const fullResponse = await fetch(
-            "/get_user?id=" + uId);
-        const responseJson = await fullResponse.json();
-        setCategory(responseJson.category);
-    }
+    // async function fetchUserId() {
+    //     const fullResponse = await fetch(
+    //         "/get_user_id_by_email?e_mail=" + email);
+    //     const responseJson = await fullResponse.json();
+    //     setUId(responseJson);
+    // }
+    // async function fetchUserCategory() {
+    //     const fullResponse = await fetch(
+    //         "/get_user?id=" + uId);
+    //     const responseJson = await fullResponse.json();
+    //     setCategory(responseJson.category);
+    // }
 
     const onChangeEmailHandler = (e) => setEmail(e.target.value);
     const onChangePasswordHandler = (e) => setPassword(e.target.value);
     const handleCheckChange = (event) => {
         setChecked(event.target.checked);
     };
+    const onSuccess = () => {
+        API.getUserByEmail(email)
+            .then(res => {
+                setUId(res.json());
+            })
+            .catch(err => console.log(err));
+        API.getUser(uId)
+            .then(res => {
+                setCategory(res.json().category);
+            })
+            .catch(err =>console.log(err));
+        localStorage.setItem("userId", uId);
+        localStorage.setItem("userCategory",category);
+        history.push("/");
+        if (checkedRemember) {
+            localStorage.setItem("password", password);
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("checked", "true");
+        } else {
+            localStorage.setItem("password", "");
+            localStorage.setItem("userEmail", "");
+            localStorage.setItem("checked", "false");
+        }
+    };
 
+    const onFailure = error => {
+        console.log(error && error.response);
+        this.setState({errors: error.response.data, isLoading: false});
+    };
     function submitHandler(e) {
         e.preventDefault();
         var data = {
             emailAddress: email,
             password: password
         };
-
-        // Submit form via jQuery/AJAX
-        $.ajax({
-            type: "POST",
-            url: "/login",
-            data: data,
-        })
-            .done(function (data) {
-                fetchUserId();
-                fetchUserCategory();
-                localStorage.setItem("userId", uId);
-                localStorage.setItem("userCategory",category);
-                history.push("/");
-                if (checkedRemember) {
-                    localStorage.setItem("password", password);
-                    localStorage.setItem("userEmail", email);
-                    localStorage.setItem("checked", "true");
-                } else {
-                    localStorage.setItem("password", "");
-                    localStorage.setItem("userEmail", "");
-                    localStorage.setItem("checked", "false");
-                }
-            })
-            .fail(function (jqXhr) {
-                alert("Try again!!");
-            });
+        API.loginUser(data)
+            .then(onSuccess)
+            .catch(onFailure);
     }
-
-
     function redirectRegister(e) {
         history.push("/register");
     }

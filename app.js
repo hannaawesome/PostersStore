@@ -1,37 +1,37 @@
 let path = require('path');
 var express = require('express');
-let bodyParser = require("body-parser");
 let session = require('express-session');
 let debug = require('debug')('TheProject:app');
 var logger = require('morgan');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
-let connectMongo = require('connect-mongo');
-let mongoose = require('mongoose');
+//let connectMongo = require('connect-mongo');
+//let mongoose = require('mongoose');
 const passport = require("passport");
 let app = express();
 const publicPath = path.join(__dirname, "..", "in-posters", "public");
 app.use(express.static(publicPath));
+app.use(express.static('in-posters/build'));
 app.use(express.static(path.join(__dirname, 'public')));
-let MongoStore = connectMongo(session);
+//let MongoStore = connectMongo(session);
 let secret = "MyProject session secret";
 app.use(cookieParser(secret));
-let sessConnStr = "mongodb://localhost/TheProject";
-let sessionConnect = mongoose.createConnection();
-(async () => {
-
-    try {
-        await sessionConnect.openUri(sessConnStr, {useNewUrlParser: true, useUnifiedTopology: true});
-    } catch (err) {
-        debug(`Error connecting to session backend DB: ${err}`);
-        process.exit(0);
-    }
-
-    process.on('SIGINT', async () => {
-        await sessionConnect.close();
-        process.exit(0);
-    });
+// let sessConnStr = "mongodb://localhost/TheProject";
+// let sessionConnect = mongoose.createConnection();
+ (async () => {
+//
+//     try {
+//         await sessionConnect.openUri(sessConnStr, {useNewUrlParser: true, useUnifiedTopology: true});
+//     } catch (err) {
+//         debug(`Error connecting to session backend DB: ${err}`);
+//         process.exit(0);
+//     }
+//
+//     process.on('SIGINT', async () => {
+//         await sessionConnect.close();
+//         process.exit(0);
+//     });
 
 app.use(session({
     name: 'users.sid',         // the name of session ID cookie
@@ -39,7 +39,7 @@ app.use(session({
     resave: false,             // do we need to resave unchanged session? (only if touch does not work)  - mandatory option
     saveUninitialized: false,  // do we need to save an 'empty' session object? - mandatory option
     rolling: true,             // do we send the session ID cookie with each response?
-    store: new MongoStore({mongooseConnection: sessionConnect}), // session storage backend
+    //store: new MongoStore({mongooseConnection: sessionConnect}), // session storage backend
     cookie: {maxAge: 900000, httpOnly: true, sameSite: true}  // cookie parameters
     // NB: maxAge is used for session object expiry setting in the storage backend as well
 }));
@@ -54,10 +54,8 @@ app.use(session({
     app.set('view engine', 'ejs');
 
     app.use(logger('dev'));
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
     //app.use(favicon(path.join(__dirname, '/public/images/ariel.jpg')));
     // Configure passport middleware
     app.use(passport.initialize());
@@ -74,6 +72,8 @@ app.use(session({
     const Poster = require('./models')("Poster");
     const Order = require('./models')("Order");
     const Message = require('./models')("Message");
+
+
 
     let addMessageRoute= require('./routes/addMessage');
     let indexRoute = require('./routes/index');
@@ -101,7 +101,8 @@ app.use(session({
     let getUsersRoute = require('./routes/getUsers');
 
 
-    app.use('/', indexRoute);
+
+   // app.use('/', indexRoute);
 	app.use('/add_order', addOrderRoute);
 	app.use('/add_to_cart', addToCartRoute);
 	app.use('/add_to_liked', addToLikedRoute);
@@ -125,22 +126,6 @@ app.use(session({
     app.use('/get_users', getUsersRoute);
     app.use('/get_orders', getOrdersRoute);
 
-
-    app.use(function (req, res, next) {
-        let err = new Error('Not Found');
-        err.status = 404;
-        next(err);
-    });
-    app.use(function (err, req, res, next) {
-        res.locals.message = err.message;
-        res.locals.error = req.app.get('env') === 'development' ? err : {};
-        res.status(err.status || 500);
-        res.render('error');
-    });
-
-app.get("*", (req, res) => {
-    res.render(path.join(publicPath, "index.html"));
-});
 app.all('/*', async (req, res, next) => {
     debug('headers');
     res.header('Access-Control-Allow-Origin', '*');

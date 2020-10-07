@@ -27,7 +27,7 @@ const CartContextProvider = ({ children }) => {
     };const changeSize = payload => {
         dispatch({ type: "CHANGE_SIZE", payload });
     };
-    const addPoster = payload => {
+    const addingPoster = payload => {
         dispatch({ type: "ADD_ITEM", payload });
     };
 
@@ -46,7 +46,7 @@ const CartContextProvider = ({ children }) => {
 
     const contextValues = {
         removePoster,
-        addPoster,
+        addingPoster,
         increase,
         decrease,
         changeAmount,

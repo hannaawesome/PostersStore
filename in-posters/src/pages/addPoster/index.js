@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { CartContext } from "../../contexts/CartContext";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ImageUploader from 'react-images-upload';
@@ -11,24 +10,14 @@ import ImageUploader from 'react-images-upload';
 import ButtonUp from "@material-ui/core/Button";
 import FullHeartIcon from "@material-ui/icons/Favorite";
 import BorderHeartIcon from "@material-ui/icons/FavoriteBorder";
-//import { SketchPicker } from "react-color";
 
 import Chip from "@material-ui/core/Chip";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { makeStyles } from "@material-ui/core/styles";
-//import Avatar from "@material-ui/core/Avatar";
-import $ from "jquery";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionActions from "@material-ui/core/AccordionActions";
-//import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Box from "@material-ui/core/Box";
-import { Divider } from "@material-ui/core";
 import {Dropdown} from "react-bootstrap";
+import API from '../../utils/API';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -192,7 +181,7 @@ onDrop(picture) {
                                         variant="contained"
                                         color="secondary"
                                         style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => cartContext.addPoster(poster)}
+                                        onClick={() => cartContext.addingPoster(poster)}
                                     >
                                         Add to cart
                                     </ButtonUp>

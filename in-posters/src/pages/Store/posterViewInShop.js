@@ -77,7 +77,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     const classes = useStyles();
 
 
-    const { addPoster, cartItems, increase } = useContext(CartContext);
+    const { addingPoster, cartItems, increase } = useContext(CartContext);
 
     const isInCart = (poster) => {
         return !!cartItems.find((item) => item.id === poster.id);

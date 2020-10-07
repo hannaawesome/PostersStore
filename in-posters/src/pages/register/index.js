@@ -20,6 +20,7 @@ import Paper from "@material-ui/core/Paper";
 import { Route, Switch } from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
+import API from '../../utils/API';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -75,12 +76,6 @@ export default function Register() {
         const responseJson = await fullResponse.json();
         setUId(responseJson);
     }
-    async function fetchUserCategory() {
-        const fullResponse = await fetch(
-            "/get_user?id=" + uId);
-        const responseJson = await fullResponse.json();
-        setCategory(responseJson.category);
-    }
     function onSubmitRegisterHandler(e) {
         e.preventDefault();
 
@@ -92,27 +87,30 @@ export default function Register() {
                 lName: lName
             },
         };
-        // Submit form via jQuery/AJAX
-        $.ajax({
-            type: "POST",
-            url: "/register",
-            data: data,
-        })
-            .done(function (data) {
-                fetchUserId();
-                fetchUserCategory();
-                localStorage.setItem("userCategory",category);
-                localStorage.setItem("userId", uId);
-                history.push("/");
-            })
-            .fail(function (jqXhr) {
-                alert("Try again!!");
-            });
+
+            API.registerUser(data)
+                .then(res => {
+                    API.getUserByEmail(email)
+                        .then(res => {
+                            setUId(res.json());
+                        })
+                        .catch(err => console.log(err));
+                    API.getUser(uId)
+                        .then(res => {
+                            setCategory(res.json().category);
+                        })
+                        .catch(err => console.log(err));
+                    localStorage.setItem("userCategory", category);
+                    localStorage.setItem("userId", uId);
+                    history.push("/");
+                })
+                .catch(err => console.log(err));
+
     }
 
     function redirectLogin(e) {
         //e.preventDefault();
-        history.push("/login");
+        history.push("/log_in");
     }
 
     return (

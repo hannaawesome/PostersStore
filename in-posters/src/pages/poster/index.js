@@ -171,7 +171,7 @@ class ComplexGrid extends React.Component {
                                         variant="contained"
                                         color="secondary"
                                         style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => cartContext.addPoster(poster)}
+                                        onClick={() => cartContext.addingPoster(poster)}
                                     >
                                         Add to cart
                                     </ButtonUp>
