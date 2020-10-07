@@ -117,7 +117,7 @@ class RegisterByAdmin extends Component {
             category:category
         };
 
-        API.registerUser(data)
+        API.addUser(data)
             .then(res => { console.log("success");
                 // API.getUserByEmail(email)
                 //     .then(res => {

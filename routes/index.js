@@ -6,6 +6,26 @@ const debug = require('debug')('TheProject:index');
 /* GET home page. */
 
 router.get('/',function (req, res,next) {
+    // User.register(
+    //     {
+    //         _id: "12388888",
+    //         firstName: "Shosh",
+    //         lastName: "Bar",
+    //         e_mail: "s@gmail.com",
+    //         category: "Customer",
+    //         image: "",
+    //         cartItems: [],
+    //         orderHistory: [],
+    //         likedItems: [],
+    //
+    //     },
+    //     "123",
+    //     function (err, user) {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //     }
+    // );
     res.render('index', { title: 'ip-poster server' });
 });
 

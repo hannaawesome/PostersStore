@@ -18,31 +18,8 @@ let app = express();
 // const Message = require('./models')("Message");
 //require('./models');
 
-let addMessageRoute= require('./routes/addMessage');
-let indexRoute = require('./routes/index');
-let addOrderRoute = require('./routes/addOrder');
-let addToCartRoute = require('./routes/addToCart');
-let addToLikedRoute = require('./routes/addToLiked');
-let deleteFromCartRoute = require('./routes/deleteFromCart');
-let getLikedItemsRoute = require('./routes/getLikedItems');
-let getUserOrdersRoute = require('./routes/getUserOrders');
-let logoutRoute = require('./routes/logout');
-let cancelOrderRoute = require('./routes/cancelOrder');
-let loginRoute = require('./routes/login');
-let registerRoute = require('./routes/register');
-let updateUserDetailRoute = require('./routes/updateUserDetails');
-let updatePosterCartAmountRoute = require('./routes/updatePosterCartAmount');
-let updateUserRoute = require('./routes/updateUser');
-let getUserRoute = require('./routes/getUser');
-let updatePosterCartSizeRoute = require('./routes/updatePosterCartSize');
-let getPosterRoute = require('./routes/getPoster');
-let addUserRoute = require('./routes/addUser');
-let addPosterRoute = require('./routes/addPoster');
-let getUserIdByEmailRoute = require('./routes/getUserIdByEmail');
-let updatePosterRoute = require('./routes/updatePoster');
-let getOrdersRoute = require('./routes/getOrders');
-let getUsersRoute = require('./routes/getUsers');
-let getPostersRoute = require('./routes/getPosters');
+
+let mainRoute = require('./routes/mainRoute');
 
 
 //app.use(express.static(publicPath));
@@ -95,34 +72,8 @@ app.use(express.json());
     app.use(passport.initialize());
     app.use(passport.session());
 
+   app.use( mainRoute);
 
-
-
-
-   // app.use('/', indexRoute);
-	app.use('/add_order', addOrderRoute);
-	app.use('/add_to_cart', addToCartRoute);
-	app.use('/add_to_liked', addToLikedRoute);
-	app.use('/delete_from_cart', deleteFromCartRoute);
-	app.use('/get_liked_items', getLikedItemsRoute);
-	app.use('/get_user_orders', getUserOrdersRoute);
-	app.use('/logout', logoutRoute);
-	app.use('/cancel_order', cancelOrderRoute);
-	app.use('/login', loginRoute);
-	app.use('/register', registerRoute);
-    app.use('/update_user_detail', updateUserDetailRoute);
-    app.use('/update_product_cart_amount', updatePosterCartAmountRoute);
-    app.use('/update_product_cart_size', updatePosterCartSizeRoute);
-    app.use('/update_user', updateUserRoute);
-    app.use('/update_poster', updatePosterRoute);
-    app.use('/get_user', getUserRoute);
-    app.use('/get_poster', getPosterRoute);
-    app.use('/add_user', addUserRoute);
-    app.use('/add_poster', addPosterRoute);
-    app.use('/get_user_id_by_email', getUserIdByEmailRoute);
-    app.use('/get_users', getUsersRoute);
-    app.use('/get_orders', getOrdersRoute);
-app.use('/get_posters', getPostersRoute);
 
 // app.all('/*', async (req, res, next) => {
 //     debug('headers');
