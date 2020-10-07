@@ -2,7 +2,6 @@ const express = require("express");
 const Poster = require("../models/Poster");
 const router = express.Router();
 const debug = require("debug")("TheProject:GetPosters");
-
 router.get("/", async function (req, res) {
         let posters = await Poster.find({active: true}).exec();
         if (posters === undefined||posters === ""||posters===null) {
