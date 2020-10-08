@@ -14858,7 +14858,7 @@ header.nav-fixed {
 }
 
 .w3l-main-slider .banner-view {
-  background: url(../images/banner1.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
   min-height: 500px;
   position: relative;
@@ -14889,17 +14889,17 @@ header.nav-fixed {
 }
 
 .w3l-main-slider .banner-top1 {
-  background: url(../images/banner2.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
 }
 
 .w3l-main-slider .banner-top2 {
-  background: url(../images/banner3.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
 }
 
 .w3l-main-slider .banner-top3 {
-  background: url(../images/banner4.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
 }
 
@@ -15129,8 +15129,8 @@ header.nav-fixed {
 }
 
 .owl-carousel.owl-grab {
-  cursor: move;
-  cursor: -webkit-grab;
+  /*cursor: move;
+  cursor: -webkit-grab;*/
   cursor: grab;
 }
 
@@ -15214,7 +15214,7 @@ header.nav-fixed {
   top: 50%;
   margin-left: -40px;
   margin-top: -40px;
-  background: url(owl.video.play.png) no-repeat;
+  background: url(../images/mountain_for_logo.jpg) no-repeat;
   cursor: pointer;
   z-index: 1;
   -webkit-backface-visibility: hidden;
@@ -16307,7 +16307,7 @@ h2.resp-accordion:first-child {
 }
 
 
-/*--/mid-slider--*/
+/*--/mid-slider--
 .w3l-mid-slider li {
   list-style: none;
 }
@@ -16441,7 +16441,7 @@ h2.resp-accordion:first-child {
   -o-transition: 0.3s ease-in;
   -moz-transition: 0.3s ease-in;
   -ms-transition: 0.3s ease-in;
-}
+}*/
 
 .owl-mid.owl-carousel.owl-theme .owl-nav {
   text-align: center;
@@ -16865,7 +16865,7 @@ nav#breadcrumbs a:hover {
 
 .w3l-blog-single .w3-blog-info a.btn {
   background: none;
-  color: var(--btn-color);
+  color: lightyellow;
   padding: 10px 30px;
   display: inline-block;
   letter-spacing: 0px;
@@ -16928,7 +16928,7 @@ nav#breadcrumbs a:hover {
 }
 
 .w3l-blog-single .search-form button.btn.search:focus {
-  border-color: none !important;
+  border-color: black !important;
   outline: none !important;
 }
 
@@ -18019,7 +18019,7 @@ ul.page-numbers li a:hover {
 
 /*--/genre-single--*/
 .w3l-text-8 .text-bg-image {
-  background: url(../images/mid3.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
   -webkit-background-size: cover;
   -o-background-size: cover;
@@ -18096,7 +18096,7 @@ ul.page-numbers li a:hover {
 /*-- login page-start --*/
 .w3l-loginhny .login-icon a {
   font-size: 24px;
-  color: var(--primary-color);
+  color:black;
   display: inline-block;
 }
 
@@ -18259,7 +18259,7 @@ ul.page-numbers li a:hover {
 
 .w3l-about4 .pop-img-ab {
   background: #fff;
-  background: url(../images/banner2.jpg) no-repeat center;
+  background: url(../images/mountain_for_logo.jpg) no-repeat center;
   background-size: cover;
   -webkit-background-size: cover;
   -o-background-size: cover;
@@ -19111,7 +19111,7 @@ div#small-dialog4 iframe,
 }
 
 .w3l-footer .footer-about {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid black;
 }
 
 .w3l-footer .footer-links h2 {
@@ -19415,27 +19415,27 @@ nav {
   margin-left: 12px;
 }
 
-.gg-sun {
-  position: relative;
-  -webkit-transform: scale(var(--ggs, 1));
-  transform: scale(var(--ggs, 1));
-  height: 24px;
-  background: linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 5px -6px/2px 6px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 5px 14px/2px 6px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat -8px 5px/6px 2px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 14px 5px/6px 2px;
-  border-radius: 100px;
-  box-shadow: inset 0 0 0 2px;
-  border: 6px solid transparent;
-}
+/*.gg-sun {*/
+/*  position: relative;*/
+/*  -webkit-transform: scale(var(--ggs, 1));*/
+/*  transform: scale(var(--ggs, 1));*/
+/*  height: 24px;*/
+/*  background: linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 5px -6px/2px 6px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 5px 14px/2px 6px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat -8px 5px/6px 2px, linear-gradient(180deg, currentColor 4px, transparent 0) no-repeat 14px 5px/6px 2px;*/
+/*  border-radius: 100px;*/
+/*  box-shadow: inset 0 0 0 2px;*/
+/*  border: 6px solid transparent;*/
+/*}*/
 
-.gg-moon {
-  overflow: hidden;
-  position: relative;
-  -webkit-transform: rotate(-135deg) scale(var(--ggs, 1));
-  transform: rotate(-135deg) scale(var(--ggs, 1));
-  width: 20px;
-  height: 20px;
-  border: 2px solid;
-  border-bottom: 2px solid transparent;
-}
+/*.gg-moon {*/
+/*  overflow: hidden;*/
+/*  position: relative;*/
+/*  -webkit-transform: rotate(-135deg) scale(var(--ggs, 1));*/
+/*  transform: rotate(-135deg) scale(var(--ggs, 1));*/
+/*  width: 20px;*/
+/*  height: 20px;*/
+/*  border: 2px solid;*/
+/*  border-bottom: 2px solid transparent;*/
+/*}*/
 
 .gg-moon,
 .gg-moon:after {
@@ -19501,4 +19501,4 @@ input:checked+.mode-container i.gg-moon {
 }
 
 /*-- //dark and light mode styling --*/
-sourceMappingURL=style-freedom.css.map
+/*sourceMappingURL=style-freedom.css.map*/
