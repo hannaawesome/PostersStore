@@ -25,8 +25,9 @@ const publicPath = path.join(__dirname, "..", "in-posters", "public");
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-// Tal
+
 app.use(express.static(publicPath));
+app.use(express.static('in-posters/build'));
 
 // view engine setup
 app.use(bodyParser.json());
@@ -113,9 +114,8 @@ app.use(function (err, req, res, next) {
     res.render("error");
 });
 
-// Tal
-app.get("*", (req, res) => {
-    res.sendFile(path.join(publicPath, "index.html"));
+router.use(function(req, res) {
+    res.sendFile(path.join(__dirname, '../in-posters/build/index.html'));
 });
 
 
