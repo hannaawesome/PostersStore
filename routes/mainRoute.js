@@ -145,9 +145,9 @@ router.post("/register", catchErrors(async function (req, res) {
             fName: req.body.fName,
             lName: req.body.lName
         },
-        phone:-1,
+        phone:"",
         e_mail: req.body.e_mail,
-        category: usersList.length.toString()?'Customer':"Admin",
+        category: usersList.length?'Customer':"Admin",
         cartItems: [],
         orderHistory: [],
         likedItems: []
