@@ -52,6 +52,9 @@ export default function NavigationBar() {
     function redirectHome(e) {
         history.push("/");
     }
+    function redirectChat(e) {
+        history.push("/groups_menu");
+    }
 
     function onLogout(e) {
         if (sessionStorage.getItem("userEmail")!==""&&sessionStorage.getItem("userEmail")!==null)
@@ -68,6 +71,7 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
+                            <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>

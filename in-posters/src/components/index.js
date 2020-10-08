@@ -14,6 +14,7 @@ import Cart from "../pages/cart";
 import Register from "../pages/register";
 import UsersData from "../pages/users";
 import Store from "../pages/Store";
+import GroupsMenu from "../pages/groupsMenu"
 import {Container} from "@material-ui/core";
 import "tabler-react/dist/Tabler.css";
 import {Navbar,Nav, NavDropdown} from "react-bootstrap"
@@ -36,6 +37,7 @@ import Login from "../pages/login";
 import NavigationBar from "./NavigationBar";
 import makeToast from "../Toaster";
 import io from "socket.io-client";
+import Chatroom from "../pages/chatRoom";
 
 
 export default function App(props: Props): React.Node {
@@ -73,59 +75,6 @@ export default function App(props: Props): React.Node {
         history.push("/store");
     }
 
-    function redirectContact(e) {
-        history.push("/contact");
-    }
-
-    function redirectLiked(e) {
-        history.push("/liked");
-    }
-
-    function redirectAccount(e) {
-        history.push("/account");
-    }
-
-    function redirectCart(e) {
-        history.push("/cart");
-    }
-
-    function redirectLogin(e) {
-        history.push("/log_in");
-    }
-
-    function redirectRegister(e) {
-        history.push("/register");
-    }
-
-    function redirectPosterEdit(e) {
-        history.push("/poster_edit");
-    }
-
-    function redirectUsers(e) {
-        history.push("/users");
-    }
-
-    function redirectUserEdit(e) {
-        history.push("/user_edit");
-    }
-
-    function redirectOrderList(e) {
-        history.push("/order_list");
-    }
-
-    function redirectStock(e) {
-        history.push("/stock");
-    }
-
-    function redirectCheckout(e) {
-        history.push("/checkout");
-    }
-
-
-    function redirectHome(e) {
-        history.push("/");
-    }
-
     return (
 
         <div>
@@ -157,6 +106,16 @@ export default function App(props: Props): React.Node {
                 <Route exact from="/checkout" render={(props) =><Checkout{...props} />} />
                 <Route exact from="/poster" render={(props) =><PosterData{...props} />} />
                 <Route exact from="/forgot_password" render={(props) =><ForgotPasswordPage{...props} />} />
+                <Route
+                    path="/groups_menu"
+                    render={() => <GroupsMenu socket={socket} />}
+                    exact
+                />
+                <Route
+                    path="/chatroom/:id"
+                    render={() => <Chatroom socket={socket} />}
+                    exact
+                />
 
                 <Route render={(props) =>Error404} />
             </Switch>
