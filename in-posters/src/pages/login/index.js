@@ -210,7 +210,7 @@ console.log(email);
                                             Login
                                         </Button>
                                         <GoogleLogin
-                                            clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                                            clientId="142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com"
                                             buttonText="Login"
                                             onSuccess={responseGoogle}
                                             onFailure={responseGoogle}

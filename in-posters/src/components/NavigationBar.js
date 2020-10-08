@@ -97,6 +97,7 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
+                            <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>
@@ -121,6 +122,7 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
+                            <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>
