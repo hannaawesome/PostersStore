@@ -14889,17 +14889,17 @@ header.nav-fixed {
 }
 
 .w3l-main-slider .banner-top1 {
-  background: url(../images/mountain_for_logo.jpg) no-repeat center;
+  background: url(../images/banner2.jpg) no-repeat center;
   background-size: cover;
 }
 
 .w3l-main-slider .banner-top2 {
-  background: url(../images/mountain_for_logo.jpg) no-repeat center;
+  background: url(../images/banner3.jpg) no-repeat center;
   background-size: cover;
 }
 
 .w3l-main-slider .banner-top3 {
-  background: url(../images/mountain_for_logo.jpg) no-repeat center;
+  background: url(../images/banner4.jpg) no-repeat center;
   background-size: cover;
 }
 
@@ -15214,7 +15214,7 @@ header.nav-fixed {
   top: 50%;
   margin-left: -40px;
   margin-top: -40px;
-  background: url(../images/mountain_for_logo.jpg) no-repeat;
+  background: url(owl.video.play.png) no-repeat;
   cursor: pointer;
   z-index: 1;
   -webkit-backface-visibility: hidden;
