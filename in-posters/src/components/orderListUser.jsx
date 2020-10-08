@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import PosterViewInShop from "./../Store/posterViewInShop";
+import OrderListItem from "../../components/orderListItem";
 //import { ProductsContext } from "../../contexts/ProductsContext";
 //import styles from './ProductsGrid.module.scss';
 
@@ -16,7 +16,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -43,21 +42,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Liked = () => {
+const OrderListUser = () => {
     const classes = useStyles();
 
-    const [posters, postersSet] = React.useState([]);
+    const [orders, ordersSet] = React.useState([]);
+    const [ordersToShow, ordersToShowSet] = React.useState([]);
 
     React.useEffect(() => {
-        async function fetchPosters() {
+        async function fetchOrders() {
             const fullResponse = await fetch(
-                "/get_liked_items?id=" + sessionStorage.getItem("userId")
+                "/get_user_orders?id="+sessionStorage.getItem("userId")
             );
             const responseJson = await fullResponse.json();
-            postersSet(responseJson);
+            ordersSet(responseJson);
+            ordersToShowSet(responseJson);
         }
 
-        fetchPosters();
+        fetchOrders().then(r => console.log("got"));
     }, []);
     return (
         <React.Fragment>
@@ -66,27 +67,12 @@ const Liked = () => {
             <br />
             <br />
             <main>
-                <div className={classes.heroContent}>
-                    <Container maxWidth="sm">
-                        <Typography
-                            component="h1"
-                            variant="h2"
-                            align="center"
-                            color="textPrimary"
-                            gutterBottom
-                        >
-                            Liked Posters
-                        </Typography>
-                    </Container>
-                </div>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    {/* End hero unit */}
-
                     <Grid container spacing={4}>
-                        {
-                        posters.map((poster, index) => (
+                        {ordersToShow !== undefined &&
+                        ordersToShow.map((order, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
-                                <PosterViewInShop key={index} poster={poster} />
+                                <OrderListItem key={index} order={order} />
                             </Grid>
                         ))}
                     </Grid>
@@ -99,4 +85,4 @@ const Liked = () => {
     );
 };
 
-export default Liked;
+export default OrderListUser;

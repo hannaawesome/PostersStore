@@ -98,12 +98,6 @@ export default function App(props: Props): React.Node {
         history.push("/");
     }
 
-    function redirectLogout(e) {
-        if (localStorage.getItem("userId")!==""&&localStorage.getItem("userId")!==null)
-            history.push("/logout");
-        else
-            history.push("/");
-    }
     return (
 
         <div>

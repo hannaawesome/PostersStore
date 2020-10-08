@@ -120,12 +120,12 @@ class RegisterByAdmin extends Component {
         };
 
         API.addUser(data)
-            .then(res => { console.log("success");
+            .then(res => {
                 API.getUserByEmail(email)
                     .then(res => {
                         console.log("success");
-                        localStorage.setItem("userCategory", category);
-                        localStorage.setItem("userId", res.json());
+                        sessionStorage.setItem("userCategory", category);
+                        sessionStorage.setItem("userId", res.data._id);
                         history.push("/");
                      })
                     .catch(err => console.log(err));

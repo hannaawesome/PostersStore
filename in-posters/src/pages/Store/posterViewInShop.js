@@ -51,7 +51,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     const [liked, setLiked] = React.useState(poster.likedItems);
     const handlePosterChangedSaved = () => {
         var data = {
-            _id: localStorage.getItem("userId"),
+            _id: sessionStorage.getItem("userId"),
             posterId: poster.id,
             state: !liked,
         };
@@ -65,7 +65,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
         // Submit form via jQuery/AJAX
         $.ajax({
             type: "POST",
-            url: "/get_liked_items",
+            url: "/update_liked",
             data: data,
         })
             .done(function(data) {})

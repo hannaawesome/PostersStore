@@ -23,7 +23,7 @@ import { useHistory } from "react-router-dom";
 import API from '../../utils/API';
 import HomePage from "../home";
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: "100vw",
         height: "100vh",
@@ -55,34 +55,33 @@ const styles = (theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-});
+}));
 //let history = useHistory();
-const initialState = {
-    uId: '',
-    fName: '',
-    lName: '',
-    email: '',
-    category: 'Customer',
-    password: '',
-};
-class Register extends Component {
-    state = initialState;
+// const initialState = {
+//     uId: '',
+//     fName: '',
+//     lName: '',
+//     email: '',
+//     category: 'Customer',
+//     password: '',
+// };
+export default function Register(){
+    let history = useHistory();
+    const classes = useStyles();
 
-    componentDidMount() {
-    }
 
-    //const [uId, setUId] = React.useState("");
-    //const [fName, setFName] = React.useState("");
-    // const [lName, setLName] = React.useState("");
-    //const [email, setEmail] = React.useState("");
-    //const [category, setCategory] = React.useState("");
-    // const [password, setPassword] = React.useState("");
-    onChangeEmailHandler  = email => {
-        this.setState({email:email.target.value});
+   const [uId, setUId] = React.useState("");
+    const [fName, setFName] = React.useState("");
+    const [lName, setLName] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [category, setCategory] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const onChangeEmailHandler  = email => {
+        setEmail(email.target.value);
     };
-    onChangePasswordHandler = (e) => this.setState({password: e.target.value});
-    onChangeFName = (e) => this.setState({fName: e.target.value});
-    onChangeLName = (e) => this.setState({lName: e.target.value});
+   const onChangePasswordHandler = (e) => setPassword( e.target.value);
+    const onChangeFName = (e) => setFName( e.target.value);
+    const onChangeLName = (e) => setLName( e.target.value);
 
     // async function fetchUserId() {
     //     const fullResponse = await fetch(
@@ -90,9 +89,8 @@ class Register extends Component {
     //     const responseJson = await fullResponse.json();
     //     setUId(responseJson);
     // }
-    onSubmitRegisterHandler(e){
+   function onSubmitRegisterHandler(e){
         e.preventDefault();
-        const {uId, fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
             password: password,
@@ -106,29 +104,22 @@ class Register extends Component {
             .then(res => {
                 API.getUserByEmail(email)
                     .then(res => {
-                        this.setState({id: res.json()});
-                        API.getUser(uId)
-                            .then(res => {
-                                this.setState({category: res.json().category});
-                            })
-                            .catch(err => console.log(err));
-                        localStorage.setItem("userCategory", category);
-                        localStorage.setItem("userId", uId);
-                       /// history.push("/");
+                        setUId(res.data._id);
+                        setCategory( res.data.category);
+                        console.log("goooo");
+                        sessionStorage.setItem("userCategory", category);
+                        sessionStorage.setItem("userId",uId);
+                        history.push("/");
                     })
                     .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
-
     }
 
-    redirectLogin(e) {
+    function redirectLogin(e) {
         //e.preventDefault();
-       /// history.push("/log_in");
+        history.push("/log_in");
     }
-
-    render() {
-        const {classes} = this.props;
         return (
             <div className={classes.paper}>
                 <br/>
@@ -142,7 +133,7 @@ class Register extends Component {
 
                 <form
                     className={classes.form}
-                    onSubmit={this.onSubmitRegisterHandler}
+                    onSubmit={onSubmitRegisterHandler}
                     noValidate
                 >
                     <Grid container spacing={2}>
@@ -158,7 +149,7 @@ class Register extends Component {
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
-                                onChange={this.onChangeFName}
+                                onChange={onChangeFName}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -170,7 +161,7 @@ class Register extends Component {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lName"
-                                onChange={this.onChangeLName}
+                                onChange={onChangeLName}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -182,7 +173,7 @@ class Register extends Component {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                onChange={this.onChangeEmailHandler}
+                                onChange={onChangeEmailHandler}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -195,7 +186,7 @@ class Register extends Component {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                onChange={this.onChangePasswordHandler}
+                                onChange={onChangePasswordHandler}
                             />
                         </Grid>
                     </Grid>
@@ -208,7 +199,7 @@ class Register extends Component {
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link onClick={this.redirectLogin} variant="body2">
+                            <Link onClick={redirectLogin} variant="body2">
                                 Already have an account? Login
                             </Link>
                         </Grid>
@@ -216,9 +207,7 @@ class Register extends Component {
                 </form>
             </div>
         );
-    }
 }
-export default withStyles(styles, { withTheme: true })(Register);
 
 
 

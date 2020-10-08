@@ -8,7 +8,13 @@ import shoppingCart from "./components_images/shopping-cart.png";
 
 export default function NavigationBar() {
     let history = useHistory();
-    const [category] = React.useState(localStorage.getItem("userCategory"));
+    const [checkedRemember] =React.useState(localStorage.getItem("checkedRemember"));
+    const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
+    if(checkedRemember)
+    {
+        setCategory(localStorage.getItem("userCategory"));
+        sessionStorage.getItem("userCategory",category)
+    }
     function redirectStore(e) {
         history.push("/store");
     }
@@ -47,9 +53,9 @@ export default function NavigationBar() {
         history.push("/");
     }
 
-    function redirectLogout(e) {
-        if (localStorage.getItem("userId")!==""&&localStorage.getItem("userId")!==null)
-            history.push("/logout");
+    function onLogout(e) {
+        if (sessionStorage.getItem("userId")!==""&&sessionStorage.getItem("userId")!==null)
+           {sessionStorage.setItem("userId",""); sessionStorage.setItem("category","");}
         else
             history.push("/");
     }
@@ -72,7 +78,7 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectUsers()}>Users</Nav.Link>
                             <Nav.Link onClick={redirectOrderList()}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock()}>Stock</Nav.Link>
-                            <Nav.Link onClick={redirectLogout}>
+                            <Nav.Link onClick={onLogout}>
                                 <img alt="" src={exit} height={20} width={20}/>
                             </Nav.Link>
                         </Nav>
@@ -96,7 +102,7 @@ export default function NavigationBar() {
                             </Nav.Link>
                             <Nav.Link onClick={redirectOrderList()}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock()}>Stock</Nav.Link>
-                            <Nav.Link onClick={redirectLogout}>
+                            <Nav.Link onClick={onLogout}>
                                 <img alt="" src={exit} height={20} width={20}/>
                             </Nav.Link>
                         </Nav>
@@ -118,7 +124,7 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectCart}>
                                 <img alt="" src={shoppingCart} height={20} width={20}/>
                             </Nav.Link>
-                            <Nav.Link onClick={redirectLogout}>
+                            <Nav.Link onClick={onLogout}>
                                 <img alt="" src={exit} height={20} width={20}/>
                             </Nav.Link>
                         </Nav>

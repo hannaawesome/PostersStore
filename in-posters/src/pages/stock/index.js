@@ -105,8 +105,7 @@ const Stock = () => {
     React.useEffect(() => {
         async function fetchPosters() {
             const fullResponse = await fetch(
-                "/Posters?userId=" + localStorage.getItem("userId")
-            );
+                "/get_posters");
             const responseJson = await fullResponse.json();
             postersSet(responseJson);
             postersToShowSet(responseJson);

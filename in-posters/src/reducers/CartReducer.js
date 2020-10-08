@@ -2,7 +2,7 @@ import $ from "jquery";
 
 const handleAddItem = (posterId,amount,width,length) => {
     var data = {
-        _id: localStorage.getItem("userId"),
+        _id: sessionStorage.getItem("userId"),
         posterId: posterId,
         amount,
         measurement:{
@@ -23,7 +23,7 @@ const handleAddItem = (posterId,amount,width,length) => {
 
 const handleRemoveItem = (posterId) => {
     var data = {
-        _id: localStorage.getItem("userId"),
+        _id: sessionStorage.getItem("userId"),
         posterId: posterId,
     };
 
@@ -39,7 +39,7 @@ const handleRemoveItem = (posterId) => {
 
 const handleChangeAmountItem = (posterId, amount) => {
     var data = {
-        _id: localStorage.getItem("userId"),
+        _id: sessionStorage.getItem("userId"),
         posterId: posterId,
         amount: amount,
     };
@@ -56,7 +56,7 @@ const handleChangeAmountItem = (posterId, amount) => {
 
 const handleChangeSizeItem = (posterId, width,length) => {
     var data = {
-        _id: localStorage.getItem("userId"),
+        _id: sessionStorage.getItem("userId"),
         posterId: posterId,
         measurement:{
             width:width,

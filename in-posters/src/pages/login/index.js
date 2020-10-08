@@ -83,35 +83,34 @@ export default function Login(){
     const onSuccess = () => {
         API.getUserByEmail(email)
             .then(res => {
-                setUId(res.json());
-            })
-            .catch(err => console.log(err));
-        API.getUser(uId)
-            .then(res => {
-                setCategory(res.json().category);
-            })
-            .catch(err =>console.log(err));
-        localStorage.setItem("userId", uId);
-        localStorage.setItem("userCategory",category);
-        history.push("/");
+                setUId(res.data._id);
+                setCategory(res.data.category);
+                sessionStorage.setItem("userId",uId );
+                sessionStorage.setItem("userCategory",category);
         if (checkedRemember) {
+            localStorage.setItem("userId",uId );
+            localStorage.setItem("userCategory",category);
             localStorage.setItem("password", password);
             localStorage.setItem("userEmail", email);
             localStorage.setItem("checked", "true");
         } else {
+            localStorage.setItem("userId","" );
+            localStorage.setItem("userCategory","");
             localStorage.setItem("password", "");
             localStorage.setItem("userEmail", "");
             localStorage.setItem("checked", "false");
         }
+        history.push('/');
+            })
+            .catch(err => console.log(err));
     };
-
     const onFailure = error => {
         console.log(error && error.response);
     };
     function submitHandler(e) {
-        e.preventDefault();
+       // e.preventDefault();
         var data = {
-            emailAddress: email,
+            e_mail: email,
             password: password
         };
         API.loginUser(data)

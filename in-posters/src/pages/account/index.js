@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AccountDetails from "../../components/acountDetails";
-import OrderList from "../../components/orderList";
+import OrderListUser from "../../components/orderListUser";
 import Login from "../login";
 
 export default function Account(){
@@ -8,11 +8,12 @@ export default function Account(){
         localStorage.getItem("userId")
     );
     if (uId!==""&&uId!==null) {
+        sessionStorage.setItem("userId",uId);
             return (<div>
                     <h5>MyAccount</h5>
                     <AccountDetails/>
                     <h5>OrderList</h5>
-                    <OrderList/>
+                    <OrderListUser/>
                 </div>
             );
         } else {

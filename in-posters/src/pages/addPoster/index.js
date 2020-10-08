@@ -72,7 +72,7 @@ class AddPoster extends React.Component {
 
         this.state = {
             full: 0,
-          image:[],
+          image:"",
             poster: {},
 
         };

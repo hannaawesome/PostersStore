@@ -79,15 +79,15 @@ router.post("/register", async function (req, res) {
 router.post("/login", (req, res, next) => {
     passport.authenticate(["User"], (err, user, info) => {
         if (err) {
-            debug("ERROR " + err);
+            console.log("ERROR " + err);
             res.send(404);
         } else if (!user) {
-            debug("User is NULL" + user);
+            console.log("User is NULL ");
             res.send(404);
         } else {
             req.login(user, function (err) {
                 if (err) {
-                    debug("ERROR while login" + err);
+                    console.log("ERROR while login" + err);
                     res.send(404);
                 } else res.send(200);
             });
@@ -199,7 +199,7 @@ router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function 
         res.send(404);
     }
 });
-router.post("/add_to_liked", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
             _id: req.body._id,
@@ -210,6 +210,7 @@ router.post("/add_to_liked", connectEnsureLogin.ensureLoggedIn(), async function
             res.send(404)
         }
         let posterId = req.body.posterId;
+        let isLiked=req.body.liked;
         let poster = await Poster.findOne({
             _id: posterId,
             active: true
@@ -219,17 +220,24 @@ router.post("/add_to_liked", connectEnsureLogin.ensureLoggedIn(), async function
         if (poster === undefined) {
             res.send(404);
         } else {
-            if (liked === undefined) cart = [];
-            if (
+            if (liked === undefined && isLiked === false) {
+                console.log("ERROR in liked");
+                res.send(404);
+            } else if (
                 liked === [] ||
-                liked.findIndex((item) => item.posterId === posterId) === -1
-            ) {
-                liked.push({ posterId: posterId });
-                user.likedItems=liked;
+                liked.findIndex((item) => item.posterId === posterId) === -1 && !isLiked) {
+                console.log("ERROR in liked");
+                res.send(404);
+            } else {
+                if (isLiked) {
+                    liked.push({posterId: posterId});
+                } else
+                    liked.remove(liked.findIndex((item) => item.posterId === posterId));
+                    user.likedItems = liked;
                 await User.UPDATE(user);
                 debug("successfully added to liked");
                 res.send(200);
-            } else res.send(404);
+            }
         }
     } catch (err) {
         console.log(err);
@@ -384,15 +392,15 @@ router.get("/get_user", async function (req, res) {
             _id: req.query.id,
             active: true,
         }).exec();
-        res.json(user);
+         await res.json(user);
     }
 );
-router.get("/get_user_id_by_email", async function (req, res) {
+router.get("/get_user_by_email", async function (req, res) {
         let user = await User.findOne({
             e_mail: req.query.e_mail,
             active: true,
         }).exec();
-        res.json(user._id);
+        await res.json(user);
     }
 );
 router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
@@ -407,7 +415,7 @@ router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async functi
     let orderHist = user.orderHistory;
     let orders = await Order.find({active: true}).exec();
     if (orders !== undefined) {
-        res.json(
+         res.json(
             orders.map((order) => {
                     if (orderHist.findIndex((item) => item === order._id) !== -1)
                         return {
@@ -459,7 +467,7 @@ router.post('/update_poster', async function(req, res,next) {
             length:req.body.measurement.length,
         },
         tagList:req.body.tagList,
-        amount:req.body.anount,
+        amount:req.body.amount,
     };
     try {
         await Poster.UPDATE(update_poster);

@@ -7,8 +7,8 @@ export default {
     addOrder: function(orderData) {
         return axios.post('/add_order', orderData);
     },
-    addToLiked: function(posterData) {
-        return axios.post('/add_to_liked', posterData);
+    updateLiked: function(posterData) {
+        return axios.post('/update_liked', posterData);
     },
     registerUser: function(userData) {
         return axios.post('/register', userData);
@@ -52,8 +52,8 @@ export default {
     addPoster: function(posterData) {
         return axios.post('/add_poster', posterData);
     },
-    getUserByEmail: function(id) {
-        return axios.get('/get_user_id_by_email?id='+id);
+    getUserByEmail: function(email) {
+        return axios.get('/get_user_by_email?e_mail='+email);
     },
     getUsers: function() {
         return axios.get('/get_users');
