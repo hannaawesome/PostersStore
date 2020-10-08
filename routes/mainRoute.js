@@ -15,7 +15,6 @@ const auth = require("./auth");
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 router.get("/get_chatrooms", catchErrors(async function (req, res) {
     const chatrooms = await Chatroom.find({});
 

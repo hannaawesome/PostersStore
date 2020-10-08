@@ -90,7 +90,7 @@ const Register= (props) => {
         console.log(email);
         $.ajax({
             type: "GET",
-            url: "/get_user?email="+sessionStorage.setItem("userEmail", email),
+            url: "/get_user?email="+sessionStorage.getItem("userEmail", email),
         })
             .done(res => {
                 setCategory( res.data.category);
@@ -98,6 +98,7 @@ const Register= (props) => {
                 sessionStorage.setItem("userCategory", category);
                 sessionStorage.setItem("userEmail",email);
                 history.push("/");
+                props.setupSocket();
             })
             .fail(err => console.log(err));
 

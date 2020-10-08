@@ -7,8 +7,9 @@ const expressSession = require("express-session")({
     resave: false,
     saveUninitialized: false,
 });
+const routes = require('./routes');
 
-var basicRouter = require("./routes/mainRoute");
+//var basicRouter = require("./routes/mainRoute");
 
 var createError = require("http-errors");
 var express = require("express");
@@ -96,7 +97,8 @@ app.use("/", express.static(path.join(__dirname, "in-posters", "build")));
 //     history.push("/checkout");
 // }
 
-app.use("/", basicRouter);
+//app.use("/", basicRouter);
+app.use(routes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -113,11 +115,6 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render("error");
 });
-
-router.use(function(req, res) {
-    res.sendFile(path.join(__dirname, '../in-posters/build/index.html'));
-});
-
 
 
 

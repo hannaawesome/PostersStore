@@ -144,7 +144,7 @@ export default function App(props: Props): React.Node {
                 <Route exact path="/account" render={(props) =><Account{...props} />} />
                 <Route exact from="/register" render={(props) =><Register{...props} />} />
                 <Route exact from="/cart" render={(props) =><Cart{...props} />} />
-                <Route exact from="/log_in" render={(props) =><Login{...props} />} />
+                <Route path="/log_in" render={() => <LoginPage setupSocket={setupSocket} />} exact/>
                 <Route exact from="/empty_page" render={(props) =><Empty{...props} />} />
                 <Route exact from="/liked" render={(props) =><Liked{...props} />} />
                 <Route exact from="/contact" render={(props) => <Contact {...props} />}/>
