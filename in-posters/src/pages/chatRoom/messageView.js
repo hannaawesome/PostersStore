@@ -8,7 +8,6 @@ import {Dropdown} from "react-bootstrap";
 import $ from "jquery";
 
 const MessageView = ({ match, socket ,message}) => {
-    const [userEmail, setUserEmail] = React.useState("");
     const [like, setLike] = React.useState(false);
     const [unlike, setUnlike] = React.useState(false);
 
@@ -62,7 +61,7 @@ const MessageView = ({ match, socket ,message}) => {
                         <React.Fragment>
               <span
                   className={
-                      userEmail === message.userEmail ? "ownMessage" : "otherMessage"
+                      sessionStorage.getItem("userEmail") === message.userEmail ? "ownMessage" : "otherMessage"
                   }
               >
                 {message.name}:

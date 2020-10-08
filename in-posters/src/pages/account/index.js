@@ -8,7 +8,7 @@ export default function Account(){
         localStorage.getItem("userEmail")
     );
     if (email!==""&&email!==null) {
-        React.useEffect(() => { sessionStorage.setItem("userEmail",email);  }, [0]);
+       sessionStorage.setItem("userEmail",email);
             return (<div>
                     <h5>MyAccount</h5>
                     <AccountDetails/>

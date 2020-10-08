@@ -91,7 +91,6 @@ const Register= (props) => {
         $.ajax({
             type: "GET",
             url: "/get_user?email="+sessionStorage.setItem("userEmail", email),
-            data: data,
         })
             .done(res => {
                 setCategory( res.data.category);
@@ -108,7 +107,7 @@ const Register= (props) => {
     const onFailure = error => {
         console.log(error && error.response);
     };
-    const onSubmitRegisterHandler= () => {
+    const onSubmitRegisterHandler= (e) => {
         e.preventDefault();
 
         var data = {

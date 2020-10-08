@@ -49,7 +49,9 @@
     "@material-ui/core": "^4.11.0",
     "axios": "^0.20.0",
     "jwt-then": "^1.0.1",
-    "react-google-login": "^5.1.21"
+    "react-google-login": "^5.1.21",
+    "socket.io-client": "^2.3.1",
+    "sweetalert2": "^10.3.5"
   },
   "proxy": "http://localhost:8000"
 }

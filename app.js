@@ -42,10 +42,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "in-posters", "build")));
 
-//  app.use(
-//      "/account",
-//      express.static(path.join(__dirname, "in-posters", "build"))
-//  );
+ app.use(
+     "/account",
+     express.static(path.join(__dirname, "in-posters", "build"))
+ );
 // app.use(
 //     "/store",
 //     express.static(path.join(__dirname, "in-posters", "build"))

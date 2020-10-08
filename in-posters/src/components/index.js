@@ -32,12 +32,10 @@ import PosterEdit from "../pages/posterEdit";
 import Stock from "../pages/stock";
 import PosterData from "../pages/poster";
 import Checkout from "../pages/checkout";
-import heart from "./components_images/heart.png";
-import exit from "./components_images/exit.png";
-import shoppingCart from "./components_images/shopping-cart.png";
 import Login from "../pages/login";
 import NavigationBar from "./NavigationBar";
 import makeToast from "../Toaster";
+import io from "socket.io-client";
 
 
 export default function App(props: Props): React.Node {

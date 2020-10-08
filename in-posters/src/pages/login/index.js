@@ -94,7 +94,6 @@ console.log(email);
         $.ajax({
             type: "GET",
             url: "/get_user?email="+sessionStorage.setItem("userEmail", email),
-            data: data,
         })
             .done(res => {
                 setCategory(res.data.category);
