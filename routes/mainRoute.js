@@ -285,6 +285,7 @@ router.post("/delete_from_cart", connectEnsureLogin.ensureLoggedIn(), async func
         res.send(404);
     }
 });
+
 router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     let user = await User.findOne({
         _id: req.query.id,
@@ -632,4 +633,5 @@ router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function
         res.send(404);
     }
 });
+
 module.exports = router;

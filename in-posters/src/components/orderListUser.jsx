@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import OrderListItem from "../../components/orderListItem";
+import OrderListItem from "./orderListItem";
 //import { ProductsContext } from "../../contexts/ProductsContext";
 //import styles from './ProductsGrid.module.scss';
 

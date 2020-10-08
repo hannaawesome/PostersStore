@@ -41,34 +41,34 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "in-posters", "build")));
 
- app.use(
-     "/account",
-     express.static(path.join(__dirname, "in-posters", "build"))
- );
-app.use(
-    "/store",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
-app.use(
-    "/register",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
-app.use(
-    "/log_in",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
-app.use(
-    "/cart",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
-app.use(
-    "/liked",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
-app.use(
-    "/contact",
-    express.static(path.join(__dirname, "in-posters", "build"))
-);
+//  app.use(
+//      "/account",
+//      express.static(path.join(__dirname, "in-posters", "build"))
+//  );
+// app.use(
+//     "/store",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
+// app.use(
+//     "/register",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
+// app.use(
+//     "/log_in",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
+// app.use(
+//     "/cart",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
+// app.use(
+//     "/liked",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
+// app.use(
+//     "/contact",
+//     express.static(path.join(__dirname, "in-posters", "build"))
+// );
 
 // function redirectPosterEdit(e) {
 //     history.push("/poster_edit");

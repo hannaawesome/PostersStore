@@ -1,7 +1,6 @@
 import {useHistory} from "react-router-dom";
 import $ from "jquery";
 import {useContext} from "react";
-import {CartContext} from "../../contexts/CartContext";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";

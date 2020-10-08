@@ -8,12 +8,12 @@ import shoppingCart from "./components_images/shopping-cart.png";
 
 export default function NavigationBar() {
     let history = useHistory();
-    const [checkedRemember] =React.useState(localStorage.getItem("checkedRemember"));
+    const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
     const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
     if(checkedRemember)
     {
         setCategory(localStorage.getItem("userCategory"));
-        sessionStorage.getItem("userCategory",category)
+        sessionStorage.setItem("userCategory",category)
     }
     function redirectStore(e) {
         history.push("/store");

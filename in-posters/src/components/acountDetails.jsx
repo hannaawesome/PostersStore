@@ -1,7 +1,4 @@
 import React, { useContext } from "react";
-import OrderListItem from "../../components/orderListItem";
-//import { ProductsContext } from "../../contexts/ProductsContext";
-//import styles from './ProductsGrid.module.scss';
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
@@ -21,6 +18,7 @@ import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import Card from "@material-ui/core/Card";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -50,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const AccountDetails = () => {
     const classes = useStyles();
 
+        let history = useHistory();
     const [user, userSet] = React.useState({});
     React.useEffect(() => {
         async function fetchUser() {

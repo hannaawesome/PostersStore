@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login(){
     let history = useHistory();
+
     const [uId, setUId] = React.useState(localStorage.getItem("userId"));
     const [email, setEmail] = React.useState(localStorage.getItem("userEmail"));
     const [category, setCategory] = React.useState(localStorage.getItem("userCategory"));
@@ -81,11 +82,15 @@ export default function Login(){
         setChecked(event.target.checked);
     };
     const onSuccess = () => {
+console.log(email);
         API.getUserByEmail(email)
             .then(res => {
+                console.log(res.data.category);
+
                 setUId(res.data._id);
                 setCategory(res.data.category);
                 sessionStorage.setItem("userId",uId );
+                console.log(sessionStorage.getItem("userId"));
                 sessionStorage.setItem("userCategory",category);
         if (checkedRemember) {
             localStorage.setItem("userId",uId );
@@ -103,6 +108,8 @@ export default function Login(){
         history.push('/');
             })
             .catch(err => console.log(err));
+       // makeToast("error", err.response.data.message);
+
     };
     const onFailure = error => {
         console.log(error && error.response);

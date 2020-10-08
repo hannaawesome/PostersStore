@@ -8,9 +8,6 @@ export default function HomePage() {
                 <div>
                     <PostersGallary/>
                 </div>
-               // <div>
-                //    <RegisterByAdmin/>
-                //</div>
             );
 
 }
