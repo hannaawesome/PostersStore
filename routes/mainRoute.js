@@ -10,7 +10,8 @@ const passport = require("passport");
 const debug = require("debug")("router");
 const { catchErrors } = require("../handlers/errorHandlers");
 const auth = require("./auth");
-
+var async = require('async');
+var nodemailer = require('nodemailer');
 
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -168,7 +169,7 @@ router.post("/register", catchErrors(async function (req, res) {
     }), 6000);
 }));
 router.post("/login", (req, res, next) => {
-    passport.authenticate(["User"], (err, user, info) => {
+    passport.authenticate("User", (err, user, info) => {
         if (err) {
             console.log("ERROR " + err);
             res.send(404);
@@ -489,6 +490,8 @@ router.get("/get_user", async function (req, res) {
             active: true,
         }).exec();
          await res.json(user);
+
+
     }
 );
 
@@ -719,5 +722,250 @@ router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function
         res.send(404);
     }
 });
+router.post('/delete_user',async function(req, res,next) {
+    try {
+        await User.DELETE(req.body.email);
+    }
+    catch(err){
+        console.log("could not delete");
+    }
+    setTimeout((function() {res.status(200).send()}), 1000);
+});
+router.post('/delete_poster',async function(req, res,next) {
+    try {
+        await Poster.DELETE(req.body._id);
+    }
+    catch(err){
+        console.log("could not delete poster "+err);
+    }
+    setTimeout((function() {res.status(200).send()}), 1000);
+});
+router.post('/forgot_password', async function(req, res, next) {
+    await async.waterfall([
+        function (done) {
+            crypto.randomBytes(20, function (err, buf) {
+                var token = buf.toString('hex');
+                done(err, token);
+            });
+        },
+        async function (token, done) {
+            try {
+                let us = await User.findOne({e_mail: req.body.email}).exec();
+                if (!us) {
+                    res.status(404).send();
+                    return;
+                }
+                us.resetPasswordToken = token;
+                us.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                await us.save();
+                var smtpTransport = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'hweissbe@g.jct.ac.il',
+                        pass: 'Hannaw18'
+                    }
+                });
+                var mailOptions = {
+                    to: us.mailAddress,
+                    from: 'hweissbe@g.jct.ac.il',
+                    subject: 'Password Reset',
+                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                };
+                smtpTransport.sendMail(mailOptions, function (err) {
+                    res.status(200).send();
+                });
+            } catch (err) {
+                console.log(`Failure ${err}`);
+            }
+        }], function (err) {
+        if (err) return next(err);
+    });
+});
+router.get('/reset_password', async function(req, res, next) {
+    try {
+        let us = await  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
+        if (!us) {
+            res.status(404).send();
+            return;
+        }
+        console.log(us);
+    } catch (err) {
+        console.log(`Failure ${err}`);
+    }
+});
+router.post('/update_password', async function(req, res, next) {
+    try {
+        let us = await User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
+        if (!us) {
+            res.status(404).send();
+            return;
+        }
+
+        await us.setPassword(req.body.password);
+        us.resetPasswordToken = undefined;
+        us.resetPasswordExpires = undefined;
+
+        await us.save();
+        res.status(200).send();
+    } catch (err) {
+        console.log(`Failure ${err}`);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const PORT = 5000;
+// const SESSION_COOKIE_SECRET = '';
+// const SESSOIN_COOKIE_MAX_AGE_IN_MS = 60 * 60 * 1000;
+// const SESSION_COOKIE_IS_SECURE = false;
+//
+// const GOOGLE_CLIENT_ID = '';
+// const GOOGLE_CLIENT_SECRET = '';
+// const SENDGRID_API_KEY = '';
+//
+// const transport = nodemailer.createTransport(nodemailerSendgrid({
+//     apiKey: SENDGRID_API_KEY,
+// }));
+
+// const users = [{
+//     id: 'local/a0234aDdfj-2f4sdfa3oEerq-2U4',
+//     fullName: 'A Ayevich',
+//     email: 'hello@example.com',
+//     password: 'password'
+// }];
+//
+// pass.serializeUser((user, cb) => cb(null, user));
+// pass.deserializeUser((u, cb) => cb(null, u));
+//
+// pass.use(new LocalStrategy({
+//     usernameField: 'email',
+// }, (email, password, cb) => {
+//     const user = users.find(u => u.email === email);
+//     cb(null, (user && user.password === password) ? user : false);
+// }));
+//
+// pass.use(new GoogleStrategy({
+//     clientID: GOOGLE_CLIENT_ID,
+//     clientSecret: GOOGLE_CLIENT_SECRET,
+//     callbackURL: `http://localhost:${PORT}/auth/google/callback`
+// }, (accessToken, refreshToken, profile, cb) => {
+//     const user = {
+//         id: `google/${profile.id}`,
+//         email: profile.email,
+//         fullName: profile.displayName,
+//         profile,
+//         tokens: { accessToken, refreshToken },
+//     };
+//     users.push(user);
+//     cb(null, user);
+// }));
+
+//const app = asyncify(express());
+//const FileStore = createFileStore(session);
+
+// router.disable('x-powered-by');
+// router.use(flash());
+
+// app.get('/forgot', (req, res, next) => {
+//     res.setHeader('Content-type', 'text/html');
+//     res.end(templates.layout(`
+//     ${templates.error(req.flash())}
+//     ${templates.forgotPassword()}
+//   `));
+// });
+
+// router.post('/forgot_password', async (req, res, next) => {
+//     const user = User.find(u => u.e_mail === req.body.email);
+//
+//     if (!user) {
+//         req.flash('error', 'No account with that email address exists.');
+//         //return res.redirect('/forgot');
+//     }
+//     const token = (await promisify(crypto.randomBytes)(20)).toString('hex');
+//
+//     user.resetPasswordToken = token;
+//     user.resetPasswordExpires = Date.now() + 3600000;
+//
+//     const resetEmail = {
+//         to: user.e_mail,
+//         from: 'passwordreset@example.com',
+//         subject: 'inPosters Password Reset',
+//         text: `
+//       You are receiving this because you (or someone else) have requested the reset of the password for your account.
+//       Please click on the following link, or paste this into your browser to complete the process:
+//       http://${req.headers.host}/reset/${token}
+//       If you did not request this, please ignore this email and your password will remain unchanged.
+//     `,
+//     };
+//
+//     await transport.sendMail(resetEmail);
+//     req.flash('info', `An e-mail has been sent to ${user.e_mail} with further instructions.`);
+//
+//     //res.redirect('/forgot');
+// });
+
+// router.get('/reset/:token', (req, res) => {
+//     const user = User.find(u => (
+//         (u.resetPasswordExpires > Date.now()) &&
+//         crypto.timingSafeEqual(Buffer.from(u.resetPasswordToken), Buffer.from(req.params.token))
+//     ));
+//
+//     if (!user) {
+//         req.flash('error', 'Password reset token is invalid or has expired.');
+//         //return res.redirect('/forgot_password');
+//     }
+//
+//   //   res.setHeader('Content-type', 'text/html');
+//   //   res.end(templates.layout(`
+//   //   ${templates.error(req.flash())}
+//   //   ${templates.resetPassword(user.resetPasswordToken)}
+//   // `));
+// });
+
+// router.post('/reset/:token', async (req, res) => {
+//     const user = User.find(u => (
+//         (u.resetPasswordExpires > Date.now()) &&
+//         crypto.timingSafeEqual(Buffer.from(u.resetPasswordToken), Buffer.from(req.params.token))
+//     ));
+//
+//     if (!user) {
+//         req.flash('error', 'Password reset token is invalid or has expired.');
+//     }
+//
+//     user.setPassword(req.body.password);
+//     delete user.resetPasswordToken;
+//     delete user.resetPasswordExpires;
+//     user.save();
+//     const resetEmail = {
+//         to: user.e_mail,
+//         from: 'passwordreset@example.com',
+//         subject: 'Your password has been changed',
+//         text: `
+//       This is a confirmation that the password for your account "${user.e_mail}" has just been changed.
+//     `,
+//     };
+//
+//     await transport.sendMail(resetEmail);
+//     req.flash('success', `Success! Your password has been changed.`);
+//
+// });
 
 module.exports = router;

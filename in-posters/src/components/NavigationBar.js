@@ -5,13 +5,16 @@ import {Navbar,Nav, NavDropdown} from "react-bootstrap"
 import heart from "./components_images/heart.png";
 import exit from "./components_images/exit.png";
 import shoppingCart from "./components_images/shopping-cart.png";
+import {useGoogleLogout} from "react-google-login";
 
-export default function NavigationBar() {
+export default function NavigationBar({category}) {
     let history = useHistory();
         const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
-        const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
+       // const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
+    const [email] = React.useState(localStorage.getItem("userEmail"));
         if(checkedRemember){
-            setCategory(localStorage.getItem("userCategory"));
+           // setCategory(localStorage.getItem("userCategory"));
+            category=localStorage.getItem("userCategory");
         sessionStorage.setItem("userCategory",category);
         }
 
@@ -28,7 +31,13 @@ export default function NavigationBar() {
     }
 
     function redirectAccount(e) {
-        history.push("/account");
+
+        if (email!==""&&email!==null)
+            {
+                sessionStorage.setItem("userEmail", email);
+                history.push("/account");
+            }
+            else history.push("/log_in", { from: 'anywhere' } )
     }
 
     function redirectCart(e) {
@@ -55,13 +64,25 @@ export default function NavigationBar() {
     function redirectChat(e) {
         history.push("/groups_menu");
     }
+    const onLogoutSuccess = (res) => {
+        console.log('Logged out Success');
+        history.push("/");
+    };
+
+    const onFailure = () => {
+        console.log('Handle failure cases');
+    };
 
     function onLogout(e) {
-        if (sessionStorage.getItem("userEmail")!==""&&sessionStorage.getItem("userEmail")!==null)
-           {sessionStorage.setItem("userEmail",""); sessionStorage.setItem("category","");}
-        else
-            history.push("/");
+           sessionStorage.setItem("userEmail","");
+           sessionStorage.setItem("category","");
+        useGoogleLogout({
+            clientId:"142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com",
+            onLogoutSuccess,
+            onFailure,
+        });
     }
+        console.log(category);
     switch (category) {
         case "Admin":
             return (
@@ -79,9 +100,9 @@ export default function NavigationBar() {
                             <Nav.Link onClick={redirectCart}>
                                 <img alt="" src={shoppingCart} height={20} width={20}/>
                             </Nav.Link>
-                            <Nav.Link onClick={redirectUsers()}>Users</Nav.Link>
-                            <Nav.Link onClick={redirectOrderList()}>Orders</Nav.Link>
-                            <Nav.Link onClick={redirectStock()}>Stock</Nav.Link>
+                            <Nav.Link onClick={redirectUsers}>Users</Nav.Link>
+                            <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
+                            <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
                             <Nav.Link onClick={onLogout}>
                                 <img alt="" src={exit} height={20} width={20}/>
                             </Nav.Link>

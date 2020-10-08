@@ -17,9 +17,9 @@ module.exports = db => {
         cartItems:Array,//array of (PosterId,amount,measurement)
         orderHistory:Array,//array of (OrderId)
         likedItems:Array,//array of (PostersId)
-        active:Boolean,
-        resetPasswordToken: String,
-        resetPasswordExpires: Date
+        active: {type: Boolean , default:true},
+        resetPasswordToken:{type: String},
+        resetPasswordExpires:{ type: Date },
     }, { autoIndex: false });
 
     schema.statics.CREATE = async function(user) {

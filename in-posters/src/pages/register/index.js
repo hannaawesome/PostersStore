@@ -21,6 +21,7 @@ import {Route, Switch, withRouter} from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import HomePage from "../home";
+import makeToast from "../../Toaster";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,15 +91,14 @@ const Register= (props) => {
         console.log(email);
         $.ajax({
             type: "GET",
-            url: "/get_user?email="+sessionStorage.getItem("userEmail", email),
+            url: "/get_user?email="+email,
         })
             .done(res => {
-                setCategory( res.data.category);
-                console.log("goooo");
+                setCategory( res.category);
                 sessionStorage.setItem("userCategory", category);
                 sessionStorage.setItem("userEmail",email);
-                history.push("/");
                 props.setupSocket();
+                history.push("/");
             })
             .fail(err => console.log(err));
 
@@ -106,7 +106,7 @@ const Register= (props) => {
 
     };
     const onFailure = error => {
-        console.log(error && error.response);
+        makeToast("register failed", error.response.data.message);
     };
     const onSubmitRegisterHandler= (e) => {
         e.preventDefault();
@@ -132,7 +132,7 @@ const Register= (props) => {
 
     function redirectLogin(e) {
         //e.preventDefault();
-        history.push("/log_in");
+        history.push("/log_in", { from: 'anywhere' } );
     }
         return (
             <div className={classes.paper}>

@@ -11,9 +11,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import React, {useEffect} from "react";
-import Register from "../register";
 import {makeStyles} from "@material-ui/core/styles";
-import { GoogleLogin } from 'react-google-login';
+import { useGoogleLogin} from 'react-google-login';
+import makeToast from "../../Toaster";
 
 
 
@@ -55,7 +55,7 @@ const Login= (props) => {
     let history = useHistory();
 
     const [email, setEmail] = React.useState(localStorage.getItem("userEmail"));
-    const [category, setCategory] = React.useState(localStorage.getItem("userCategory"));
+    //const [category, setCategory] = React.useState(localStorage.getItem("userCategory"));
 
     const [password, setPassword] = React.useState(
         localStorage.getItem("password")
@@ -77,14 +77,35 @@ const Login= (props) => {
     //     const responseJson = await fullResponse.json();
     //     setCategory(responseJson.category);
     // }
-    const responseGoogleSuccess = (response) => {
-
-        console.log(response);
+    const responseGoogleSuccess = (res) => {
+        console.log('Login Success: currentUser:', res.profileObj);
+        setEmail(res.profileObj.email);
+        console.log(email);
+        $.ajax({
+            type: "GET",
+            url: "/get_user?email="+email,
+        })
+            .done(res => {
+                sessionStorage.setItem("userCategory",res.category);
+                sessionStorage.setItem("userEmail", email);
+                props.setupSocket();
+                if(history.location.state.from==="checkout")
+                    history.push('/checkout');
+                else
+                    history.push('/');
+            })
+            .fail(err => {console.log(err); makeToast("error", err.response.data.message);});    };
+    const responseGoogleFailure = (res) => {
+        console.log('Login failed: res:', res);
+        makeToast("Could not login, try again!");
     };
-    const responseGoogleFailure = (response) => {
-
-        console.log(response);
-    };
+    const { googleLogIn } = useGoogleLogin({
+        responseGoogleSuccess,
+        responseGoogleFailure,
+        clientId:"142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com",
+        isSignedIn: true,
+        accessType: 'offline',
+    });
 
 
 
@@ -97,14 +118,13 @@ const Login= (props) => {
 console.log(email);
         $.ajax({
             type: "GET",
-            url: "/get_user?email="+sessionStorage.getItem("userEmail", email),
+            url: "/get_user?email="+email,
         })
             .done(res => {
-                setCategory(res.data.category);
-                sessionStorage.setItem("userCategory",category);
+                sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
                 if (checkedRemember) {
-                    localStorage.setItem("userCategory",category);
+                    localStorage.setItem("userCategory",res.category);
                     localStorage.setItem("password", password);
                     localStorage.setItem("userEmail", email);
                     localStorage.setItem("checked", "true");
@@ -114,16 +134,17 @@ console.log(email);
                     localStorage.setItem("userEmail", "");
                     localStorage.setItem("checked", "false");
                 }
-                history.push('/');
                 props.setupSocket();
+                if(history.location.state.from==="checkout")
+                    history.push('/checkout');
+                else
+                    history.push('/');
             })
-            .fail(err => console.log(err));
-
-       // makeToast("error", err.response.data.message);
+            .fail(err => {console.log(err); makeToast("error", err.response.data.message);});
 
     };
     const onFailure = error => {
-        console.log(error && error.response);
+        makeToast("Could not login, try again!");
     };
     function submitHandler(e) {
 
@@ -131,7 +152,7 @@ console.log(email);
         e.preventDefault();
 
         var data = {
-            email: email,
+            e_mail: email,
             password: password,
         };
 
@@ -213,13 +234,11 @@ console.log(email);
                                         >
                                             Login
                                         </Button>
-                                        <GoogleLogin
-                                            clientId="142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com"
-                                            buttonText="Login"
-                                            onSuccess={responseGoogleSuccess}
-                                            onFailure={responseGoogleFailure}
-                                            cookiePolicy={'single_host_origin'}
-                                        />
+                                        <button onClick={googleLogIn} className="button">
+                                            <img src="images/google.svg" alt="google login" className="icon"/>
+
+                                            <span className="buttonText">Sign in with Google</span>
+                                        </button>
                                         <Grid container>
                                             <Grid item xs>
                                                 <Link onClick={redirectForgotPassword}>{"Forgot password?"}</Link>

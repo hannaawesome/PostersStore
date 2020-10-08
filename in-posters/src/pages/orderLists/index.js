@@ -46,7 +46,6 @@ const OrderList = () => {
     const classes = useStyles();
 
     const [orders, ordersSet] = React.useState([]);
-    const [ordersToShow, ordersToShowSet] = React.useState([]);
 
     React.useEffect(() => {
         async function fetchOrders() {
@@ -55,7 +54,6 @@ const OrderList = () => {
             );
             const responseJson = await fullResponse.json();
             ordersSet(responseJson);
-            ordersToShowSet(responseJson);
         }
 
         fetchOrders().then(r => console.log("got"));
@@ -72,8 +70,8 @@ const OrderList = () => {
                     {/* End hero unit */}
 
                     <Grid container spacing={4}>
-                        {ordersToShow !== undefined &&
-                        ordersToShow.map((order, index) => (
+                        {orders !== undefined &&
+                        orders.map((order, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
                                 <OrderListItem key={index} order={order} />
                             </Grid>

@@ -137,7 +137,7 @@ class RegisterByAdmin extends Component {
     redirectLogin(e) {
         //e.preventDefault();
         const { history } = this.props;
-        history.push("/log_in");
+        history.push("/log_in", { from: 'anywhere' } );
     }
 
     render() {

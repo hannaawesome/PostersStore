@@ -27,10 +27,15 @@ const Cart = () => {
         checkout,
         handleCheckout,
     } = useContext(CartContext);
-
+    const [email] = React.useState(
+        sessionStorage.getItem("userEmail")
+    );
     function redirectCheckOut(e) {
-        //e.preventDefault();
-        history.push("/checkout");
+            if (email!==""&&email!==null)
+                history.push("/checkout");
+
+            else history.push("/log_in", { from: 'checkout' } )
+
     }
     return (
         <div>

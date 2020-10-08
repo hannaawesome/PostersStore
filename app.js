@@ -4,8 +4,9 @@ var favicon = require("serve-favicon");
 
 const expressSession = require("express-session")({
     secret: "secret",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
+    cookie: {maxAge: 900000, httpOnly: true, sameSite: true}
 });
 const routes = require('./routes');
 

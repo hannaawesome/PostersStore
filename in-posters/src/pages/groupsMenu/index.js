@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const DashboardPage = (props) => {
+const GroupsMenu = (props) => {
     const [chatrooms, setChatrooms] = React.useState([]);
     const nameRef = React.createRef();
     const getChatrooms = () => {
@@ -82,4 +82,4 @@ const DashboardPage = (props) => {
     );
 };
 
-export default DashboardPage;
+export default GroupsMenu;
