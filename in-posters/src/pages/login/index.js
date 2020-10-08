@@ -77,7 +77,11 @@ const Login= (props) => {
     //     const responseJson = await fullResponse.json();
     //     setCategory(responseJson.category);
     // }
-    const responseGoogle = (response) => {
+    const responseGoogleSuccess = (response) => {
+
+        console.log(response);
+    };
+    const responseGoogleFailure = (response) => {
 
         console.log(response);
     };
@@ -212,8 +216,8 @@ console.log(email);
                                         <GoogleLogin
                                             clientId="142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com"
                                             buttonText="Login"
-                                            onSuccess={responseGoogle}
-                                            onFailure={responseGoogle}
+                                            onSuccess={responseGoogleSuccess}
+                                            onFailure={responseGoogleFailure}
                                             cookiePolicy={'single_host_origin'}
                                         />
                                         <Grid container>
