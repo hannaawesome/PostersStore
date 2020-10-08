@@ -37,9 +37,39 @@ import exit from "./components_images/exit.png";
 import shoppingCart from "./components_images/shopping-cart.png";
 import Login from "../pages/login";
 import NavigationBar from "./NavigationBar";
+import makeToast from "../Toaster";
 
 
 export default function App(props: Props): React.Node {
+    const [socket, setSocket] = React.useState(null);
+
+    const setupSocket = () => {
+        const token = sessionStorage.getItem("userCategory");
+        if (token && !socket) {
+            const newSocket = io("http://localhost:8000", {
+                query: {
+                    token: sessionStorage.getItem("userCategory"),
+                },
+            });
+
+            newSocket.on("disconnect", () => {
+                setSocket(null);
+                setTimeout(setupSocket, 3000);
+                makeToast("error", "Socket Disconnected!");
+            });
+
+            newSocket.on("connect", () => {
+                makeToast("success", "Socket Connected!");
+            });
+
+            setSocket(newSocket);
+        }
+    };
+
+    React.useEffect(() => {
+        setupSocket();
+        //eslint-disable-next-line
+    }, []);
     let history = useHistory();
     function redirectStore(e) {
         history.push("/store");

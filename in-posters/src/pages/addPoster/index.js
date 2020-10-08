@@ -17,7 +17,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {Dropdown} from "react-bootstrap";
-import API from '../../utils/API';
 
 const useStyles = makeStyles((theme) => ({
     root: {

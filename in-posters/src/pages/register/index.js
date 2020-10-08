@@ -17,10 +17,9 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { Route, Switch } from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
-import API from '../../utils/API';
 import HomePage from "../home";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,12 +64,10 @@ const useStyles = makeStyles((theme) => ({
 //     category: 'Customer',
 //     password: '',
 // };
-export default function Register(){
+const Register= (props) => {
     let history = useHistory();
     const classes = useStyles();
 
-
-   const [uId, setUId] = React.useState("");
     const [fName, setFName] = React.useState("");
     const [lName, setLName] = React.useState("");
     const [email, setEmail] = React.useState("");
@@ -89,32 +86,49 @@ export default function Register(){
     //     const responseJson = await fullResponse.json();
     //     setUId(responseJson);
     // }
-   function onSubmitRegisterHandler(e){
+    const onSuccess = () => {
+        console.log(email);
+        $.ajax({
+            type: "GET",
+            url: "/get_user?email="+sessionStorage.setItem("userEmail", email),
+            data: data,
+        })
+            .done(res => {
+                setCategory( res.data.category);
+                console.log("goooo");
+                sessionStorage.setItem("userCategory", category);
+                sessionStorage.setItem("userEmail",email);
+                history.push("/");
+            })
+            .fail(err => console.log(err));
+
+        // makeToast("error", err.response.data.message);
+
+    };
+    const onFailure = error => {
+        console.log(error && error.response);
+    };
+    const onSubmitRegisterHandler= () => {
         e.preventDefault();
+
         var data = {
             e_mail: email,
             password: password,
             fullName: {
                 fName: fName,
                 lName: lName
-            },
-        };
+            }};
 
-        API.registerUser(data)
-            .then(res => {
-                API.getUserByEmail(email)
-                    .then(res => {
-                        setUId(res.data._id);
-                        setCategory( res.data.category);
-                        console.log("goooo");
-                        sessionStorage.setItem("userCategory", category);
-                        sessionStorage.setItem("userId",uId);
-                        history.push("/");
-                    })
-                    .catch(err => console.log(err));
-            })
-            .catch(err => console.log(err));
-    }
+        // Submit form via jQuery/AJAX
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            data: data,
+        })
+            .done(onSuccess)
+            .fail(onFailure);
+    };
+
 
     function redirectLogin(e) {
         //e.preventDefault();
@@ -207,7 +221,7 @@ export default function Register(){
                 </form>
             </div>
         );
-}
-
+};
+export default withRouter(Register);
 
 

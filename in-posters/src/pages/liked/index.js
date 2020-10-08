@@ -51,7 +51,7 @@ const Liked = () => {
     React.useEffect(() => {
         async function fetchPosters() {
             const fullResponse = await fetch(
-                "/get_liked_items?id=" + sessionStorage.getItem("userId")
+                "/get_liked_items?email=" + sessionStorage.getItem("userEmail")
             );
             const responseJson = await fullResponse.json();
             postersSet(responseJson);

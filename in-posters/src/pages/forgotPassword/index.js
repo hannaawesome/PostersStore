@@ -58,19 +58,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ForgotPassword() {
     const classes = useStyles();
     let history = useHistory();
-    const [uId, setUId] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const onChangeEmailHandler = (e) => setEmail(e.target.value);
     const onChangePasswordHandler = (e) => setPassword(e.target.value);
-
-
-    async function fetchUserId() {
-        const fullResponse = await fetch(
-            "/get_user_id_by_email?e_mail=" + email);
-        const responseJson = await fullResponse.json();
-        setUId(responseJson);
-    }
 
     function onSubmitRegisterHandler(e) {
         e.preventDefault();
@@ -90,8 +81,7 @@ export default function ForgotPassword() {
             data: data,
         })
             .done(function (data) {
-                fetchUserId();
-                localStorage.setItem("userId", uId);
+                localStorage.setItem("userEmail", email);
                 history.push("/");
             })
             .fail(function (jqXhr) {

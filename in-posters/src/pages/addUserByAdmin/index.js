@@ -119,18 +119,18 @@ class RegisterByAdmin extends Component {
             category:category
         };
 
-        API.addUser(data)
-            .then(res => {
-                API.getUserByEmail(email)
-                    .then(res => {
-                        console.log("success");
-                        sessionStorage.setItem("userCategory", category);
-                        sessionStorage.setItem("userId", res.data._id);
-                        history.push("/");
-                     })
-                    .catch(err => console.log(err));
-            })
-            .catch(err => console.log(err));
+        // API.addUser(data)
+        //     .then(res => {
+        //         API.getUserByEmail(email)
+        //             .then(res => {
+        //                 console.log("success");
+        //                 sessionStorage.setItem("userCategory", category);
+        //                 sessionStorage.setItem("userEmail", res.data.e_mail);
+        //                 history.push("/");
+        //              })
+        //             .catch(err => console.log(err));
+        //     })
+        //     .catch(err => console.log(err));
 
     }
 

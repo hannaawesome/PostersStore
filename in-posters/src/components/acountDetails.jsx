@@ -53,10 +53,10 @@ const AccountDetails = () => {
     React.useEffect(() => {
         async function fetchUser() {
             const fullResponse = await fetch(
-                "/get_user?id="+sessionStorage.getItem("userId")
+                "/get_user?email="+sessionStorage.getItem("userEmail")
             );
             const responseJson = await fullResponse.json();
-            user(responseJson);
+            userSet(responseJson);
         }
 
         fetchUser().then(r => console.log("got"));

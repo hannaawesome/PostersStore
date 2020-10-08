@@ -71,7 +71,7 @@ const styles = (theme) => ({
     },
 });
 
-class ComplexGrid extends React.Component {
+class PosterData extends React.Component {
     static contextType = CartContext;
 
     constructor({match}) {
@@ -83,12 +83,11 @@ class ComplexGrid extends React.Component {
             poster: {},
         };
         this.handleClick = this.handleHeartClick.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
     async componentDidMount() {
         try {
-            const resp = await fetch("/GetPosterItem?Id=" + this.params.posterId);
+            const resp = await fetch("/get_poster?id=" + this.params.posterId);
             if (!resp.ok) {
                 throw Error(resp.statusText);
             }
@@ -100,13 +99,7 @@ class ComplexGrid extends React.Component {
         }
     }
 
-    handleChange(e, {name, value}) {
-        this.setState({commentText: value});
-    }
-
-    handleChangeRating(e, value) {
-        this.setState({rating: value});
-    }handleHeartClick() {
+   handleHeartClick() {
         const {full, poster} = this.state;
         if (full) this.setState({full: 0});
         else this.setState({full: 1});
@@ -212,4 +205,4 @@ class ComplexGrid extends React.Component {
         );
     }
 }
-export default withStyles(styles, { withTheme: true })(ComplexGrid);
+export default withStyles(styles, { withTheme: true })(PosterData);

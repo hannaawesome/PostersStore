@@ -1,7 +1,7 @@
 import $ from "jquery";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import {Route, Switch, useHistory} from "react-router-dom";
+import {Route, Switch, useHistory,withRouter} from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -13,7 +13,10 @@ import Link from "@material-ui/core/Link";
 import React, {useEffect} from "react";
 import Register from "../register";
 import {makeStyles} from "@material-ui/core/styles";
-import API from "../../utils/API";
+import { GoogleLogin } from 'react-google-login';
+
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100vw",
@@ -48,10 +51,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Login(){
+const Login= (props) => {
     let history = useHistory();
 
-    const [uId, setUId] = React.useState(localStorage.getItem("userId"));
     const [email, setEmail] = React.useState(localStorage.getItem("userEmail"));
     const [category, setCategory] = React.useState(localStorage.getItem("userCategory"));
 
@@ -75,6 +77,12 @@ export default function Login(){
     //     const responseJson = await fullResponse.json();
     //     setCategory(responseJson.category);
     // }
+    const responseGoogle = (response) => {
+
+        console.log(response);
+    };
+
+
 
     const onChangeEmailHandler = (e) => setEmail(e.target.value);
     const onChangePasswordHandler = (e) => setPassword(e.target.value);
@@ -83,31 +91,32 @@ export default function Login(){
     };
     const onSuccess = () => {
 console.log(email);
-        API.getUserByEmail(email)
-            .then(res => {
-                console.log(res.data.category);
-
-                setUId(res.data._id);
+        $.ajax({
+            type: "GET",
+            url: "/get_user?email="+sessionStorage.setItem("userEmail", email),
+            data: data,
+        })
+            .done(res => {
                 setCategory(res.data.category);
-                sessionStorage.setItem("userId",uId );
-                console.log(sessionStorage.getItem("userId"));
                 sessionStorage.setItem("userCategory",category);
-        if (checkedRemember) {
-            localStorage.setItem("userId",uId );
-            localStorage.setItem("userCategory",category);
-            localStorage.setItem("password", password);
-            localStorage.setItem("userEmail", email);
-            localStorage.setItem("checked", "true");
-        } else {
-            localStorage.setItem("userId","" );
-            localStorage.setItem("userCategory","");
-            localStorage.setItem("password", "");
-            localStorage.setItem("userEmail", "");
-            localStorage.setItem("checked", "false");
-        }
-        history.push('/');
+                sessionStorage.setItem("userEmail", email);
+                if (checkedRemember) {
+                    localStorage.setItem("userCategory",category);
+                    localStorage.setItem("password", password);
+                    localStorage.setItem("userEmail", email);
+                    localStorage.setItem("checked", "true");
+                } else {
+                    localStorage.setItem("userCategory","");
+                    localStorage.setItem("password", "");
+                    localStorage.setItem("userEmail", "");
+                    localStorage.setItem("checked", "false");
+                }
+                history.push('/');
+                props.setupSocket();
+
             })
-            .catch(err => console.log(err));
+            .fail(err => console.log(err));
+
        // makeToast("error", err.response.data.message);
 
     };
@@ -115,14 +124,23 @@ console.log(email);
         console.log(error && error.response);
     };
     function submitHandler(e) {
-       // e.preventDefault();
+
+
+        e.preventDefault();
+
         var data = {
-            e_mail: email,
-            password: password
+            email: email,
+            password: password,
         };
-        API.loginUser(data)
-            .then(onSuccess)
-            .catch(onFailure);
+
+        // Submit form via jQuery/AJAX
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            data: data,
+        })
+            .done(onSuccess)
+            .fail(onFailure);
     }
     function redirectRegister(e) {
         history.push("/register");
@@ -193,6 +211,13 @@ console.log(email);
                                         >
                                             Login
                                         </Button>
+                                        <GoogleLogin
+                                            clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                                            buttonText="Login"
+                                            onSuccess={responseGoogle}
+                                            onFailure={responseGoogle}
+                                            cookiePolicy={'single_host_origin'}
+                                        />
                                         <Grid container>
                                             <Grid item xs>
                                                 <Link onClick={redirectForgotPassword}>{"Forgot password?"}</Link>
@@ -209,4 +234,5 @@ console.log(email);
             </Grid>
         </div>
     );
-}
+};
+export default withRouter(Login);

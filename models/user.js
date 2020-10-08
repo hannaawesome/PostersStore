@@ -81,11 +81,11 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    schema.statics.FIND_ONE_USER = async function (_id) {
-        return this.findOne({_id:_id}).exec();
+    schema.statics.FIND_ONE_USER = async function (emaol) {
+        return this.findOne({e_mail:email}).exec();
     };
-    schema.statics.DELETE = async function (uid) {
-        const filter = { _id: uid };
+    schema.statics.DELETE = async function (email) {
+        const filter = { e_mail: email };
         const update = { active: false };
         // `doc` is the document _before_ `update` was applied
         let doc = await this.findOneAndUpdate(filter, update);
@@ -94,14 +94,13 @@ module.exports = db => {
     };
     schema.statics.UPDATE = async function (updatedUser,password) {
         let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_USER(updatedUser._id);
+        queryForUpdate= this.FIND_ONE_USER(updatedUser.e_mail);
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
             userToUpdate.fullName.fName= updatedUser.fullName.fName;
             userToUpdate.fullName.lName= updatedUser.fullName.lName;
             userToUpdate.phone=updatedUser.phone;
-            userToUpdate.e_mail= updatedUser.e_mail;
             userToUpdate.cartItems= updatedUser.cartItems;
             userToUpdate.orderHistory= updatedUser.orderHistory;
             userToUpdate.likedItems= updatedUser.likedItems;
@@ -113,7 +112,7 @@ module.exports = db => {
     };
     schema.statics.UPDATE_STATUS = async function (updatedUser) {
         let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_USER(updatedUser._id);
+        queryForUpdate= this.FIND_ONE_USER(updatedUser.e_mail);
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {

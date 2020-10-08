@@ -35,11 +35,6 @@ router.post('/', function (req, res, next) {
 router.use(function(req, res) {
     res.sendFile(path.join(__dirname, '../in-poster/build/index.html'));
 });
-// function SessionConstructor(userId, catagory, details) {
-//     this.userId = userId;
-//     this.catagory = catagory;
-//     this.details = details;
-// }
 
 
 module.exports = router;

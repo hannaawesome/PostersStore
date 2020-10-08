@@ -4,11 +4,11 @@ import OrderListUser from "../../components/orderListUser";
 import Login from "../login";
 
 export default function Account(){
-    const [uId] = React.useState(
-        localStorage.getItem("userId")
+    const [email] = React.useState(
+        localStorage.getItem("userEmail")
     );
-    if (uId!==""&&uId!==null) {
-        sessionStorage.setItem("userId",uId);
+    if (email!==""&&email!==null) {
+        React.useEffect(() => { sessionStorage.setItem("userEmail",email);  }, [0]);
             return (<div>
                     <h5>MyAccount</h5>
                     <AccountDetails/>

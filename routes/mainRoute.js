@@ -4,16 +4,103 @@ const User = require("../models")("User");
 const Message = require("../models")("Message");
 const Order = require("../models")("Order");
 const Poster = require("../models")("Poster");
+const Chatroom=require("../models")("Chatroom");
 const connectEnsureLogin = require("connect-ensure-login");
 const passport = require("passport");
 const debug = require("debug")("router");
+const { catchErrors } = require("../handlers/errorHandlers");
+const auth = require("./auth");
+
 
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+router.get("/get_chatrooms", catchErrors(async function (req, res) {
+    const chatrooms = await Chatroom.find({});
 
-router.post("/add_user", async function (req, res) {
+    res.json(chatrooms);
+}));
+router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
+    const { name } = req.body;
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    if (!nameRegex.test(name)) throw "Chatroom name can contain only alphabets.";
+
+    const chatroomExists = await Chatroom.findOne({ name });
+
+    if (chatroomExists) throw "Chatroom with that name already exists!";
+
+    const chatroom = new Chatroom({
+        name,
+    });
+
+    await chatroom.save();
+
+    res.json({
+        message: "Chatroom created!",
+    });
+}));
+router.get("/get_messages", catchErrors(async function (req, res) {
+    const messages = await Message.find({});
+
+    res.json(messages);
+}));
+router.post("/update_like_to_message",auth ,catchErrors(async function (req, res) {
+    const { massageId,userAdded,likeStatus,unlikeStatus} = req.body;
+    let user = await User.findOne({
+        e_mail: userAdded,
+        active: true
+    }).exec();
+    if(user===undefined) {
+        debug("error in finding user");
+        res.send(404)
+    }
+    const message = await Message.findOne({ massageId });
+
+    if (message===undefined) console.log("ERROR message not found!");
+    const likes=message.likes;
+    const unlikes=message.unlikes;
+
+    if((likes.findIndex((item) => item.userEmail === userAdded) === -1&&!likeStatus)||(likes.findIndex((item) => item.userEmail === userAdded) !== -1&&likeStatus)) {
+        console.log("ERROR in like");
+        res.send(404);
+    }
+    if((unlikes.findIndex((item) => item.userEmail === userAdded) === -1&&!unlikeStatus)||(unlikes.findIndex((item) => item.userEmail === userAdded) !== -1&&unlikeStatus)) {
+        console.log("ERROR in unlike");
+        res.send(404);
+    }
+    if (likeStatus) {
+        if(unlikes.findIndex((item) => item.userEmail === userAdded) !== -1)
+        {
+            console.log("ERROR in adding like, already exist in unlikes");
+            res.send(404);
+        }
+        likes.push({userEmail: userAdded});
+    } else
+        likes.remove(likes.findIndex((item) => item.userEmail === userAdded));
+    if (unlikeStatus) {
+        if(likes.findIndex((item) => item.userEmail === userAdded) !== -1)
+        {
+            console.log("ERROR in adding unlike, already exist in likes");
+            res.send(404);
+        }
+        unlikes.push({userEmail: userAdded});
+    } else
+        unlikes.remove(unlikes.findIndex((item) => item.userEmail === userAdded));
+    message.likes = likes;
+    message.unlikes = unlikes;
+    await Message.UPDATE(message);
+                debug("successfully added to liked");
+                res.send(200);
+}));
+router.post("/add_user",catchErrors(async function (req, res) {
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com/;
+
+    if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
+    if (req.body.password.length < 6) throw "Password must be at least 6 characters long.";
+
     console.log("trying to add");
     let usersList = await User.REQUEST();
     let user = {
@@ -45,8 +132,13 @@ router.post("/add_user", async function (req, res) {
     setTimeout((function () {
         res.status(200).send()
     }), 6000);
-});
-router.post("/register", async function (req, res) {
+}));
+router.post("/register", catchErrors(async function (req, res) {
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com/;
+
+    if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
+    if (req.body.password.length < 6) throw "Password must be at least 6 characters long.";
+
     let usersList = await User.REQUEST();
     let user = {
         _id: usersList.length.toString(),
@@ -75,7 +167,7 @@ router.post("/register", async function (req, res) {
     setTimeout((function () {
         res.status(200).send()
     }), 6000);
-});
+}));
 router.post("/login", (req, res, next) => {
     passport.authenticate(["User"], (err, user, info) => {
         if (err) {
@@ -84,7 +176,11 @@ router.post("/login", (req, res, next) => {
         } else if (!user) {
             console.log("User is NULL ");
             res.send(404);
-        } else {
+        }
+        else if (!user.active) {
+                console.log("User is inactive ");
+                res.send(404);}
+        else {
             req.login(user, function (err) {
                 if (err) {
                     console.log("ERROR while login" + err);
@@ -96,9 +192,9 @@ router.post("/login", (req, res, next) => {
 });
 router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
-        let user_id = req.body.user_id;
+
         let user = await User.findone({
-            _id: user_id,
+            e_mail: req.body.email,
             active: true
         }).exec();
         if(user===undefined) {
@@ -118,7 +214,7 @@ router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (r
         //create the order in the DB
         await Order.CREATE([
             orderId,
-            user_id,
+            req.body.email,
             orderItemList,
             address,
             totalPrice
@@ -159,7 +255,7 @@ router.post('/add_poster', async function(req, res,next) {
 router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body._id,
+            e_mail: req.body.email,
             active: true
         }).exec();
         if (user === undefined) {
@@ -202,7 +298,7 @@ router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function 
 router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body._id,
+            e_mail: req.body.email,
             active: true
         }).exec();
         if(user===undefined) {
@@ -248,7 +344,7 @@ router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function
 router.post("/delete_from_cart", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body._id,
+            e_mail: req.body.email,
             active: true,
         }).exec();
         if(user===undefined) {
@@ -288,7 +384,7 @@ router.post("/delete_from_cart", connectEnsureLogin.ensureLoggedIn(), async func
 
 router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     let user = await User.findOne({
-        _id: req.query.id,
+        e_mail: req.body.email,
         active: true,
     }).exec();
     if (user === undefined) {
@@ -341,7 +437,7 @@ router.get("/get_orders", async function (req, res) {
             orders.map((order) => {
                 return {
                     _id: order._id,
-                    user_id: order.user_id,
+                    user_email: order.user_email,
                     itemsInOrder:order.itemsInOrder,
                     shipmentAddress:{
                         street: order.shipmentAddress.street,
@@ -390,23 +486,16 @@ router.get("/get_posters", async function (req, res) {
 );
 router.get("/get_user", async function (req, res) {
         let user = await User.findOne({
-            _id: req.query.id,
+            e_mail: req.query.email,
             active: true,
         }).exec();
          await res.json(user);
     }
 );
-router.get("/get_user_by_email", async function (req, res) {
-        let user = await User.findOne({
-            e_mail: req.query.e_mail,
-            active: true,
-        }).exec();
-        await res.json(user);
-    }
-);
+
 router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     let user = await User.findOne({
-        _id: req.body._id,
+        e_mail: req.body.email,
         active: true,
     }).exec();
     if (user === undefined) {
@@ -444,7 +533,6 @@ router.get("/get_users", async function (req, res) {
             await res.json(
                 users.map((user) => {
                     return {
-                        _id: user._id,
                         e_mail: user.e_mail,
                         fullName: {
                             fName: user.fullName.fName,
@@ -479,7 +567,7 @@ router.post('/update_poster', async function(req, res,next) {
 router.post("/update_poster_cart_amount", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body._id,
+            e_mail: req.body.email,
             active: true
         }).exec();
         if (user === undefined) {
@@ -521,7 +609,7 @@ router.post("/update_poster_cart_amount", connectEnsureLogin.ensureLoggedIn(), a
 router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body._id,
+            e_mail: req.body.email,
             active: true
         }).exec();
         if (user === undefined) {
@@ -565,7 +653,6 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
 });
 router.post("/update_user", async function (req, res) {
     let user = {
-        _id: req.body._id,
         fullName: {
             fName: req.body.fName,
             lName: req.body.lName
@@ -595,7 +682,7 @@ router.post("/update_user", async function (req, res) {
 router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
     try {
         let user = await User.findOne({
-            _id: req.body.user_id,
+            e_mail: req.body.email,
             active: true,
         }).exec();
         if (user === undefined) {

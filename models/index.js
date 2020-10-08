@@ -17,5 +17,6 @@ require("./user")(db);
 require("./poster")(db);
 require("./order")(db);
 require("./message")(db);
+require("./chatroom")(db);
 
 module.exports = (model) => db.model(model);

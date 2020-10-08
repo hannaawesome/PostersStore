@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "body-parser": "^1.19.0",
     "bootstrap": "^4.1.1",
     "express": "^4.17.1",
     "heroku": "^7.44.0",
@@ -46,7 +47,9 @@
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.0",
-    "axios": "^0.20.0"
+    "axios": "^0.20.0",
+    "jwt-then": "^1.0.1",
+    "react-google-login": "^5.1.21"
   },
   "proxy": "http://localhost:8000"
 }

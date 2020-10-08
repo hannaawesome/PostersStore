@@ -1,6 +1,7 @@
 var bodyParser = require("body-parser");
 const passport = require("passport");
 var favicon = require("serve-favicon");
+
 const expressSession = require("express-session")({
     secret: "secret",
     resave: false,
@@ -116,6 +117,8 @@ app.use(function (err, req, res, next) {
 app.get("*", (req, res) => {
     res.sendFile(path.join(publicPath, "index.html"));
 });
+
+
 
 
 module.exports = app;

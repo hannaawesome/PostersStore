@@ -48,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PosterViewInShop({ poster, renderStore }) {
     let history = useHistory();
-    const [liked, setLiked] = React.useState(poster.likedItems);
+    const [liked, setLiked] = React.useState(false);
     const handlePosterChangedSaved = () => {
         var data = {
-            _id: sessionStorage.getItem("userId"),
+            e_mail: sessionStorage.getItem("userEmail"),
             posterId: poster.id,
             state: !liked,
         };

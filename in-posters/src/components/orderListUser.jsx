@@ -51,7 +51,7 @@ const OrderListUser = () => {
     React.useEffect(() => {
         async function fetchOrders() {
             const fullResponse = await fetch(
-                "/get_user_orders?id="+sessionStorage.getItem("userId")
+                "/get_user_orders?email="+sessionStorage.getItem("userEmail")
             );
             const responseJson = await fullResponse.json();
             ordersSet(responseJson);

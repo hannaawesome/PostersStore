@@ -8,13 +8,13 @@ import shoppingCart from "./components_images/shopping-cart.png";
 
 export default function NavigationBar() {
     let history = useHistory();
-    const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
-    const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
-    if(checkedRemember)
-    {
-        setCategory(localStorage.getItem("userCategory"));
-        sessionStorage.setItem("userCategory",category)
-    }
+        const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
+        const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
+        if(checkedRemember){
+            setCategory(localStorage.getItem("userCategory"));
+        sessionStorage.setItem("userCategory",category);
+        }
+
     function redirectStore(e) {
         history.push("/store");
     }
@@ -54,8 +54,8 @@ export default function NavigationBar() {
     }
 
     function onLogout(e) {
-        if (sessionStorage.getItem("userId")!==""&&sessionStorage.getItem("userId")!==null)
-           {sessionStorage.setItem("userId",""); sessionStorage.setItem("category","");}
+        if (sessionStorage.getItem("userEmail")!==""&&sessionStorage.getItem("userEmail")!==null)
+           {sessionStorage.setItem("userEmail",""); sessionStorage.setItem("category","");}
         else
             history.push("/");
     }
