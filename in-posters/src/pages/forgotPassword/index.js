@@ -3,15 +3,15 @@ import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import {
-    HelpBlock,
     FormGroup,
-    Glyphicon,
     FormControl,
-    ControlLabel,
+    FormLabel,
+
 } from "react-bootstrap";
 import "../../components/css/ForgotPassword.css";
 import makeToast from "../../Toaster";
 import LoaderButton from "../../components/LoaderButton";
+import FormStaticText from "tabler-react/dist/components/Form/FormStaticText.react";
 
 export default function ForgotPassword() {
     const [code, setCode] = React.useState("");
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
         return (
             <form onSubmit={handleSendCodeClick}>
                 <FormGroup bsSize="large" controlId="email">
-                    <ControlLabel>Email</ControlLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl
                         autoFocus
                         type="email"
@@ -98,20 +98,20 @@ export default function ForgotPassword() {
         return (
             <form onSubmit={handleConfirmClick}>
                 <FormGroup bsSize="large" controlId="code">
-                    <ControlLabel>Confirmation Code</ControlLabel>
+                    <FormLabel>Confirmation Code</FormLabel>
                     <FormControl
                         autoFocus
                         type="tel"
                         value={code}
                         onChange={e => setCode(e.target.value)}
                     />
-                    <HelpBlock>
+                    <FormStaticText>
                         Please check your email ({email}) for the confirmation code.
-                    </HelpBlock>
+                    </FormStaticText>
                 </FormGroup>
                 <hr />
                 <FormGroup bsSize="large" controlId="password">
-                    <ControlLabel>New Password</ControlLabel>
+                    <FormLabel>New Password</FormLabel>
                     <FormControl
                         type="password"
                         value={password}
@@ -119,7 +119,7 @@ export default function ForgotPassword() {
                     />
                 </FormGroup>
                 <FormGroup bsSize="large" controlId="confirmPassword">
-                    <ControlLabel>Confirm Password</ControlLabel>
+                    <FormLabel>Confirm Password</FormLabel>
                     <FormControl
                         type="password"
                         value={confirmPassword}
@@ -142,7 +142,7 @@ export default function ForgotPassword() {
     function renderSuccessMessage() {
         return (
             <div className="success">
-                <Glyphicon glyph="ok" />
+                {/*<Glyphicon glyph="ok" />*/}
                 <p>Your password has been reset.</p>
                 <p>
                     <Link to="/log_in">
@@ -174,7 +174,7 @@ export default function ForgotPassword() {
 // import { makeStyles } from "@material-ui/core/styles";
 // import Avatar from "@material-ui/core/Avatar";
 // import CssBaseline from "@material-ui/core/CssBaseline";
-// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import FormFormControl from "@material-ui/core/FormFormControl";
 // import Checkbox from "@material-ui/core/Checkbox";
 // import Link from "@material-ui/core/Link";
 // import Grid from "@material-ui/core/Grid";

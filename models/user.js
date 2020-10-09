@@ -7,7 +7,6 @@ module.exports = db => {
     let schema = new mongo.Schema({
         _id:String,
         e_mail: { type: String, required: true, unique: true},
-       // password: { type: String, required: true },
         fullName: {
             fName: String,
             lName : String

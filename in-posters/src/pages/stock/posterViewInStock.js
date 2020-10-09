@@ -85,7 +85,7 @@ export default function PosterViewInStock({ poster, renderStore }) {
     function ViewPosterItemHandler(e) {
         //var self;
         e.preventDefault();
-         history.push("/poster");
+         history.push("/poster_edit");
     }
     return (
         <Card className={classes.root} onClick={ViewPosterItemHandler}>

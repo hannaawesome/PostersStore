@@ -4,12 +4,11 @@ var favicon = require("serve-favicon");
 
 const expressSession = require("express-session")({
     secret: "secret",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {maxAge: 900000, httpOnly: true, sameSite: true}
 });
 const routes = require('./routes');
-
 //var basicRouter = require("./routes/mainRoute");
 
 var createError = require("http-errors");
@@ -19,7 +18,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var app = express();
-var router = express.Router();
+//var router = express.Router();
 
 const publicPath = path.join(__dirname, "..", "in-posters", "public");
 
@@ -45,10 +44,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "in-posters", "build")));
 
- app.use(
-     "/account",
-     express.static(path.join(__dirname, "in-posters", "build"))
- );
+ // app.use(
+ //     "/account",
+ //     express.static(path.join(__dirname, "in-posters", "build"))
+ // );
 // app.use(
 //     "/store",
 //     express.static(path.join(__dirname, "in-posters", "build"))

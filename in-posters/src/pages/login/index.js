@@ -1,7 +1,7 @@
 import $ from "jquery";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import {Route, Switch, useHistory,withRouter} from "react-router-dom";
+ import {Switch, useHistory,withRouter} from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -10,7 +10,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import React, {useEffect} from "react";
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import { useGoogleLogin} from 'react-google-login';
 import makeToast from "../../Toaster";
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
 const Login= (props) => {
     let history = useHistory();
 
@@ -60,6 +61,8 @@ const Login= (props) => {
     const [password, setPassword] = React.useState(
         localStorage.getItem("password")
     );
+    const [fName, setFName] = React.useState("");
+     const [lName, setLName] = React.useState("");
     const [checkedRemember, setChecked] = React.useState(
         JSON.parse(localStorage.getItem("checked"))
     );
@@ -80,6 +83,9 @@ const Login= (props) => {
     const responseGoogleSuccess = (res) => {
         console.log('Login Success: currentUser:', res.profileObj);
         setEmail(res.profileObj.email);
+        setPassword(res.profileObj.googleId);//isn't really necessary
+        setFName(res.profileObj.name);
+        setLName(res.profileObj.familyName);
         console.log(email);
         $.ajax({
             type: "GET",
@@ -88,21 +94,49 @@ const Login= (props) => {
             .done(res => {
                 sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
+                localStorage.setItem("connectedByGoogle","true");
                 props.setupSocket();
                 if(history.location.state.from==="checkout")
                     history.push('/checkout');
                 else
                     history.push('/');
             })
-            .fail(err => {console.log(err); makeToast("error", err.response.data.message);});    };
+            .fail(addUserGoogle)};
+        function addUserGoogle() {
+            var data = {
+                e_mail: email,
+                password: password,
+                fullName: {
+                 fName: fName,
+                 lName: lName
+             }};
+            $.ajax({
+                type: "POST",
+                url: "/register",
+                data
+            })
+                .done(res => {
+                    sessionStorage.setItem("userCategory","Customer");
+                    sessionStorage.setItem("userEmail", email);
+                    localStorage.setItem("connectedByGoogle","true");
+                    props.setupSocket();
+                    if(history.location.state.from==="checkout")
+                        history.push('/checkout');
+                    else
+                        history.push('/');
+                })
+                .fail(res => console.log('Register by google to db failed: res:', res));
+        }
     const responseGoogleFailure = (res) => {
         console.log('Login failed: res:', res);
-        makeToast("Could not login, try again!");
+        makeToast("error","Could not login, try again!");
     };
+
+    const clientId="142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com";
     const { googleLogIn } = useGoogleLogin({
         responseGoogleSuccess,
         responseGoogleFailure,
-        clientId:"142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com",
+        clientId,
         isSignedIn: true,
         accessType: 'offline',
     });
@@ -123,6 +157,7 @@ console.log(email);
             .done(res => {
                 sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
+                localStorage.setItem("connectedByGoogle","false");
                 if (checkedRemember) {
                     localStorage.setItem("userCategory",res.category);
                     localStorage.setItem("password", password);
@@ -144,7 +179,7 @@ console.log(email);
 
     };
     const onFailure = error => {
-        makeToast("Could not login, try again!");
+        makeToast("error","Could not login, try again!");
     };
     function submitHandler(e) {
 
@@ -235,7 +270,7 @@ console.log(email);
                                             Login
                                         </Button>
                                         <button onClick={googleLogIn} className="button">
-                                            <img src="images/google.svg" alt="google login" className="icon"/>
+                                            <img src="../../components/components_images/google.svg" alt="google login" className="icon"/>
 
                                             <span className="buttonText">Sign in with Google</span>
                                         </button>

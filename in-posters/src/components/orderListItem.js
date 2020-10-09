@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 export default function OrderListItem({ order }) {
     const classes = useStyles();
 
-
+//change icon to say that it means finish
     function FinishOrderItemHandler(e) {
 
     }

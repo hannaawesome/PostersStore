@@ -8,13 +8,16 @@ import InPosterApp from "./components";
 import CartContextProvider from "./contexts/CartContext";
 ReactDOM.render(
   <React.StrictMode>
-          <CartContextProvider>
+      <CartContextProvider>
               <BrowserRouter>
                   <div>
                   <InPosterApp/>
               </div>
-          </BrowserRouter>
-          </CartContextProvider>
+       </BrowserRouter>
+       </CartContextProvider>
+          <div>
+
+          </div>
   </React.StrictMode>,
   document.getElementById('root')
 );

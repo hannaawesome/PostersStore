@@ -1,21 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import { useHistory } from "react-router-dom";
 import "tabler-react/dist/Tabler.css";
-import {Navbar,Nav, NavDropdown} from "react-bootstrap"
+import {Navbar,Nav} from "react-bootstrap"
 import heart from "./components_images/heart.png";
 import exit from "./components_images/exit.png";
 import shoppingCart from "./components_images/shopping-cart.png";
 import {useGoogleLogout} from "react-google-login";
 
+
 export default function NavigationBar({category}) {
     let history = useHistory();
         const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
+        const [connectByGoogle]=React.useState(JSON.parse(localStorage.getItem("connectedByGoogle")));
        // const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
-    const [email] = React.useState(localStorage.getItem("userEmail"));
+   // const [email] = React.useState(sessionStorage.getItem("userEmail"));
         if(checkedRemember){
            // setCategory(localStorage.getItem("userCategory"));
-            category=localStorage.getItem("userCategory");
+             category=localStorage.getItem("userCategory");
         sessionStorage.setItem("userCategory",category);
+            sessionStorage.setItem("userEmail", localStorage.getItem("userEmail"));
         }
 
     function redirectStore(e) {
@@ -32,9 +35,8 @@ export default function NavigationBar({category}) {
 
     function redirectAccount(e) {
 
-        if (email!==""&&email!==null)
+        if (sessionStorage.getItem("userEmail")!==""&&sessionStorage.getItem("userEmail")!==null)
             {
-                sessionStorage.setItem("userEmail", email);
                 history.push("/account");
             }
             else history.push("/log_in", { from: 'anywhere' } )
@@ -66,23 +68,27 @@ export default function NavigationBar({category}) {
     }
     const onLogoutSuccess = (res) => {
         console.log('Logged out Success');
+        sessionStorage.setItem("userEmail","");
+        sessionStorage.setItem("userCategory","");
         history.push("/");
     };
 
-    const onFailure = () => {
-        console.log('Handle failure cases');
+    const onFailure = (err) => {
+        console.log(err);
     };
-
+    const clientId="142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com";
     function onLogout(e) {
            sessionStorage.setItem("userEmail","");
-           sessionStorage.setItem("category","");
-        useGoogleLogout({
-            clientId:"142120254422-j6pkdhtomqv3oqjrcgakbkuv21pk8lk7.apps.googleusercontent.com",
-            onLogoutSuccess,
-            onFailure,
-        });
+           sessionStorage.setItem("userCategory","");
+           history.push('/');
     }
+    const { logOutGoogle } = useGoogleLogout({
+        clientId,
+        onLogoutSuccess,
+        onFailure,
+    });
         console.log(category);
+    //connectByGoogle?logOutGoogle:
     switch (category) {
         case "Admin":
             return (
@@ -126,8 +132,8 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectCart}>
                                 <img alt="" src={shoppingCart} height={20} width={20}/>
                             </Nav.Link>
-                            <Nav.Link onClick={redirectOrderList()}>Orders</Nav.Link>
-                            <Nav.Link onClick={redirectStock()}>Stock</Nav.Link>
+                            <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
+                            <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
                             <Nav.Link onClick={onLogout}>
                                 <img alt="" src={exit} height={20} width={20}/>
                             </Nav.Link>
@@ -160,7 +166,7 @@ export default function NavigationBar({category}) {
             );
         default:
             return (
-                <React.Fragment>
+                <div>
                     <Navbar bg="light">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
@@ -175,7 +181,8 @@ export default function NavigationBar({category}) {
                             </Nav.Link>
                         </Nav>
                     </Navbar>
-                </React.Fragment>
+                </div>
             );
     }
-}
+
+ }

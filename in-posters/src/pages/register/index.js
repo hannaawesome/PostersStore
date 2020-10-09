@@ -56,30 +56,22 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
-//let history = useHistory();
-// const initialState = {
-//     uId: '',
-//     fName: '',
-//     lName: '',
-//     email: '',
-//     category: 'Customer',
-//     password: '',
-// };
+
 const Register= (props) => {
     let history = useHistory();
     const classes = useStyles();
 
-    const [fName, setFName] = React.useState("");
-    const [lName, setLName] = React.useState("");
+    const [fname, setFname] = React.useState("");
+    const [lname, setLname] = React.useState("");
     const [email, setEmail] = React.useState("");
-    const [category, setCategory] = React.useState("");
+   // const [category, setCategory] = React.useState("");
     const [password, setPassword] = React.useState("");
     const onChangeEmailHandler  = email => {
         setEmail(email.target.value);
     };
    const onChangePasswordHandler = (e) => setPassword( e.target.value);
-    const onChangeFName = (e) => setFName( e.target.value);
-    const onChangeLName = (e) => setLName( e.target.value);
+    const onChangeFName = (e) => setFname( e.target.value);
+    const onChangeLName = (e) => setLname( e.target.value);
 
     // async function fetchUserId() {
     //     const fullResponse = await fetch(
@@ -93,20 +85,20 @@ const Register= (props) => {
             type: "GET",
             url: "/get_user?email="+email,
         })
-            .done(res => {
-                setCategory( res.category);
-                sessionStorage.setItem("userCategory", category);
+            .then(res => {
+                sessionStorage.setItem("userCategory", res.category);
                 sessionStorage.setItem("userEmail",email);
+                localStorage.setItem("connectedByGoogle","false");
                 props.setupSocket();
                 history.push("/");
             })
-            .fail(err => console.log(err));
+            .catch(err =>console.log(err));
 
-        // makeToast("error", err.response.data.message);
+        //
 
     };
     const onFailure = error => {
-        makeToast("register failed", error.response.data.message);
+        makeToast("error", error.response.data.message);
     };
     const onSubmitRegisterHandler= (e) => {
         e.preventDefault();
@@ -115,8 +107,8 @@ const Register= (props) => {
             e_mail: email,
             password: password,
             fullName: {
-                fName: fName,
-                lName: lName
+                fName: fname,
+                lName: lname
             }};
 
         // Submit form via jQuery/AJAX
@@ -124,9 +116,8 @@ const Register= (props) => {
             type: "POST",
             url: "/register",
             data: data,
-        })
-            .done(onSuccess)
-            .fail(onFailure);
+        }).then(onSuccess)
+            .catch(onFailure);
     };
 
 

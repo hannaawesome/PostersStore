@@ -6,14 +6,12 @@ import {Route, Switch, useHistory} from "react-router-dom";
 import Toolbar from "@material-ui/core/Toolbar";
 import Account from "../pages/account";
 import Register from "../pages/register";
-import "tabler-react/dist/Tabler.css";
-import {Error400, Error401, Error403, Error404, Error500, Error503} from "../pages/Errors";
+//import "tabler-react/dist/Tabler.css";
 import NavigationBar from "./NavigationBar";
 import makeToast from "../Toaster";
 import io from "socket.io-client";
 import Cart from "../pages/cart";
 import Login from "../pages/login";
-import Empty from "../pages/Errors/Empty.react";
 import Liked from "../pages/liked";
 import Contact from "../pages/contact";
 import Store from "../pages/Store";
@@ -23,19 +21,23 @@ import OrderList from "../pages/orderLists";
 import Stock from "../pages/stock";
 import Checkout from "../pages/checkout";
 import PosterData from "../pages/poster";
-import ForgotPassword from "../pages/forgotPassword";
+//import ForgotPassword from "../pages/forgotPassword";
 import UsersData from "../pages/users";
 import GroupsMenu from "../pages/groupsMenu"
 import Chatroom from "../pages/chatRoom"
+import {Error404Page} from "tabler-react";
+
 import About from "./about";
+import ForgotPassword from "../pages/forgotPassword";
 
 export default function App(props: Props): React.Node {
-    const [socket, setSocket] = React.useState(null);
 
+
+    const [socket, setSocket] = React.useState(null);
     const setupSocket = () => {
         const token = sessionStorage.getItem("userCategory");
         if (token && !socket) {
-            const newSocket = io("http://localhost:8000", {
+            const newSocket = io(window.location.href, {
                 query: {
                     token: sessionStorage.getItem("userCategory"),
                 },
@@ -59,60 +61,50 @@ export default function App(props: Props): React.Node {
         setupSocket();
         //eslint-disable-next-line
     }, []);
+   if( sessionStorage.getItem("userCategory")===undefined)
+        sessionStorage.setItem("userCategory","");
     return (
-
         <div>
             <Header/>
             <Switch>
                 <Route exact from="/" render={(props) => <div><Toolbar>
                     <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                </Toolbar><HomePage{...props}/></div>}/>
-                <Route exact from="/400" render={(props) => <Error400{...props} />}/>
-                <Route exact from="/401" render={(props) => <Error401{...props} />}/>
-                <Route exact from="/403" render={(props) => <Error403{...props} />}/>
-                <Route exact from="/404" render={(props) => <Error404{...props} />}/>
-                <Route exact from="/500" render={(props) => <Error500{...props} />}/>
-                <Route exact from="/503" render={(props) => <Error503{...props} />}/>
+                </Toolbar>
+                    <HomePage{...props}/>
+                </div>}/>
                 <Route exact path="/account" render={(props) =>
                     <div>
                         <Toolbar>
                              <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        <Account{...props} />
+                         <Account{...props} />
                     </div>}/>
-                <Route exact from="/register" render={(props) =>
+                <Route exact from="/register" render={() =>
                     <div>
                         <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        <Register{...props}/>
+                        <Register setupSocket={setupSocket}/>
                     </div> } />
                     <Route exact from="/cart" render={(props) =>
                         <div>
                         <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                            <Cart{...props} />
+                              <Cart{...props} />
                         </div>} />
                     <Route path="/log_in" render={() =><div>
                         <Toolbar>
                             <NavigationBar/>
                         </Toolbar>
-                        <Login setupSocket={setupSocket} />
+                         <Login setupSocket={setupSocket} />
                     </div>} exact/>
-                    <Route exact from="/empty_page" render={(props) =>
-                        <div>
-                            <Toolbar>
-                                <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
-                            <Empty{...props} />
-                        </div>} />
                     <Route exact from="/liked" render={(props) =>
                         <div>
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <Liked{...props} />
+                            {/*  <Liked{...props} />*/}
                         </div>} />
                     <Route exact from="/contact" render={(props) =>
                         <div>
@@ -126,21 +118,21 @@ export default function App(props: Props): React.Node {
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <Store{...props} />
+                             <Store{...props} />
                         </div>} />
                      <Route exact from="/poster_edit" render={(props) =>
                          <div>
                              <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                              </Toolbar>
-                             <PosterEdit{...props} />
+                               <PosterEdit{...props} />
                          </div>} />
                     <Route exact from="/users" render={(props) =>
                         <div>
                             <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <UsersData{...props} />
+                             <UsersData{...props} />
                         </div>} />
                     <Route exact from="/user_edit" render={(props) =>
                         <div>
@@ -161,21 +153,21 @@ export default function App(props: Props): React.Node {
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <Stock{...props} />} />
+                            <Stock{...props} />}
                         </div>} />
                     <Route exact from="/checkout" render={(props) =>
                         <div>
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <Checkout{...props} />} />
+                              <Checkout{...props} />} />
                         </div>} />
-                    <Route exact from="/poster" render={(props) =>
+                    <Route exact from="/poster/:id" render={(props) =>
                         <div>
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <PosterData{...props} />
+                            {/*  <PosterData{...props} />*/}
                         </div>} />} />
                     <Route exact from="/forgot_password" render={(props) =>
                         <div>
@@ -189,7 +181,7 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        <GroupsMenu socket={socket} />
+                            {/* <GroupsMenu socket={socket} />*/}
                         </div>
                         } exact/>
                     <Route path="/chatroom/:id" render={() =>
@@ -197,10 +189,26 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        <Chatroom socket={socket} />
+                            {/* <Chatroom socket={socket} />*/}
                         </div>}
                     exact/>
-                    <Route render={(props) =>Error404} />
+                <Route path="/add_poster" render={() =>
+                    <div>
+                        <Toolbar>
+                            <NavigationBar category={sessionStorage.getItem("userCategory")}/>
+                        </Toolbar>
+                        {/* <AddPoster />*/}
+                    </div>}
+                       exact/>
+                <Route path="/add_user" render={() =>
+                    <div>
+                        <Toolbar>
+                            <NavigationBar category={sessionStorage.getItem("userCategory")}/>
+                        </Toolbar>
+                        {/* <RegisterByAdmin socket={socket} />*/}
+                    </div>}
+                       exact/>
+                    <Route render={(props) =><Error404Page/>} />
                     </Switch>
                     <About/>
                     </div>

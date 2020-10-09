@@ -79,3 +79,4 @@
 // //"passport-local-mongoose": "^6.0.1",
 // //"socket.io": "^2.3.0"
 // //}
+//    "react-bootstrap": "0.32.4",

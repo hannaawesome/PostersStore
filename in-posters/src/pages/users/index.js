@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import UserInList from "./userInList";
+import React from "react";
 //import { ProductsContext } from "../../contexts/ProductsContext";
 //import styles from './ProductsGrid.module.scss';
 
@@ -16,6 +15,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import AccountDetails from "../../components/accountDetails";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -89,7 +91,10 @@ const UserData = () => {
             usersToShowSet(users);
         }
     };
-
+    const handleAddUser = (event) => {
+        event.preventDefault();
+       // history.push("/");
+    };
     React.useEffect(() => {
         async function fetchUsers() {
             const fullResponse = await fetch(
@@ -100,7 +105,7 @@ const UserData = () => {
             usersToShowSet(responseJson);
         }
 
-        fetchUsers.then(r => console.log("got"));
+        fetchUsers();
     }, []);
     return (
         <React.Fragment>
@@ -114,6 +119,16 @@ const UserData = () => {
                     <Container maxWidth="sm">
                         <div className={classes.heroButtons}>
                             <Grid container spacing={2} justifyContent="center">
+                                <Grid item>
+                                    <div style={{ width: 300 }}>
+                                        <IconButton
+                                            onClick={handleAddUser}
+                                            style={{maxWidth: "130px", maxHeight: "30px"}}
+                                        >
+                                            <AddIcon/>
+                                        </IconButton>
+                                    </div>
+                                </Grid>
                                 <Grid item>
                                     <div style={{ width: 300 }}>
                                         <Autocomplete
@@ -161,7 +176,7 @@ const UserData = () => {
                         {usersToShow !== undefined &&
                         usersToShow.map((user, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
-                                <UserInList key={index} user={user} />
+                                <AccountDetails key={index} user={user} />
                             </Grid>
                         ))}
                     </Grid>

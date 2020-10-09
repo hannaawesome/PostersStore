@@ -1,13 +1,10 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class PosterEdit extends Component {
-    render() {
+export default function PosterEdit() {
         return (
             <div>
                 
             </div>
         );
-    }
-}
 
-export default PosterEdit;
+}

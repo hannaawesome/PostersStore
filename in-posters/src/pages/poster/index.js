@@ -70,7 +70,7 @@ const styles = (theme) => ({
         color: theme.palette.error.main,
     },
 });
-
+//added to cart
 class PosterData extends React.Component {
     static contextType = CartContext;
 

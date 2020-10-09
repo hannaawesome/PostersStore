@@ -96,7 +96,7 @@ router.post("/update_like_to_message",auth ,catchErrors(async function (req, res
                 res.send(200);
 }));
 router.post("/add_user",catchErrors(async function (req, res) {
-    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com/;
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@g.jct.ac.il/;
 
     if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
     if (req.body.password.length < 6) throw "Password must be at least 6 characters long.";
@@ -134,7 +134,7 @@ router.post("/add_user",catchErrors(async function (req, res) {
     }), 6000);
 }));
 router.post("/register", catchErrors(async function (req, res) {
-    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com/;
+    const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@g.jct.ac.il/;
 
     if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
     if (req.body.password.length < 6) throw "Password must be at least 6 characters long.";
@@ -143,8 +143,8 @@ router.post("/register", catchErrors(async function (req, res) {
     let user = {
         _id: usersList.length.toString(),
         fullName: {
-            fName: req.body.fName,
-            lName: req.body.lName
+            fName: req.body.fullName.fName,
+            lName: req.body.fullName.lName
         },
         phone:"",
         e_mail: req.body.e_mail,
@@ -740,81 +740,81 @@ router.post('/delete_poster',async function(req, res,next) {
     }
     setTimeout((function() {res.status(200).send()}), 1000);
 });
-router.post('/forgot_password', async function(req, res, next) {
-    await async.waterfall([
-        function (done) {
-            crypto.randomBytes(20, function (err, buf) {
-                var token = buf.toString('hex');
-                done(err, token);
-            });
-        },
-        async function (token, done) {
-            try {
-                let us = await User.findOne({e_mail: req.body.email}).exec();
-                if (!us) {
-                    res.status(404).send();
-                    return;
-                }
-                us.resetPasswordToken = token;
-                us.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-                await us.save();
-                var smtpTransport = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: 'hweissbe@g.jct.ac.il',
-                        pass: 'Hannaw18'
-                    }
-                });
-                var mailOptions = {
-                    to: us.mailAddress,
-                    from: 'hweissbe@g.jct.ac.il',
-                    subject: 'Password Reset',
-                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                };
-                smtpTransport.sendMail(mailOptions, function (err) {
-                    res.status(200).send();
-                });
-            } catch (err) {
-                console.log(`Failure ${err}`);
-            }
-        }], function (err) {
-        if (err) return next(err);
-    });
-});
-router.get('/reset_password', async function(req, res, next) {
-    try {
-        let us = await  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
-        if (!us) {
-            res.status(404).send();
-            return;
-        }
-        console.log(us);
-    } catch (err) {
-        console.log(`Failure ${err}`);
-    }
-});
-router.post('/update_password', async function(req, res, next) {
-    try {
-        let us = await User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
-        if (!us) {
-            res.status(404).send();
-            return;
-        }
-
-        await us.setPassword(req.body.password);
-        us.resetPasswordToken = undefined;
-        us.resetPasswordExpires = undefined;
-
-        await us.save();
-        res.status(200).send();
-    } catch (err) {
-        console.log(`Failure ${err}`);
-    }
-});
+// router.post('/forgot_password', async function(req, res, next) {
+//     await async.waterfall([
+//         function (done) {
+//             crypto.randomBytes(20, function (err, buf) {
+//                 var token = buf.toString('hex');
+//                 done(err, token);
+//             });
+//         },
+//         async function (token, done) {
+//             try {
+//                 let us = await User.findOne({e_mail: req.body.email}).exec();
+//                 if (!us) {
+//                     res.status(404).send();
+//                     return;
+//                 }
+//                 us.resetPasswordToken = token;
+//                 us.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+//
+//                 await us.save();
+//                 var smtpTransport = nodemailer.createTransport({
+//                     service: 'gmail',
+//                     auth: {
+//                         user: 'hweissbe@g.jct.ac.il',
+//                         pass: 'Hannaw18'
+//                     }
+//                 });
+//                 var mailOptions = {
+//                     to: us.mailAddress,
+//                     from: 'hweissbe@g.jct.ac.il',
+//                     subject: 'Password Reset',
+//                     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+//                         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+//                         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+//                         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+//                 };
+//                 smtpTransport.sendMail(mailOptions, function (err) {
+//                     res.status(200).send();
+//                 });
+//             } catch (err) {
+//                 console.log(`Failure ${err}`);
+//             }
+//         }], function (err) {
+//         if (err) return next(err);
+//     });
+// });
+// router.get('/reset_password', async function(req, res, next) {
+//     try {
+//         let us = await  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
+//         if (!us) {
+//             res.status(404).send();
+//             return;
+//         }
+//         console.log(us);
+//     } catch (err) {
+//         console.log(`Failure ${err}`);
+//     }
+// });
+// router.post('/update_password', async function(req, res, next) {
+//     try {
+//         let us = await User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
+//         if (!us) {
+//             res.status(404).send();
+//             return;
+//         }
+//
+//         await us.setPassword(req.body.password);
+//         us.resetPasswordToken = undefined;
+//         us.resetPasswordExpires = undefined;
+//
+//         await us.save();
+//         res.status(200).send();
+//     } catch (err) {
+//         console.log(`Failure ${err}`);
+//     }
+// });
 
 
 

@@ -99,14 +99,13 @@ onDrop(picture) {
     });
 }
 
-    handleHeartClick() {
+   /* handleHeartClick() {
         const {full, isVisible, product} = this.state;
         if (full) this.setState({full: 0});
         else this.setState({full: 1});
-    }
+    }*/
 
     render() {
-        const cartContext = this.context;
         const {classes} = this.props;
         const {
             full,
@@ -167,22 +166,6 @@ onDrop(picture) {
                                     <br/>
                                 </Grid>
 
-                                <Grid item xs container>
-                                    <ButtonUp
-                                        variant="contained"
-                                        color="secondary"
-                                        style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => cartContext.addingPoster(poster)}
-                                    >
-                                        Add to cart
-                                    </ButtonUp>
-                                    <IconButton
-                                        onClick={this.handleClick}
-                                        style={{maxWidth: "130px", maxHeight: "30px"}}
-                                    >
-                                        {full ? <FullHeartIcon/> : <BorderHeartIcon/>}
-                                    </IconButton>
-                                </Grid>
                                 <br/>
                                 <br/>
                             </Grid>

@@ -7,7 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('TheProject:server');
 var http = require('http');
-require("./../models/message");
+var Message=require("./../models")("Message");
+var User=require("./../models")("User");
 
 
 /**

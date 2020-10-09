@@ -59,7 +59,7 @@ const Cart = () => {
                 <div className="col-sm-9 p-3">
                     {cartItems.length > 0 ? (
                         <div className="card card-body border-0">
-                            {cartItems.map((product) => (
+                            {cartItems !== undefined &&cartItems.map((product) => (
                                 <PosterView key={product.id} product={product} />
                             ))}
                         </div>
@@ -69,7 +69,7 @@ const Cart = () => {
 
                     {checkout && (
                         <div className="p-3 text-center text-success">
-                            <p>Checkout successfull</p>
+                            <p>Checkout successful</p>
                             <Link to="/" className="btn btn-outline-success btn-sm">
                                 BUY MORE
                             </Link>
