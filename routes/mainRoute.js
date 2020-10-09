@@ -48,7 +48,7 @@ router.get("/get_messages", catchErrors(async function (req, res) {
 
     res.json(messages);
 }));
-router.post("/update_like_to_message",auth ,catchErrors(async function (req, res) {
+router.post("/update_like_to_message" ,catchErrors(async function (req, res) {
     const { massageId,userAdded,likeStatus,unlikeStatus} = req.body;
     let user = await User.findOne({
         e_mail: userAdded,
@@ -96,7 +96,7 @@ router.post("/update_like_to_message",auth ,catchErrors(async function (req, res
                 debug("successfully added to liked");
                 res.send(200);
 }));
-router.post("/add_user",catchErrors(async function (req, res) {
+router.post("/add_user",connectEnsureLogin.ensureLoggedIn(),catchErrors(async function (req, res) {
     const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@g.jct.ac.il/;
 
     if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
@@ -228,7 +228,7 @@ router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (r
         res.send(404);
     }});
 
-router.post('/add_poster', async function(req, res,next) {
+router.post('/add_poster',connectEnsureLogin.ensureLoggedIn(), async function(req, res,next) {
     try {
         let posters = await Poster.REQUEST();
         let posterId = 40000; //first order id is 100, the second will be 101...
@@ -254,7 +254,7 @@ router.post('/add_poster', async function(req, res,next) {
         res.send(404);
     }
 });
-router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/add_to_cart", async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
@@ -347,7 +347,7 @@ router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function
     }
 });
 
-router.post("/delete_from_cart", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/delete_from_cart", async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
@@ -431,7 +431,7 @@ router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async functi
         );
     }
 });
-router.get("/get_orders", async function (req, res) {
+router.get("/get_orders",connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
         let orders = await Order.find({active: true}).exec();
         res.json(
             orders.map((order) => {
@@ -523,7 +523,7 @@ router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async functi
             ));
     }
 });
-router.get("/get_users", async function (req, res) {
+router.get("/get_users",connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
         let users = await User.find({active: true}).exec();
         if (users === undefined||users === ""||users===null) {
             debug("no users found");
@@ -544,7 +544,7 @@ router.get("/get_users", async function (req, res) {
                 }));
     }
 );
-router.post('/update_poster', async function(req, res,next) {
+router.post('/update_poster',connectEnsureLogin.ensureLoggedIn(), async function(req, res,next) {
     let update_poster = {
         _id:req.body._id,
         name: req.body.name,
@@ -647,7 +647,7 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
         res.send(404);
     }
 });
-router.post("/update_user", async function (req, res) {
+router.post("/update_user", connectEnsureLogin.ensureLoggedIn(),async function (req, res) {
     let user = {
         fullName: {
             fName: req.body.fName,
@@ -716,7 +716,7 @@ router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function
         res.send(404);
     }
 });
-router.post('/delete_user',async function(req, res,next) {
+router.post('/delete_user',connectEnsureLogin.ensureLoggedIn(),async function(req, res,next) {
     try {
         await User.DELETE(req.query.email);
     }
@@ -725,7 +725,7 @@ router.post('/delete_user',async function(req, res,next) {
     }
     setTimeout((function() {res.status(200).send()}), 1000);
 });
-router.post('/delete_poster',async function(req, res,next) {
+router.post('/delete_poster',connectEnsureLogin.ensureLoggedIn(),async function(req, res,next) {
     try {
         await Poster.DELETE(req.query.id);
     }

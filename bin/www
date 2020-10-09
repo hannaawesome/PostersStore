@@ -96,9 +96,7 @@ const jwt = require("jwt-then");
 io.use(async (socket, next) => {
   try {
     const token = socket.handshake.query.token;
-
-
-    const payload = await jwt.verify(token, process.env.SECRET);
+    const payload = await jwt.verify(token, sessionStorage.getItem("category"));
     socket.userId = payload.id;
     next();
   } catch (err) {}
