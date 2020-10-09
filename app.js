@@ -3,7 +3,7 @@ const passport = require("passport");
 var favicon = require("serve-favicon");
 
 const expressSession = require("express-session")({
-    secret: "secret",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {maxAge: 900000, httpOnly: true, sameSite: true}

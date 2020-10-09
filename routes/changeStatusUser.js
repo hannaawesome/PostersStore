@@ -12,7 +12,7 @@ router.post('/',async function(req, res,next) {
         address: {
             street: "",
             city: "",
-            state: ""
+            houseNum: ""
         },
         phone: "",
         mail: "",

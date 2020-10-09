@@ -14,6 +14,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import { useGoogleLogin} from 'react-google-login';
 import makeToast from "../../Toaster";
+import {sha256} from "js-sha256";
 
 
 
@@ -160,7 +161,7 @@ console.log(email);
                 localStorage.setItem("connectedByGoogle","false");
                 if (checkedRemember) {
                     localStorage.setItem("userCategory",res.category);
-                    localStorage.setItem("password", password);
+                    localStorage.setItem("password", sha256(password+process.env.SALT_PASSWORD));
                     localStorage.setItem("userEmail", email);
                     localStorage.setItem("checked", "true");
                 } else {
@@ -188,7 +189,7 @@ console.log(email);
 
         var data = {
             e_mail: email,
-            password: password,
+            password: sha256(password+process.env.SALT_PASSWORD),
         };
 
         // Submit form via jQuery/AJAX

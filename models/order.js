@@ -9,9 +9,9 @@ module.exports = db => {
         user_id: String,
         itemsInOrder:Array,//array of (poster_id,amount,measurement)
         shipmentAddress:{
+            houseNum:String,
             street: String,
-            city: String,
-            state: String
+            city: String
         },
         totalPrice:Number,
         createdAt: { type: Date, default: Date.now() },
@@ -54,7 +54,7 @@ module.exports = db => {
             orderToUpdate.itemsInOrder=updatedOrder.itemsInOrder;
             orderToUpdate.shipmentAddress.street= updatedOrder.shipmentAddress.street;
             orderToUpdate.shipmentAddress.city= updatedOrder.shipmentAddress.city;
-            orderToUpdate.shipmentAddress.state= updatedOrder.shipmentAddress.state;
+            orderToUpdate.shipmentAddress.houseNum= updatedOrder.shipmentAddress.houseNum;
             orderToUpdate.measurement.width = updatedOrder.width;
             orderToUpdate.measurement.length = updatedOrder.length;
             orderToUpdate.totalPrice=updatedOrder.totalPrice;

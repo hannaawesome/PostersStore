@@ -7,7 +7,7 @@ module.exports = db => {
         _id:String,
         name: { type: String, required: true},
         creator: String,
-		img: String,
+		img: Array,
 		price: Number,
         measurement:{type:String,default:"50X70"},
         sizeList:Array,//array of string

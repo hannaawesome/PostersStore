@@ -28,6 +28,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Box from "@material-ui/core/Box";
 import { Divider } from "@material-ui/core";
 import {Dropdown} from "react-bootstrap";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -118,8 +121,8 @@ class PosterData extends React.Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
-
-                        <Grid item xs={1}></Grid>
+                        <Grid item xs={1}><img src={poster.img.thumbnail}/>
+                        </Grid>
                         <Grid item xs={5}>
 
                             <Dropdown
@@ -198,6 +201,31 @@ class PosterData extends React.Component {
                                 })};
                             </List>
                         </Grid>
+                        {/* <Grid item xs={12} sm={6} >
+                            <Select
+                                labelId="mutiple-chip-label"
+                                id="mutiple-chip"
+                                multiple
+                                value={tagList}
+                                onChange={(event) => {setTagList(event.target.value);}}
+                                input={<Input id="select-multiple-chip" />}
+                                renderValue={(selected) => (
+                                    <div className={classes.chips}>
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} className={classes.chip} />
+                                        ))}
+                                    </div>
+                                )}
+                                MenuProps={MenuProps}
+                            >
+                                {constTagList.map((tag) => (
+                                    <MenuItem key={tag} value={tag} style={getStyles(tag, tagList, theme)}>
+                                        {tag}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                        </Grid>*/}
                     </Grid>
                 </div>
             </div>

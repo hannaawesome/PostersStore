@@ -12,9 +12,8 @@ const { catchErrors } = require("../handlers/errorHandlers");
 const auth = require("./auth");
 var async = require('async');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
-const util = require('util');
-const asyncify = require("async");
+const sha256 = require("js-sha256");
+
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -443,7 +442,7 @@ router.get("/get_orders", async function (req, res) {
                     shipmentAddress:{
                         street: order.shipmentAddress.street,
                         city: order.shipmentAddress.city,
-                        state: order.shipmentAddress.state
+                        houseNum: order.shipmentAddress.houseNum
                     },
                     totalPrice: order.totalPrice,
                     createdAt: order.createdAt,
@@ -515,7 +514,7 @@ router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async functi
                             shipmentAddress: {
                                 street: order.shipmentAddress.street,
                                 city: order.shipmentAddress.city,
-                                state: order.shipmentAddress.state
+                                houseNum: order.shipmentAddress.houseNum
                             },
                             totalPrice: order.totalPrice,
                             createdAt: order.createdAt,
@@ -889,8 +888,11 @@ router.post('/forgot_password', async (req, res, next) => {
         //req.flash('error', 'No account with that email address exists.');
         //return res.redirect('/forgot');
     }
-    //const token = (await util.promisify(crypto.randomBytes)(6));
        const code=Math.floor(Math.random() * 999999);
+
+       //const token = (await util.promisify(crypto.randomBytes)(6));
+       const token = sha256(code + process.env.SALT_CODE);
+
      //const token = (await util.promisify(crypto.randomBytes)(6)).toString('hex');
    // console.log(token2);
        var smtpTransport = nodemailer.createTransport({
@@ -900,7 +902,7 @@ router.post('/forgot_password', async (req, res, next) => {
                pass: 'Hannaw18'
            }
        });
-    user.resetPasswordToken = code;
+    user.resetPasswordToken = token;
     user.save();
     //User.UPDATE(user,"");
     //user.resetPasswordExpires = Date.now() + 3600000;
@@ -928,10 +930,11 @@ router.post('/forgot_password', async (req, res, next) => {
 
 router.post('confirm_code', (req, res) => {
    try {
+       const hash=sha256(req.data.code + process.env.SALT_CODE);
        const user = User.find(u => (
            //   (u.resetPasswordExpires > Date.now()) &&
            //   crypto.timingSafeEqual(Buffer.from(u.resetPasswordToken), Buffer.from(req.params.token))
-           u.e_mail === req.data.email && u.code === req.data.code
+       u.e_mail === req.data.email &&  sha256(u.code + process.env.SALT_CODE) === hash
        ));
 
        if (!user) {

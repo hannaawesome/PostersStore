@@ -71,12 +71,13 @@ const MessageView = ({ match, socket ,message}) => {
                                     {message.message}
                                 </Grid>
                                 <Grid item xs={5}>
-
+                                    {message.likes.length}
                                     <IconButton onClick={handleLike}>
                                         <ThumbUpIcon/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={5}>
+                                    {message.unlikes.length}
                                     <IconButton onClick={handleUnlike}>
                                         <ThumbDownIcon/>
                                     </IconButton>

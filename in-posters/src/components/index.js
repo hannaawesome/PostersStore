@@ -183,7 +183,7 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                            {/* <GroupsMenu socket={socket} />*/}
+                            <GroupsMenu socket={socket} />
                         </div>
                         } exact/>
                     <Route path="/chatroom/:id" render={() =>
@@ -191,7 +191,7 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                            {/* <Chatroom socket={socket} />*/}
+                             <Chatroom socket={socket} />
                         </div>}
                     exact/>
                 <Route path="/add_poster" render={() =>

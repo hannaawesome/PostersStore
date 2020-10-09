@@ -28,6 +28,7 @@
     "fs": "0.0.1-security",
     "http-errors": "~1.6.3",
     "image-to-base64": "^2.0.1",
+    "js-sha256": "^0.9.0",
     "jwt-then": "^1.0.1",
     "mongoose": "^5.10.8",
     "morgan": "^1.9.1",

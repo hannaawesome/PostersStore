@@ -13,6 +13,7 @@ import LoaderButton from "../../components/LoaderButton";
 import $ from "jquery";
 import Button from "@material-ui/core/Button";
 import {useHistory} from "react-router-dom";
+import {sha256} from "js-sha256";
 
 export default function ForgotPassword() {
     const [code, setCode] = React.useState("");
@@ -71,7 +72,7 @@ export default function ForgotPassword() {
             var data={
                 code:code,
                 e_mail:email,
-                password:password
+                password:sha256(password+process.env.SALT_PASSWORD)
             };
             $.ajax({
                 type: "POST",

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ImageUploader from 'react-images-upload';
-import { Multiselect } from 'multiselect-react-dropdown';
+//import { Multiselect } from 'multiselect-react-dropdown';
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -12,6 +12,11 @@ import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import makeToast from "../../Toaster";
 import withRouter from "react-router-dom/es/withRouter";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import Input from "@material-ui/core/Input";
+import useTheme from "@material-ui/core/styles/useTheme";
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,25 +50,57 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 300,
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: 2,
+    },
+    noLabel: {
+        marginTop: theme.spacing(3),
+    },
 }));
-
+function getStyles(item, list, theme) {
+    return {
+        fontWeight:
+            list.indexOf(item) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+const constSizeList = ["50X70","160X180","100X120"];
+const constTagList = ["cars","people","music","view"];
 const AddPoster= () => {
     const [pName,setPName]=React.useState("");
     const [creator,setCreator]=React.useState("");
-    const [img,setImg]=React.useState("");
+    const [img,setImg]=React.useState([]);
     const [price,setPrice]=React.useState(0);
     const [sizeList,setSizeList]=React.useState([]);
     const [tagList,setTagList]=React.useState([]);
     const [amount,setAmount]=React.useState(1);
-    const constSizeList = ["50X70","160X180","100X120"];
-    const constTagList = ["cars","people","music","view"];
+
     let history = useHistory();
     const classes = useStyles();
+    const theme = useTheme();
 
-const onDrop=(picture)=> {
-    this.setState({
-        pictures: this.state.pictures.concat(picture),
-    });
+const onDrop=(img)=> {
+    setImg(img);
 };
 
     const onSuccess = () => {
@@ -74,6 +111,7 @@ const onDrop=(picture)=> {
         makeToast("error", error.response.data.message);
     };
     const onSubmitAddedHandler= (e) => {
+        console.log(img);
         e.preventDefault();
         var data = {
             name: pName,
@@ -106,9 +144,9 @@ const onDrop=(picture)=> {
                 onSubmit={onSubmitAddedHandler}
                 noValidate
             >
-                <Grid container spacing={3}>
+                <Grid container spacing={1}>
 
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} >
 
                         <TextField
                             autoComplete="name"
@@ -122,7 +160,7 @@ const onDrop=(picture)=> {
                             onChange={(e) => setPName(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} >
                         <TextField
                             variant="outlined"
                             required
@@ -160,37 +198,72 @@ const onDrop=(picture)=> {
                     <Grid item xs={12}>
                     <ImageUploader
                         withIcon={true}
-                        buttonText='Choose images'
+                        buttonText='Choose image'
                         onChange={onDrop}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
                         maxFileSize={5242880}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif','.svg','.ico']}
+                        label="Max of 5mb, excepted extensions are: .jpg , .gif, .png, .gif, .svg, .ico"
+                        singleImage={true}
+                        withPreview={true}
                     />
                     </Grid>
-                    <Grid item xs={5}>
-                        <Multiselect
-                            options={constSizeList}
-                            selectedValues={sizeList} // Preselected value to persist in dropdown
-                            onSelect={e => {setSizeList(e.target.value)}} // Function will trigger on select event
-                            displayValue="Select Tags" // Property name to display in the dropdown options
-                            maxWidth="xs"
-                        />
-                        )}
+                    <Grid item xs={12} sm={6}>
+                        <Select
+                            labelId="demo-mutiple-chip-label"
+                            id="demo-mutiple-chip"
+                            multiple
+                            value={sizeList}
+                            onChange={(event) => {setSizeList(event.target.value);}}
+                            input={<Input id="select-multiple-chip" />}
+                            renderValue={(selected) => (
+                                <div className={classes.chips}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} className={classes.chip} />
+                                    ))}
+                                </div>
+                            )}
+                            MenuProps={MenuProps}
+                        >
+                            {constSizeList.map((size) => (
+                                <MenuItem key={size} value={size} style={getStyles(size, sizeList, theme)}>
+                                    {size}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
                     </Grid>
-                    <Grid item xs={5} sm={6}>
-                        <Multiselect
-                            options={constTagList}
-                            selectedValues={tagList} // Preselected value to persist in dropdown
-                            onSelect={e => {setTagList(e.target.value)}} // Function will trigger on select event
-                            displayValue="Select Tags" // Property name to display in the dropdown options
-                            maxWidth="xs"
-                        />
+                    <Grid item xs={12} sm={6} >
+                        <Select
+                            labelId="mutiple-chip-label"
+                            id="mutiple-chip"
+                            multiple
+                            value={tagList}
+                            onChange={(event) => {setTagList(event.target.value);}}
+                            input={<Input id="select-multiple-chip" />}
+                            renderValue={(selected) => (
+                                <div className={classes.chips}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} className={classes.chip} />
+                                    ))}
+                                </div>
+                            )}
+                            MenuProps={MenuProps}
+                        >
+                            {constTagList.map((tag) => (
+                                <MenuItem key={tag} value={tag} style={getStyles(tag, tagList, theme)}>
+                                    {tag}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
                     </Grid>
                 </Grid>
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
-                    className={classes.submit}>
+                    className={classes.submit}
+                >
                     Add
                 </Button>
             </form>
@@ -198,3 +271,11 @@ const onDrop=(picture)=> {
     )
 };
 export default withRouter(AddPoster);
+//                        imgExtension={['.jpg', '.gif', '.png', '.gif','svg']}
+// <Multiselect
+//     options={constSizeList}
+//     selectedValues={sizeList} // Preselected value to persist in dropdown
+//     onSelect={e => {setSizeList(e.target.value)}} // Function will trigger on select event
+//     displayValue="Select Tags" // Property name to display in the dropdown options
+//     maxWidth="xs"
+// />

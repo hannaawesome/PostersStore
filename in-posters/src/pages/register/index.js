@@ -22,6 +22,7 @@ import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import HomePage from "../home";
 import makeToast from "../../Toaster";
+import {sha256} from "js-sha256";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -105,7 +106,7 @@ const Register= (props) => {
 
         var data = {
             e_mail: email,
-            password: password,
+            password: sha256(password+process.env.SALT_PASSWORD),
             fullName: {
                 fName: fname,
                 lName: lname

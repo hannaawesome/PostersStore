@@ -25,6 +25,7 @@ import HomePage from "../home";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import {sha256} from "js-sha256";
 
 const styles = (theme) => ({
     root: {
@@ -111,7 +112,7 @@ class RegisterByAdmin extends Component {
         const {fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
-            password: password,
+            password: sha256(password+process.env.SALT_PASSWORD),
             fullName: {
                 fName: fName,
                 lName: lName

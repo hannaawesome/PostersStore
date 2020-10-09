@@ -9,7 +9,7 @@ class PostersGallary extends Component {
         this.state = {
             galleryItems: [],
         };
-    }
+    }//change to get posters and then show our gallery
     getData (){
         axios.get(`https://picsum.photos/v2/list?limit=6`, {})
             .then(res => {
