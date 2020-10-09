@@ -13,6 +13,8 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -21,6 +23,7 @@ import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import Rating from "@material-ui/lab/Rating";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,48 +50,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PosterViewInStock({ poster, renderStore }) {
     let history = useHistory();
-    const [liked, setLiked] = React.useState(poster.likedItems);
-    const handlePosterChangedSaved = () => {
-        var data = {
-            email: sessionStorage.getItem("userEmail"),
-            posterId: poster.id,
-            state: !liked,
-        };
-
-        if (liked && renderStore !== undefined) {
-            renderStore(poster.id);
-        } else {
-            setLiked(!liked);
-        }
-
-        // Submit form via jQuery/AJAX
+    const redirectPosterEdit = () => {
+        history.push("poster_edit");
+    };
+    const handlePosterDelete = () => {
         $.ajax({
             type: "POST",
-            url: "/get_liked_items",
-            data: data,
+            url: "/delete_poster?id="+poster._id,
         })
             .done(function(data) {})
             .fail(function(jqXhr) {});
-
-        //here we need to update  the db (send a request to the server in order to update this user's product is saved )
     };
-
     const classes = useStyles();
 
-
-    const { addingPoster, cartItems, increase } = useContext(CartContext);
-
-    const isInCart = (poster) => {
-        return !!cartItems.find((item) => item.id === poster.id);
-    };
-
-    function ViewPosterItemHandler(e) {
+    function handlePosterEdit(e) {
         //var self;
         e.preventDefault();
-         history.push("/poster_edit");
+         history.push("/poster_edit?id="+poster._id);
     }
     return (
-        <Card className={classes.root} onClick={ViewPosterItemHandler}>
+        <Card className={classes.root}>
             <CardHeader
                 title={poster.name}
                 subheader={poster.creator}
@@ -106,13 +87,17 @@ export default function PosterViewInStock({ poster, renderStore }) {
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton
-                    aria-label="add to favorites"
-                    onClick={handlePosterChangedSaved}
+                    aria-label="Edit"
+                    onClick={handlePosterEdit}
                 >
-                    {!liked && <FavoriteBorderIcon />}
-                    {liked && <FavoriteIcon />}
+                    <EditIcon/>
                 </IconButton>
-
+                <IconButton
+                    aria-label="Delete"
+                    onClick={handlePosterDelete}
+                >
+                    <DeleteIcon/>
+                </IconButton>
             </CardActions>
         </Card>
     );

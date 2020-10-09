@@ -9,10 +9,8 @@ module.exports = db => {
         creator: String,
 		img: String,
 		price: Number,
-        measurement:{
-            width:Number,
-            length:Number
-        },
+        measurement:{type:String,default:"50X70"},
+        sizeList:Array,//array of string
         tagList:Array,
         amount:Number,
         active:Boolean
@@ -26,6 +24,7 @@ module.exports = db => {
 			img: poster[3],
             price: poster[4],
             measurement:poster[5],
+            sizeList:poster[6],
             tagList:poster[6],
             amount:poster[7],
             active:true
@@ -99,8 +98,8 @@ module.exports = db => {
             posterToUpdate.creator = updatedPoster.creator;
             posterToUpdate.img= updatedPoster.img;
             posterToUpdate.price=updatedPoster.price;
-            posterToUpdate.measurement.width=updatedPoster.measurement.width;
-            posterToUpdate.measurement.length=updatedPoster.measurement.length;
+            posterToUpdate.measurement=updatedPoster.measurement;
+            posterToUpdate.sizeList=updatedPoster.sizeList;
             posterToUpdate.tagList=updatedPoster.tagList;
             posterToUpdate.amount=updatedPoster.amount;
 

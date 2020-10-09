@@ -29,6 +29,8 @@ import {Error404Page} from "tabler-react";
 
 import About from "./about";
 import ForgotPassword from "../pages/forgotPassword";
+import AddPoster from "../pages/addPoster";
+import RegisterByAdmin from "../pages/addUserByAdmin";
 
 export default function App(props: Props): React.Node {
 
@@ -104,7 +106,7 @@ export default function App(props: Props): React.Node {
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            {/*  <Liked{...props} />*/}
+                              <Liked{...props} />
                         </div>} />
                     <Route exact from="/contact" render={(props) =>
                         <div>
@@ -167,7 +169,7 @@ export default function App(props: Props): React.Node {
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            {/*  <PosterData{...props} />*/}
+                              <PosterData{...props} />
                         </div>} />} />
                     <Route exact from="/forgot_password" render={(props) =>
                         <div>
@@ -197,7 +199,7 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        {/* <AddPoster />*/}
+                         <AddPoster />
                     </div>}
                        exact/>
                 <Route path="/add_user" render={() =>
@@ -205,7 +207,7 @@ export default function App(props: Props): React.Node {
                         <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         </Toolbar>
-                        {/* <RegisterByAdmin socket={socket} />*/}
+                         <RegisterByAdmin socket={socket} />
                     </div>}
                        exact/>
                     <Route render={(props) =><Error404Page/>} />

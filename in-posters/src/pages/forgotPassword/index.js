@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import {
     FormGroup,
@@ -11,7 +10,9 @@ import {
 import "../../components/css/ForgotPassword.css";
 import makeToast from "../../Toaster";
 import LoaderButton from "../../components/LoaderButton";
-import FormStaticText from "tabler-react/dist/components/Form/FormStaticText.react";
+import $ from "jquery";
+import Button from "@material-ui/core/Button";
+import {useHistory} from "react-router-dom";
 
 export default function ForgotPassword() {
     const [code, setCode] = React.useState("");
@@ -36,17 +37,27 @@ export default function ForgotPassword() {
         );
     }
 
-    async function handleSendCodeClick(event) {
+    async function handleSendEmailClick(event) {
         event.preventDefault();
 
         setIsSendingCode(true);
 
         try {
-            await Auth.forgotPassword(email);
+                  $.ajax({
+                        type: "POST",
+                        url: "/forgot_password",
+                        data: {email:email},
+                    })
+                        .done()
+                        .fail((e)=>console.log(e));
+
+           // await Auth.forgotPassword(email);
             setCodeSent(true);
+            makeToast("info","An email has been sent to your address.");
+
         } catch (error) {
-            //onError(error);
-            makeToast(error);
+           // onError(error);
+            makeToast("error",error);
             setIsSendingCode(false);
         }
     }
@@ -57,21 +68,30 @@ export default function ForgotPassword() {
         setIsConfirming(true);
 
         try {
-            await Auth.forgotPasswordSubmit(
-                email,
-                code,
-                password
-            );
+            var data={
+                code:code,
+                e_mail:email,
+                password:password
+            };
+            $.ajax({
+                type: "POST",
+                url: "/confirm_code",
+                data: data,
+            })
+                .done()
+                .fail();
+
             setConfirmed(true);
+
         } catch (error) {
-            makeToast(error);
+            makeToast("error",error);
             setIsConfirming(false);
         }
     }
 
     function renderRequestCodeForm() {
         return (
-            <form onSubmit={handleSendCodeClick}>
+            <form onSubmit={handleSendEmailClick}>
                 <FormGroup bsSize="large" controlId="email">
                     <FormLabel>Email</FormLabel>
                     <FormControl
@@ -105,9 +125,9 @@ export default function ForgotPassword() {
                         value={code}
                         onChange={e => setCode(e.target.value)}
                     />
-                    <FormStaticText>
+                    <FormLabel>
                         Please check your email ({email}) for the confirmation code.
-                    </FormStaticText>
+                    </FormLabel>
                 </FormGroup>
                 <hr />
                 <FormGroup bsSize="large" controlId="password">
@@ -138,6 +158,10 @@ export default function ForgotPassword() {
             </form>
         );
     }
+var history=useHistory();
+    function redirectLogin() {
+        history.push('/log_in',{from:"anywhere"});
+    }
 
     function renderSuccessMessage() {
         return (
@@ -145,9 +169,10 @@ export default function ForgotPassword() {
                 {/*<Glyphicon glyph="ok" />*/}
                 <p>Your password has been reset.</p>
                 <p>
-                    <Link to="/log_in">
+                    <Link onClick={redirectLogin}>
                         Click here to login with your new credentials.
                     </Link>
+
                 </p>
             </div>
         );
@@ -163,89 +188,4 @@ export default function ForgotPassword() {
         </div>
     );
 }
-// import React, { useState, useEffect } from "react";
-// import Button from "@material-ui/core/Button";
-// import TextField from "@material-ui/core/TextField";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import IconButton from "@material-ui/core/IconButton";
-// import CloseIcon from "@material-ui/icons/Close";
-// import { makeStyles } from "@material-ui/core/styles";
-// import Avatar from "@material-ui/core/Avatar";
-// import CssBaseline from "@material-ui/core/CssBaseline";
-// import FormFormControl from "@material-ui/core/FormFormControl";
-// import Checkbox from "@material-ui/core/Checkbox";
-// import Link from "@material-ui/core/Link";
-// import Grid from "@material-ui/core/Grid";
-// import Box from "@material-ui/core/Box";
-// import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-// import Typography from "@material-ui/core/Typography";
-// import Paper from "@material-ui/core/Paper";
-// import { Route, Switch } from "react-router-dom";
-// import $ from "jquery";
-// import { useHistory } from "react-router-dom";
-
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//         width: "100vw",
-//         height: "100vh",
-//     },
-//     image: {
-//         backgroundImage: "url(https://source.unsplash.com/random/?phone)",
-//         backgroundRepeat: "no-repeat",
-//         backgroundColor:
-//             theme.palette.type === "light"
-//                 ? theme.palette.grey[50]
-//                 : theme.palette.grey[900],
-//         backgroundSize: "cover",
-//         backgroundPosition: "center",
-//     },
-//     paper: {
-//         margin: theme.spacing(8, 4),
-//         display: "flex",
-//         flexDirection: "column",
-//         alignItems: "center",
-//     },
-//     avatar: {
-//         margin: theme.spacing(1),
-//         backgroundColor: theme.palette.secondary.main,
-//     },
-//     form: {
-//         width: "100%", // Fix IE 11 issue.
-//         marginTop: theme.spacing(1),
-//     },
-//     submit: {
-//         margin: theme.spacing(3, 0, 2),
-//     },
-// }));
-
-// export default function ForgotPassword() {
-//     const classes = useStyles();
-//     let history = useHistory();
-//     const [email, setEmail] = React.useState("");
-//     const [password, setPassword] = React.useState("");
-//     const onChangeEmailHandler = (e) => setEmail(e.target.value);
-//     const onChangePasswordHandler = (e) => setPassword(e.target.value);
-
-    // function onSubmitRegisterHandler(e) {
-    //     e.preventDefault();
-    //
-    //     var data = {
-    //         e_mail: email
-    //     };
-    //     // Submit form via jQuery/AJAX
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "/forgot_password",
-    //         data: data,
-    //     })
-    //         .done(function (data) {
-    //             localStorage.setItem("userEmail", email);
-    //             history.push("/");
-    //         })
-    //         .fail(function (jqXhr) {
-    //             alert("Try again!!");
-    //         });
-    // }
 

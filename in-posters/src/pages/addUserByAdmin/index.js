@@ -61,11 +61,11 @@ const styles = (theme) => ({
 });
 
 const initialState = {
-    fName: 'mmk',
-    lName: 'kkl',
-    email: 'fc@',
+    fName: '',
+    lName: '',
+    email: '',
     category: 'Customer',
-    password: 'jkl',
+    password: '',
 };
 class RegisterByAdmin extends Component {
     state = initialState;

@@ -11,8 +11,10 @@ const debug = require("debug")("router");
 const { catchErrors } = require("../handlers/errorHandlers");
 const auth = require("./auth");
 var async = require('async');
-var nodemailer = require('nodemailer');
-
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const util = require('util');
+const asyncify = require("async");
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -242,6 +244,7 @@ router.post('/add_poster', async function(req, res,next) {
             req.body.img,
             req.body.price,
             req.body.measurement,
+            req.body.sizeList,
             req.body.tagList,
             req.body.amount
         ]);
@@ -271,10 +274,13 @@ router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function 
         }).exec();
 
         let cart = user.cartItems;
+        let liked=user.likedItems;
         if (poster === undefined) {
             res.send(404);
         } else {
             if (cart === undefined) cart = [];
+            if(liked.findIndex((item) => item.posterId === posterId) !== -1)
+                liked.remove(liked.findIndex((item) => item.posterId === posterId));
             //if (
             //    cart === [] ||
             //   cart.findIndex((item) => item.posterId === posterId) === -1
@@ -282,9 +288,10 @@ router.post("/add_to_cart", connectEnsureLogin.ensureLoggedIn(), async function 
             cart.push({
                 posterId: posterId,
                 amount: amount,
-                measurement: {width: measurementChosen.width, length: measurementChosen.length}
+                measurement:  measurementChosen
             });
             user.cartItems = cart;
+            user.likedItems=liked;
             await User.UPDATE(user);
             debug("successfully added to cart");
             res.send(200);
@@ -402,12 +409,9 @@ router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async functi
                         name: p.name,
                         creator: p.creator,
                         img: p.img,
-                        type_of_image: p.type_of_image,
                         price: p.price,
-                        measurement: {
-                            width: p.measurement.width,
-                            length: p.measurement.length
-                        },
+                        measurement: p.measurement,
+                        sizeList:p.sizeList,
                         tagList: p.tagList,
                         liked: true
                     };
@@ -417,12 +421,9 @@ router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async functi
                         name: p.name,
                         creator: p.creator,
                         img: p.img,
-                        type_of_image: p.type_of_image,
                         price: p.price,
-                        measurement: {
-                            width: p.measurement.width,
-                            length: p.measurement.length
-                        },
+                        measurement: p.measurement,
+                        sizeList:p.sizeList,
                         tagList: p.tagList,
                         liked: false
                     };
@@ -467,19 +468,17 @@ router.get("/get_posters", async function (req, res) {
             await res.json(posters);
         }else
             await res.json(
-                posters.map((poster) => {
+                posters.map((p) => {
                     return {
-                        _id: poster._id,
-                        name: poster.name,
-                        creator: poster.creator,
-                        img: poster.img,
-                        price: poster.price,
-                        measurement:{
-                            width:poster.measurement.width,
-                            length:poster.measurement.length
-                        },
-                        tagList:poster.tagList,
-                        amount:poster.amount,
+                        _id: p._id,
+                        name: p.name,
+                        creator: p.creator,
+                        img: p.img,
+                        price: p.price,
+                        measurement: p.measurement,
+                        sizeList:p.sizeList,
+                        tagList: p.tagList,
+                        amount:p.amount
                     };
                 }));
     }
@@ -553,10 +552,8 @@ router.post('/update_poster', async function(req, res,next) {
         creator: req.body.creator,
         img: req.body.img,
         price: req.body.price,
-        measurement:{
-            width:req.body.measurement.width,
-            length:req.body.measurement.length,
-        },
+        measurement:req.body.measurement,
+        sizeList:req.body.sizeList,
         tagList:req.body.tagList,
         amount:req.body.amount,
     };
@@ -619,8 +616,7 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
             res.send(404)
         }
         let posterId = req.body.posterId;
-        let width = req.body.measurement.width;
-        let length=req.body.measurement.length;
+
 
         let poster = await Poster.findOne({
             _id: posterId,
@@ -640,8 +636,7 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
                 res.send(404);
             }
             else {
-                cart[poster].measurement.width = width;
-                cart[poster].measurement.length = length;
+                cart[poster].measurement=req.body.measurement;
                 user.cartItems = cart;
                 await User.UPDATE(user);
                 debug("successfully updated in cart");
@@ -724,7 +719,7 @@ router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function
 });
 router.post('/delete_user',async function(req, res,next) {
     try {
-        await User.DELETE(req.body.email);
+        await User.DELETE(req.query.email);
     }
     catch(err){
         console.log("could not delete");
@@ -733,7 +728,7 @@ router.post('/delete_user',async function(req, res,next) {
 });
 router.post('/delete_poster',async function(req, res,next) {
     try {
-        await Poster.DELETE(req.body._id);
+        await Poster.DELETE(req.query.id);
     }
     catch(err){
         console.log("could not delete poster "+err);
@@ -797,24 +792,20 @@ router.post('/delete_poster',async function(req, res,next) {
 //         console.log(`Failure ${err}`);
 //     }
 // });
-// router.post('/update_password', async function(req, res, next) {
-//     try {
-//         let us = await User.findOne({ resetPasswordToken: req.body.token, resetPasswordExpires: { $gt: Date.now() } }).exec();
-//         if (!us) {
-//             res.status(404).send();
-//             return;
-//         }
-//
-//         await us.setPassword(req.body.password);
-//         us.resetPasswordToken = undefined;
-//         us.resetPasswordExpires = undefined;
-//
-//         await us.save();
-//         res.status(200).send();
-//     } catch (err) {
-//         console.log(`Failure ${err}`);
-//     }
-// });
+router.post('/update_password', async function(req, res, next) {
+    try {
+        let us = await User.findOne({ e_mail:req.body.e_mail }).exec();
+        if (!us) {
+            res.status(404).send();
+            return;
+        }
+        await us.setPassword(req.body.password);
+        await us.save();
+        res.status(200).send();
+    } catch (err) {
+        console.log(`Failure ${err}`);
+    }
+});
 
 
 
@@ -832,18 +823,17 @@ router.post('/delete_poster',async function(req, res,next) {
 
 
 
-// const PORT = 5000;
-// const SESSION_COOKIE_SECRET = '';
-// const SESSOIN_COOKIE_MAX_AGE_IN_MS = 60 * 60 * 1000;
-// const SESSION_COOKIE_IS_SECURE = false;
-//
-// const GOOGLE_CLIENT_ID = '';
-// const GOOGLE_CLIENT_SECRET = '';
-// const SENDGRID_API_KEY = '';
-//
-// const transport = nodemailer.createTransport(nodemailerSendgrid({
-//     apiKey: SENDGRID_API_KEY,
-// }));
+const SESSION_COOKIE_SECRET = '';
+const SESSOIN_COOKIE_MAX_AGE_IN_MS = 60 * 60 * 1000;
+const SESSION_COOKIE_IS_SECURE = false;
+
+const GOOGLE_CLIENT_ID = '';
+const GOOGLE_CLIENT_SECRET = '';
+const SENDGRID_API_KEY = '';
+
+//const transport = createTransport(nodemailerSendgrid({
+ //   apiKey: SENDGRID_API_KEY,
+//}));
 
 // const users = [{
 //     id: 'local/a0234aDdfj-2f4sdfa3oEerq-2U4',
@@ -851,17 +841,17 @@ router.post('/delete_poster',async function(req, res,next) {
 //     email: 'hello@example.com',
 //     password: 'password'
 // }];
-//
+
 // pass.serializeUser((user, cb) => cb(null, user));
 // pass.deserializeUser((u, cb) => cb(null, u));
-//
+
 // pass.use(new LocalStrategy({
 //     usernameField: 'email',
 // }, (email, password, cb) => {
 //     const user = users.find(u => u.email === email);
 //     cb(null, (user && user.password === password) ? user : false);
 // }));
-//
+
 // pass.use(new GoogleStrategy({
 //     clientID: GOOGLE_CLIENT_ID,
 //     clientSecret: GOOGLE_CLIENT_SECRET,
@@ -881,8 +871,8 @@ router.post('/delete_poster',async function(req, res,next) {
 //const app = asyncify(express());
 //const FileStore = createFileStore(session);
 
-// router.disable('x-powered-by');
-// router.use(flash());
+//router.disable('x-powered-by');
+//router.use(flash());
 
 // app.get('/forgot', (req, res, next) => {
 //     res.setHeader('Content-type', 'text/html');
@@ -892,53 +882,69 @@ router.post('/delete_poster',async function(req, res,next) {
 //   `));
 // });
 
-// router.post('/forgot_password', async (req, res, next) => {
-//     const user = User.find(u => u.e_mail === req.body.email);
-//
-//     if (!user) {
-//         req.flash('error', 'No account with that email address exists.');
-//         //return res.redirect('/forgot');
-//     }
-//     const token = (await promisify(crypto.randomBytes)(20)).toString('hex');
-//
-//     user.resetPasswordToken = token;
-//     user.resetPasswordExpires = Date.now() + 3600000;
-//
-//     const resetEmail = {
-//         to: user.e_mail,
-//         from: 'passwordreset@example.com',
-//         subject: 'inPosters Password Reset',
-//         text: `
-//       You are receiving this because you (or someone else) have requested the reset of the password for your account.
-//       Please click on the following link, or paste this into your browser to complete the process:
-//       http://${req.headers.host}/reset/${token}
-//       If you did not request this, please ignore this email and your password will remain unchanged.
-//     `,
-//     };
-//
-//     await transport.sendMail(resetEmail);
-//     req.flash('info', `An e-mail has been sent to ${user.e_mail} with further instructions.`);
-//
-//     //res.redirect('/forgot');
-// });
+router.post('/forgot_password', async (req, res, next) => {
+   try{  const user =await User.FIND_ONE_USER(req.body.email);
+    if (!user) {
+        console.log( 'No account with that email address exists.');
+        //req.flash('error', 'No account with that email address exists.');
+        //return res.redirect('/forgot');
+    }
+    //const token = (await util.promisify(crypto.randomBytes)(6));
+       const code=Math.floor(Math.random() * 999999);
+     //const token = (await util.promisify(crypto.randomBytes)(6)).toString('hex');
+   // console.log(token2);
+       var smtpTransport = nodemailer.createTransport({
+           service: 'gmail',
+           auth: {
+               user: 'hweissbe@g.jct.ac.il',
+               pass: 'Hannaw18'
+           }
+       });
+    user.resetPasswordToken = code;
+    user.save();
+    //User.UPDATE(user,"");
+    //user.resetPasswordExpires = Date.now() + 3600000;
+    const resetEmail = {
+        to: req.body.email,
+        from: 'noreply@gmail.com',
+        subject: 'inPosters Password Reset',
+        text:"Your confirmation code is "+ code
+    //     text: `
+    //   You are receiving this because you (or someone else) have requested the reset of the password for your account.
+    //   Please click on the following link, or paste this into your browser to complete the process:
+    //   http://${req.headers.host}/reset/${token}
+    //   If you did not request this, please ignore this email and your password will remain unchanged.
+    // `,
+    };
 
-// router.get('/reset/:token', (req, res) => {
-//     const user = User.find(u => (
-//         (u.resetPasswordExpires > Date.now()) &&
-//         crypto.timingSafeEqual(Buffer.from(u.resetPasswordToken), Buffer.from(req.params.token))
-//     ));
-//
-//     if (!user) {
-//         req.flash('error', 'Password reset token is invalid or has expired.');
-//         //return res.redirect('/forgot_password');
-//     }
-//
-//   //   res.setHeader('Content-type', 'text/html');
-//   //   res.end(templates.layout(`
-//   //   ${templates.error(req.flash())}
-//   //   ${templates.resetPassword(user.resetPasswordToken)}
-//   // `));
-// });
+    await smtpTransport.sendMail(resetEmail);}
+    catch (e) {
+        console.log(e);
+    }
+  //  req.flash('info', `An e-mail has been sent to ${user.e_mail} with further instructions.`);
+//throw `An e-mail has been sent to ${user.e_mail} with further instructions.`;
+    //res.redirect('/forgot');
+});
+
+router.post('confirm_code', (req, res) => {
+   try {
+       const user = User.find(u => (
+           //   (u.resetPasswordExpires > Date.now()) &&
+           //   crypto.timingSafeEqual(Buffer.from(u.resetPasswordToken), Buffer.from(req.params.token))
+           u.e_mail === req.data.email && u.code === req.data.code
+       ));
+
+       if (!user) {
+           throw('Code is incorrect.');
+       }
+       user.setPassword(req.body.password);
+       delete user.resetPasswordToken;
+       User.save();
+   }catch(e){
+       console.log(e);
+   }
+
+});
 
 // router.post('/reset/:token', async (req, res) => {
 //     const user = User.find(u => (

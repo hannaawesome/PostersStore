@@ -71,7 +71,6 @@ export default function AccountDetails({ user }) {
                     >
                         <EditIcon/>
                     </IconButton>
-
                 </CardActions>
             </Card>
         );

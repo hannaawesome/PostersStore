@@ -80,7 +80,7 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    schema.statics.FIND_ONE_USER = async function (emaol) {
+    schema.statics.FIND_ONE_USER = async function (email) {
         return this.findOne({e_mail:email}).exec();
     };
     schema.statics.DELETE = async function (email) {
@@ -92,6 +92,7 @@ module.exports = db => {
         debug("user deleted");
     };
     schema.statics.UPDATE = async function (updatedUser,password) {
+        console.log(updatedUser.e_mail);
         let queryForUpdate;
         queryForUpdate= this.FIND_ONE_USER(updatedUser.e_mail);
         let userToUpdate;
@@ -103,6 +104,7 @@ module.exports = db => {
             userToUpdate.cartItems= updatedUser.cartItems;
             userToUpdate.orderHistory= updatedUser.orderHistory;
             userToUpdate.likedItems= updatedUser.likedItems;
+            userToUpdate.resetPasswordToken=updatedUser.resetPasswordToken;
             userToUpdate.setPassword(password);
             userToUpdate.save();
         }
