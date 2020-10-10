@@ -7,11 +7,12 @@ const GroupsMenu = (props) => {
     const nameRef = React.createRef();
     const getChatrooms = () => {
         axios
-            .get("/get_chatrooms", {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("userCategory"),
-                },
-            })
+            .get("/get_chatrooms", //{
+               // headers: {
+                //    Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
+               // },
+           // }
+            )
             .then((response) => {
                 setChatrooms(response.data);
             })
@@ -30,7 +31,7 @@ const GroupsMenu = (props) => {
         axios
             .post("/add_chatroom", {
                 headers: {
-                    Authorization: "Bearer " + localStorage.getItem("userCategory"),
+                    Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
                 },
                 name,
             })

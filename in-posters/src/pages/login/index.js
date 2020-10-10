@@ -271,7 +271,7 @@ console.log(email);
                                             Login
                                         </Button>
                                         <button onClick={googleLogIn} className="button">
-                                            <img src="../../components/components_images/google.svg" alt="google login" className="icon"/>
+                                            <img src="./images/google.svg" alt="google login" className="icon"/>
 
                                             <span className="buttonText">Sign in with Google</span>
                                         </button>

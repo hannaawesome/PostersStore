@@ -1,9 +1,9 @@
 var bodyParser = require("body-parser");
 const passport = require("passport");
 var favicon = require("serve-favicon");
-
+const secret="thiserycischhbaesrfinaldfftproject";
 const expressSession = require("express-session")({
-    secret: process.env.SECRET,
+    secret: secret,
     resave: false,
     saveUninitialized: false,
     cookie: {maxAge: 900000, httpOnly: true, sameSite: true}
