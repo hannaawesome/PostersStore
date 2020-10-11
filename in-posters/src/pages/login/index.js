@@ -92,17 +92,18 @@ const Login= (props) => {
             type: "GET",
             url: "/get_user?email="+email,
         })
-            .done(res => {
+            .then(res => {
                 sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
                 localStorage.setItem("connectedByGoogle","true");
+
                 props.setupSocket();
                 if(history.location.state.from==="checkout")
                     history.push('/checkout');
                 else
                     history.push('/');
             })
-            .fail(addUserGoogle)};
+            .catch(addUserGoogle)};
         function addUserGoogle() {
             var data = {
                 e_mail: email,
@@ -138,7 +139,7 @@ const Login= (props) => {
         responseGoogleSuccess,
         responseGoogleFailure,
         clientId,
-        isSignedIn: true,
+        isSignedIn: false,
         accessType: 'offline',
     });
 

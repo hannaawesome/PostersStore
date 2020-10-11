@@ -5,10 +5,10 @@ module.exports = db => {
     // create a schema
     let schema = new mongo.Schema({
         _id:String,
-        name: { type: String, required: true},
+        name: { type: String},
         creator: String,
-		img: Array,
-		price: Number,
+        img: {},
+    price: Number,
         measurement:{type:String,default:"50X70"},
         sizeList:Array,//array of string
         tagList:Array,
@@ -23,14 +23,14 @@ module.exports = db => {
             creator:poster[2],
 			img: poster[3],
             price: poster[4],
-            measurement:poster[5],
-            sizeList:poster[6],
+            measurement:"",
+            sizeList:poster[5],
             tagList:poster[6],
             amount:poster[7],
             active:true
         });
     };
-	
+
 	schema.statics.REQUEST = async function() {
         // no arguments - bring all at once
         const args = Array.from(arguments); // [...arguments]
@@ -102,7 +102,6 @@ module.exports = db => {
             posterToUpdate.sizeList=updatedPoster.sizeList;
             posterToUpdate.tagList=updatedPoster.tagList;
             posterToUpdate.amount=updatedPoster.amount;
-
             posterToUpdate.save();
         }
         else

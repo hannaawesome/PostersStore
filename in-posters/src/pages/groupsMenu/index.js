@@ -2,14 +2,18 @@ import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+
 const GroupsMenu = (props) => {
     const [chatrooms, setChatrooms] = React.useState([]);
+    const [email] = React.useState(sessionStorage.getItem("userEmail"));
+    const [category] = React.useState(sessionStorage.getItem("userCategory"));
+
     const nameRef = React.createRef();
     const getChatrooms = () => {
         axios
             .get("/get_chatrooms", //{
-               // headers: {
-                //    Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
+                //headers: {
+                 //   Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
                // },
            // }
             )
@@ -31,7 +35,7 @@ const GroupsMenu = (props) => {
         axios
             .post("/add_chatroom", {
                 headers: {
-                    Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
+                    authorization: email+" "+category,
                 },
                 name,
             })
@@ -42,7 +46,7 @@ const GroupsMenu = (props) => {
                 console.log("success");
             })
             .catch((err) => {
-                // console.log(err);
+                 console.log(err);
                 if (
                     err &&
                     err.response &&
@@ -68,7 +72,7 @@ const GroupsMenu = (props) => {
                     />
                 </div>
             </div>
-            <button onClick={registerChatroom}>Create Chatroom</button>
+            {category==="Admin"? <button onClick={registerChatroom}>Create Chatroom</button>:null}
             <div className="chatrooms">
                 {chatrooms.map((chatroom) => (
                     <div key={chatroom._id} className="chatroom">

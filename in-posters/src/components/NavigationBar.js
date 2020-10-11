@@ -80,6 +80,13 @@ export default function NavigationBar({category}) {
     function onLogout(e) {
            sessionStorage.setItem("userEmail","");
            sessionStorage.setItem("userCategory","");
+           if(JSON.parse(localStorage.getItem("checked"))) {
+               localStorage.setItem("userEmail", "");
+               localStorage.setItem("userCategory", "");
+           }
+
+           if(JSON.parse(localStorage.getItem("connectedByGoogle")))
+               logOutGoogle();
            history.push('/');
     }
     const { logOutGoogle } = useGoogleLogout({

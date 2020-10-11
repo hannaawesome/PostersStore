@@ -18,6 +18,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var app = express();
+app.use(require("cors")());
 //var router = express.Router();
 
 const publicPath = path.join(__dirname, "..", "in-posters", "public");

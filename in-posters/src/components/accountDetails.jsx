@@ -61,7 +61,7 @@ export default function AccountDetails({ user }) {
         return (
             <Card className={classes.cardStl}>
                 <CardHeader className={classes.headerStl}
-                            title={user._id}
+                            title={user.fullName.fName}
                             subheader={user.e_mail}
                 />
                 <CardActions disableSpacing>

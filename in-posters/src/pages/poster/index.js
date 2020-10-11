@@ -121,7 +121,7 @@ class PosterData extends React.Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
-                        <Grid item xs={1}><img src={poster.img.thumbnail}/>
+                        <Grid item xs={1}><img src={poster.img}/>
                         </Grid>
                         <Grid item xs={5}>
 

@@ -58,7 +58,7 @@ const MessageView = ({ match, socket ,message}) => {
     }
 
     return (
-                        <React.Fragment>
+        <React.Fragment>
               <span
                   className={
                       sessionStorage.getItem("userEmail") === message.userEmail ? "ownMessage" : "otherMessage"

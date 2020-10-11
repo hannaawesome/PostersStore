@@ -13,6 +13,9 @@ const auth = require("./auth");
 var async = require('async');
 const nodemailer = require('nodemailer');
 const sha256 = require("js-sha256");
+var multer = require('multer');
+
+const path = require("path");
 
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -176,7 +179,7 @@ router.post("/login", (req, res, next) => {
             res.send(404);
         } else if (!user) {
             console.log("User is NULL ");
-            res.send(404);
+            throw "";
         }
         else if (!user.active) {
                 console.log("User is inactive ");
@@ -227,33 +230,69 @@ router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (r
         debug(err);
         res.send(404);
     }});
+const storage = multer.diskStorage({
+    destination:"../in-posters/src/uploads",
+    //filename:"hi"
+     filename: function(req, file, cb){
+         cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+     }
+});
 
-router.post('/add_poster',connectEnsureLogin.ensureLoggedIn(), async function(req, res,next) {
-    try {
-        let posters = await Poster.REQUEST();
-        let posterId = 40000; //first order id is 100, the second will be 101...
-        if (posters !== undefined) {
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+
+}).single('file');
+const obj =(req,res) => {
+    upload(req, res, () => {
+        let posters =  Poster.find({});
+        let posterId = 2;
+        console.log(posters.length);
+        if (posters !== undefined && posters.length) {
             posterId = parseInt(posters[posters.length - 1]._id) + 1;
         }
-        //create the order in the DB
-        await Poster.CREATE([
-            posterId,
-            req.body.name,
-            req.body.creator,
-            req.body.img,
-            req.body.price,
-            req.body.measurement,
-            req.body.sizeList,
-            req.body.tagList,
-            req.body.amount
-        ]);
+        console.log("Request ---", req.body);
+        console.log("Request file ---", req.file);//Here you get file.
+        const file = new Poster();
+        file._id=posterId;
+        file.img = req.file;
+        file.save().then(()=>{
+            res.send({message:"uploaded successfully"})
+        })
+        /*Now do where ever you want to do*/
+    });
+};
 
-        debug("Poster created")
-    } catch (err) {
-        debug(err);
-        res.send(404);
+router.post("/add_poster", obj);
+/*router.post('/add_poster',upload.single('file'),(req,res)=>{
+
+        //console.log(req.body['data']);
+
+        try {
+    let posters =  Poster.REQUEST;
+    let posterId = 40000;
+    if (posters !== undefined && posters.length) {
+        posterId = parseInt(posters[posters.length - 1]._id) + 1;
     }
-});
+
+    //create the order in the DB
+    Poster.CREATE([
+        posterId,
+       // req.body.name,
+      //  req.body.data.creator,
+        req.file,
+       // req.body.data.price,
+       // req.body.data.sizeList,
+       // req.body.data.tagList,
+      //  req.body.data.amount
+    ]);
+
+} catch (err) {
+    console.log(err);
+    res.send(404);
+}
+});*/
+
 router.post("/add_to_cart", async function (req, res) {
     try {
         let user = await User.findOne({
@@ -301,18 +340,18 @@ router.post("/add_to_cart", async function (req, res) {
         res.send(404);
     }
 });
-router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/update_liked",  async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
             active: true
         }).exec();
         if(user===undefined) {
-            debug("error in finding user");
+            console.log("error in finding user");
             res.send(404)
         }
         let posterId = req.body.posterId;
-        let isLiked=req.body.liked;
+        let isLiked=req.body.state;
         let poster = await Poster.findOne({
             _id: posterId,
             active: true
@@ -337,7 +376,7 @@ router.post("/update_liked", connectEnsureLogin.ensureLoggedIn(), async function
                     liked.remove(liked.findIndex((item) => item.posterId === posterId));
                     user.likedItems = liked;
                 await User.UPDATE(user);
-                debug("successfully added to liked");
+                debug("successfully updated like");
                 res.send(200);
             }
         }
@@ -388,7 +427,7 @@ router.post("/delete_from_cart", async function (req, res) {
     }
 });
 
-router.get("/get_liked_items", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_liked_items", async function (req, res) {
     let user = await User.findOne({
         e_mail: req.body.email,
         active: true,

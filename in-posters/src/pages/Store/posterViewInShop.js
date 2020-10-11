@@ -23,6 +23,7 @@ import Rating from "@material-ui/lab/Rating";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
 import {GalleryCard} from "tabler-react";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -91,7 +92,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     }
     return (
 
-       <Card className={classes.root} onClick={ViewPosterItemHandler}>
+       <Card className={classes.root} >
             <CardHeader
                 title={poster.name}
                 subheader={poster.creator}
@@ -105,11 +106,12 @@ export default function PosterViewInShop({ poster, renderStore }) {
                 />
             )}
             <CardContent title={poster.price}>
-                if(!poster.amount)
-                    <p>out of stock</p>
+                {!poster.amount?
+                <p>Out of Stock</p>:null}
             </CardContent>
 
 <CardActions disableSpacing>
+    <Grid item xs container>
                 <IconButton
                     aria-label="add to favorites"
                     onClick={handlePosterChangedSaved}
@@ -117,8 +119,14 @@ export default function PosterViewInShop({ poster, renderStore }) {
                     {!liked && <FavoriteBorderIcon />}
                     {liked && <FavoriteIcon />}
                 </IconButton>
-
-            </CardActions>;
+    <IconButton
+        aria-label="view"
+        onClick={ViewPosterItemHandler}
+    >
+        <VisibilityIcon/>
+    </IconButton>
+    </Grid>
+            </CardActions>
         </Card>
 
     );

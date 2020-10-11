@@ -24,6 +24,7 @@ import Rating from "@material-ui/lab/Rating";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
 import EditIcon from "@material-ui/icons/Edit";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,28 +77,30 @@ export default function PosterViewInStock({ poster, renderStore }) {
             />
 
             {poster !== undefined && poster.img !== undefined && (
-                <CardMedia
+                <img src={poster.img}/>)}
+            {/*<CardMedia
                     className={classes.media}
                     image={poster.img}
                     title=""
-                />
-            )}
+                />*/}
             <CardContent>
-                title={poster.price}
+               {poster.price}
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton
+                <Grid>
+                    {/* <IconButton
                     aria-label="Edit"
                     onClick={handlePosterEdit}
                 >
                     <EditIcon/>
-                </IconButton>
+                </IconButton>*/}
                 <IconButton
                     aria-label="Delete"
                     onClick={handlePosterDelete}
                 >
                     <DeleteIcon/>
                 </IconButton>
+                </Grid>
             </CardActions>
         </Card>
     );

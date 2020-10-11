@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import "./styles/common.css";
+import "./styles/chatroom.css";
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter } from 'react-router-dom';

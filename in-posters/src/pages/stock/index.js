@@ -177,8 +177,6 @@ const Stock = () => {
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    {/* End hero unit */}
-
                     <Grid container spacing={4}>
                         {postersToShow !== undefined &&
                         postersToShow.map((poster, index) => (

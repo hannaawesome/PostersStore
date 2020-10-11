@@ -74,12 +74,6 @@ const Register= (props) => {
     const onChangeFName = (e) => setFname( e.target.value);
     const onChangeLName = (e) => setLname( e.target.value);
 
-    // async function fetchUserId() {
-    //     const fullResponse = await fetch(
-    //         "/get_user_id_by_email?e_mail=" + email);
-    //     const responseJson = await fullResponse.json();
-    //     setUId(responseJson);
-    // }
     const onSuccess = () => {
         console.log(email);
         $.ajax({
@@ -94,8 +88,6 @@ const Register= (props) => {
                 history.push("/");
             })
             .catch(err =>console.log(err));
-
-        //
 
     };
     const onFailure = error => {
@@ -123,7 +115,6 @@ const Register= (props) => {
 
 
     function redirectLogin(e) {
-        //e.preventDefault();
         history.push("/log_in", { from: 'anywhere' } );
     }
         return (

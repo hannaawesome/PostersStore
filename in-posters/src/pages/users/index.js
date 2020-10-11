@@ -18,6 +18,7 @@ import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import AccountDetails from "../../components/accountDetails";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserData = () => {
     const classes = useStyles();
-
+    let history = useHistory();
     const [users, usersSet] = React.useState([]);
     const [usersToShow, usersToShowSet] = React.useState([]);
     const [role, setRole] = React.useState("All");
@@ -93,7 +94,7 @@ const UserData = () => {
     };
     const handleAddUser = (event) => {
         event.preventDefault();
-       // history.push("/");
+        history.push("/add_user");
     };
     React.useEffect(() => {
         async function fetchUsers() {

@@ -17,17 +17,19 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { Route, Switch } from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
-import API from '../../utils/API';
 import HomePage from "../home";
+import makeToast from "../../Toaster";
+import {sha256} from "js-sha256";
+import {Dropdown} from "react-bootstrap";
+import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import {sha256} from "js-sha256";
+import MenuItem from "@material-ui/core/MenuItem";
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: "100vw",
         height: "100vh",
@@ -59,199 +61,155 @@ const styles = (theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-});
+}));
 
-const initialState = {
-    fName: '',
-    lName: '',
-    email: '',
-    category: 'Customer',
-    password: '',
-};
-class RegisterByAdmin extends Component {
-    state = initialState;
-    constructor() {
-        super();
-        this.onChangeEmailHandler = this.onChangeEmailHandler.bind(this);
-        this.onChangePasswordHandler  = this.onChangePasswordHandler.bind(this);
-        this.onChangeCategoryHandler =  this.onChangeCategoryHandler.bind(this);
-        this.onChangeFName =  this.onChangeFName.bind(this);
-        this.onChangeLName = this.onChangeLName.bind(this);
-        this.onSubmitRegisterHandler=this.onSubmitRegisterHandler.bind(this);
-    }
-    componentDidMount() {
-    }
-    //const [uId, setUId] = React.useState("");
-    //const [fName, setFName] = React.useState("");
-    // const [lName, setLName] = React.useState("");
-    //const [email, setEmail] = React.useState("");
-    //const [category, setCategory] = React.useState("");
-    // const [password, setPassword] = React.useState("");
+const RegisterByAdmin= (props) => {
+    const classes = useStyles();
 
-    onChangeEmailHandler = email => {
-        this.setState({email:email.target.value});
+    const [fname, setFname] = React.useState("");
+    const [lname, setLname] = React.useState("");
+    const [email, setEmail] = React.useState("");
+
+     const [category, setCategory] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const onChangeEmailHandler  = email => {
+        setEmail(email.target.value);
     };
-    onChangePasswordHandler  = password => {
-        this.setState({password:password.target.value});
+    const onChangePasswordHandler = (e) => setPassword( e.target.value);
+    const onChangeFName = (e) => setFname( e.target.value);
+    const onChangeLName = (e) => setLname( e.target.value);
+    const onChangeCategory = (e) => setCategory( e.target.value);
+
+    const onSuccess = () => {
+        console.log("user added");
     };
-    onChangeCategoryHandler = (e) => {this.setState({category: e.target.value}); localStorage.setItem("userCategory",this.state.category);};
-
-    onChangeFName = (e) => this.setState({fName: e.target.value});
-    onChangeLName = (e) => this.setState({lName: e.target.value});
-
-    // async function fetchUserId() {
-    //     const fullResponse = await fetch(
-    //         "/get_user_id_by_email?e_mail=" + email);
-    //     const responseJson = await fullResponse.json();
-    //     setUId(responseJson);
-    // }
-    onSubmitRegisterHandler(e){
+    const onFailure = error => {
+        makeToast("error", error.response.data.message);
+    };
+    const onSubmitRegisterHandler= (e) => {
         e.preventDefault();
-        const { history } = this.props;
 
-        const {fName, lName, email, category, password} = this.state;
         var data = {
             e_mail: email,
             password: sha256(password+process.env.SALT_PASSWORD),
             fullName: {
-                fName: fName,
-                lName: lName
+                fName: fname,
+                lName: lname
             },
-            category:category
-        };
+            category:category}
+        ;
 
-        // API.addUser(data)
-        //     .then(res => {
-        //         API.getUserByEmail(email)
-        //             .then(res => {
-        //                 console.log("success");
-        //                 sessionStorage.setItem("userCategory", category);
-        //                 sessionStorage.setItem("userEmail", res.data.e_mail);
-        //                 history.push("/");
-        //              })
-        //             .catch(err => console.log(err));
-        //     })
-        //     .catch(err => console.log(err));
+        // Submit form via jQuery/AJAX
+        $.ajax({
+            type: "POST",
+            url: "/add_user",
+            data: data,
+        }).then(onSuccess)
+            .catch(onFailure);
+    };
 
-    }
+    return (
+        <div className={classes.paper}>
+            <br/>
+            <br/>
+            <Avatar className={classes.avatar}>
+                <LockOutlinedIcon/>
+            </Avatar>
+            <Typography component="h1" variant="h5">
+                Add User
+            </Typography>
 
-    redirectLogin(e) {
-        //e.preventDefault();
-        const { history } = this.props;
-        history.push("/log_in", { from: 'anywhere' } );
-    }
+            <form
+                className={classes.form}
+                onSubmit={onSubmitRegisterHandler}
+                noValidate
+            >
+                <Grid container spacing={2}>
 
-    render() {
-        const {classes} = this.props;
-        return (
-            <div className={classes.paper}>
-                <br/>
-                <br/>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon/>
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Register
-                </Typography>
+                    <Grid item xs={12} sm={6}>
 
-                <form
-                    className={classes.form}
-                    onSubmit={this.onSubmitRegisterHandler}
-                    noValidate
-                >
-                    <Grid container spacing={2}>
-
-                        <Grid item xs={12} sm={6}>
-
-                            <TextField
-                                autoComplete="fName"
-                                name="firstName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                                onChange={this.onChangeFName}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lName"
-                                onChange={this.onChangeLName}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                onChange={this.onChangeEmailHandler}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={this.onChangePasswordHandler}
-                            />
-                        </Grid>
-                <Grid item xs={12}>
-                <FormControl required className={classes.formControl}>
-                <InputLabel htmlFor="age-native-required">Role</InputLabel>
-                <Select
-                native
-                value={this.state.category}
-                onChange={this.onChangeCategoryHandler}
-                inputProps={{
-                    id: 'age-native-required',
-                }}
-                >
-                <option aria-label="None" value="" />
-                <option value={"Admin"}>Admin</option>
-                <option value={"Employee"}>Employee</option>
-                <option value={"Customer"}>Customer</option>
-                </Select>
-                </FormControl>
+                        <TextField
+                            autoComplete="fName"
+                            name="firstName"
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="firstName"
+                            label="First Name"
+                            autoFocus
+                            onChange={onChangeFName}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="lastName"
+                            label="Last Name"
+                            name="lastName"
+                            autoComplete="lName"
+                            onChange={onChangeLName}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            onChange={onChangeEmailHandler}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            onChange={onChangePasswordHandler}
+                        />
+                    </Grid>
                 </Grid>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    className={classes.submit}>
+                    Register
+                </Button>
+                <Grid container justifyContent="flex-end">
+                    <Grid item>
+                        <FormControl variant="outlined" className={classes.formControl}>
+                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={category}
+                                onChange={onChangeCategory}
+                                label="Category"
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={"Admin"}>Admin</MenuItem>
+                                <MenuItem value={"Customer"}>Customer</MenuItem>
+                                <MenuItem value={"Employee"}>Employee</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        className={classes.submit}>
-                        Register
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <Link onClick={this.redirectLogin} variant="body2">
-                                Already have an account? Login
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-        );
-    }
-}
-export default withStyles(styles, { withTheme: true })(RegisterByAdmin);
-
-
+                </Grid>
+            </form>
+        </div>
+    );
+};
+export default withRouter(RegisterByAdmin);
 
 

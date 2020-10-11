@@ -42,12 +42,13 @@ export default function App(props: Props): React.Node {
             const newSocket = io(window.location.href, {
                 query: {
                     token: sessionStorage.getItem("userCategory"),
+                    userId: sessionStorage.getItem("userEmail")
                 },
             });
 
             newSocket.on("disconnect", () => {
                 setSocket(null);
-                setTimeout(setupSocket, 3000);
+                setTimeout(setupSocket, 1000);
                 makeToast("error", "Socket Disconnected!");
             });
 
@@ -155,7 +156,7 @@ export default function App(props: Props): React.Node {
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                             </Toolbar>
-                            <Stock{...props} />}
+                            <Stock{...props} />
                         </div>} />
                     <Route exact from="/checkout" render={(props) =>
                         <div>

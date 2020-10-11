@@ -96,8 +96,13 @@ const jwt = require("jwt-then");
 io.use(async (socket, next) => {
   try {
     const token = socket.handshake.query.token;
-    const payload = await jwt.verify(token, "Admin");
-    socket.userId = payload.id;
+    const userId=socket.handshake.query.userId;
+   // const payload = await jwt.verify(token, "Admin");
+   /// if(token==="Admin")
+      socket.userId=userId;
+    ///else
+    ///  throw "Unauthorized";
+   // socket.userId = payload.id;
     next();
   } catch (err) {}
 });
@@ -121,17 +126,20 @@ io.on("connection", (socket) => {
   socket.on("chatroomMessage", async ({chatroomId, message}) => {
     if (message.trim().length > 0) {
       const user = await User.findOne({e_mail: socket.userId});
+      console.log(user.name);
       const newMessage = new Message({
         chatroom: chatroomId,
         user: socket.userId,
-        message,
-        likes: [],
-        unlikes: []
+        message
+        //likes: [],
+        //unlikes: []
       });
       io.to(chatroomId).emit("newMessage", {
         message,
         name: user.name,
         userId: socket.userId,
+        // likes:[],
+        // unlikes:[]
       });
       await newMessage.save();
     }

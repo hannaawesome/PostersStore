@@ -111,19 +111,7 @@ module.exports = db => {
         else
             console.log("Can't update: user does not exist!");
     };
-    schema.statics.UPDATE_STATUS = async function (updatedUser) {
-        let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_USER(updatedUser.e_mail);
-        let userToUpdate;
-        [userToUpdate]=await Promise.all([queryForUpdate]);
-        if(userToUpdate) {
-            userToUpdate.category=updatedUser.category;
-            userToUpdate.save();
-        }
-        else
-            console.log("Can't update: user does not exist!");
 
-    };
     schema.plugin(passportLocalMongoose, { usernameField: "e_mail" });
 
     // the schema is useless so far

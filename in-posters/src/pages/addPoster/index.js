@@ -17,6 +17,7 @@ import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Chip from "@material-ui/core/Chip";
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -89,7 +90,7 @@ const constTagList = ["cars","people","music","view"];
 const AddPoster= () => {
     const [pName,setPName]=React.useState("");
     const [creator,setCreator]=React.useState("");
-    const [img,setImg]=React.useState([]);
+    const [img,setImg]=React.useState(null);
     const [price,setPrice]=React.useState(0);
     const [sizeList,setSizeList]=React.useState([]);
     const [tagList,setTagList]=React.useState([]);
@@ -99,8 +100,8 @@ const AddPoster= () => {
     const classes = useStyles();
     const theme = useTheme();
 
-const onDrop=(img)=> {
-    setImg(img);
+const onDrop=(event)=> {
+    setImg(event.target.files);
 };
 
     const onSuccess = () => {
@@ -108,26 +109,34 @@ const onDrop=(img)=> {
         history.push('/stock')
     };
     const onFailure = error => {
-        makeToast("error", error.response.data.message);
+        console.log(error);
+        makeToast("error", error);
     };
     const onSubmitAddedHandler= (e) => {
-        console.log(img);
+       /* if(img===null)
+        { makeToast("error","You must upload an image!");
+        return;}*/
         e.preventDefault();
-        var data = {
+        const fd=new FormData();
+        fd.append('file',img);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+               // "Accept": "application/json"
+                //'Content-Type':'application/x-www-form-urlencoded'
+
+            }
+        };
+      /*  var data = {
             name: pName,
             creator: creator,
-            img: img,
             price: price,
             sizeList: sizeList,
             tagList: tagList,
             amount: amount
-        };
-        // Submit form via jQuery/AJAX
-        $.ajax({
-            type: "POST",
-            url: "/add_poster",
-            data: data,
-        }).then(onSuccess)
+        };*/
+        //fd.set('data',data);
+        axios.post("/add_poster",fd,config).then(onSuccess)
             .catch(onFailure);
     };
 
@@ -181,6 +190,7 @@ const onDrop=(img)=> {
                             label="Price"
                             name="price"
                             autoComplete="price"
+                            type="number"
                             onChange={e => {setPrice(e.target.value)}}
                         />
                     </Grid>
@@ -196,7 +206,7 @@ const onDrop=(img)=> {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                    <ImageUploader
+                        {/*<ImageUploader
                         withIcon={true}
                         buttonText='Choose image'
                         onChange={onDrop}
@@ -205,7 +215,8 @@ const onDrop=(img)=> {
                         label="Max of 5mb, excepted extensions are: .jpg , .gif, .png, .gif, .svg, .ico"
                         singleImage={true}
                         withPreview={true}
-                    />
+                    />*/}
+                        <input type="file" onChange= {onDrop} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Select
