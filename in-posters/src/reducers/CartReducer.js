@@ -1,12 +1,10 @@
 import $ from "jquery";
 import makeToast from "../Toaster";
 
-const handleAddItem = (posterId,amount,measurement) => {
+const handleAddItem = (posterId) => {
     var data = {
         email: sessionStorage.getItem("userEmail"),
         posterId: posterId,
-        amount:amount,
-        measurement:measurement
     };
 
     // Submit form via jQuery/AJAX
@@ -39,7 +37,7 @@ const handleChangeAmountItem = (posterId, amount) => {
     var data = {
         email: sessionStorage.getItem("userEmail"),
         posterId: posterId,
-        amount: amount,
+        amountChosen: amount,
     };
 
     // Submit form via jQuery/AJAX
@@ -79,11 +77,11 @@ const Storage = (cartItems) => {
 export const sumItems = (cartItems) => {
     Storage(cartItems);
     let itemCount = cartItems.reduce(
-        (totalPrice, poster) => totalPrice + poster.quantity,
+        (totalPrice, poster) => totalPrice + poster.amountChosen,
         0
     );
     let totalPrice = cartItems
-        .reduce((totalPrice, poster) => totalPrice + poster.price * poster.quantity, 0)
+        .reduce((totalPrice, poster) => totalPrice + poster.price * poster.amountChosen, 0)
         .toFixed(2);
     return { itemCount, totalPrice };
 };
@@ -94,9 +92,10 @@ export const CartReducer = (state, action) => {
             if (!state.cartItems.find((item) => item.id === action.payload.id)) {
                 state.cartItems.push({
                     ...action.payload,
-                    quantity: action.payload.amountChosen,
+                    amountChosen: 1,
+                    measurementChosen:action.payload.measurement
                 });
-                handleAddItem(action.payload.id,action.payload.amountChosen,action.payload.measurement);
+                handleAddItem(action.payload.idt);
             }
 
             return {
@@ -118,7 +117,7 @@ export const CartReducer = (state, action) => {
         case "INCREASE":
             state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity++;
+                ].amountChosen++;
             handleChangeAmountItem(action.payload.id, action.payload.amountChosen);
             return {
                 ...state,
@@ -128,17 +127,7 @@ export const CartReducer = (state, action) => {
         case "DECREASE":
            state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity--;
-            handleChangeAmountItem(action.payload.id,action.payload.amountChosen );
-            return {
-                ...state,
-                ...sumItems(state.cartItems),
-                cartItems: [...state.cartItems],
-            };
-        case "CHANGE_AMOUNT":
-            state.cartItems[
-                state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity=action.payload.amountChosen;
+                ].amountChosen--;
             handleChangeAmountItem(action.payload.id,action.payload.amountChosen );
             return {
                 ...state,
@@ -146,8 +135,11 @@ export const CartReducer = (state, action) => {
                 cartItems: [...state.cartItems],
             };
         case "CHANGE_SIZE":
-
+            state.cartItems[
+                state.cartItems.findIndex((item) => item.id === action.payload.id)
+                ].measurement=action.payload.measurement;
             handleChangeSizeItem(action.payload.id,action.payload.measurement );
+
             return {
                 ...state,
                 ...sumItems(state.cartItems),

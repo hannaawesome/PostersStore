@@ -19,6 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import AccountDetails from "../../components/accountDetails";
 import {useHistory} from "react-router-dom";
+import AccountDetailsAdmin from "./accountDetailsAdmin";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -78,15 +79,12 @@ const UserData = () => {
 
     const handleSearchChange = (event, newInputValue) => {
         setSearchValue(newInputValue);
-        console.log(newInputValue);
         if (newInputValue !== "" && newInputValue !== null) {
             let index = users.findIndex((item) => {
-                return item.name === newInputValue;
+                return item.fullName === newInputValue;
             });
-            console.log(index);
             if (index !== -1) {
                 usersToShowSet([users[index]]);
-                console.log("change", users);
             }
         } else {
             usersToShowSet(users);
@@ -135,7 +133,7 @@ const UserData = () => {
                                         <Autocomplete
                                             value={searchValue}
                                             onChange={handleSearchChange}
-                                            options={users.map((option) => option.name)}
+                                            options={users.map((option) => option.fullName)}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
@@ -159,10 +157,10 @@ const UserData = () => {
                                             onChange={handleChangeRole}
                                             autoWidth
                                         >
-                                            <MenuItem value={"all"}>All</MenuItem>
-                                            <MenuItem value={"vehicle"}>Vehicle</MenuItem>
-                                            <MenuItem value={"people"}>People</MenuItem>
-                                            <MenuItem value={"view"}>View</MenuItem>
+                                            <MenuItem value={"All"}>All</MenuItem>
+                                            <MenuItem value={"Employee"}>Employee</MenuItem>
+                                            <MenuItem value={"Customer"}>Customer</MenuItem>
+                                            <MenuItem value={"Admin"}>Admin</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -177,7 +175,7 @@ const UserData = () => {
                         {usersToShow !== undefined &&
                         usersToShow.map((user, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
-                                <AccountDetails key={index} user={user} />
+                                <AccountDetailsAdmin key={index} user={user} />
                             </Grid>
                         ))}
                     </Grid>

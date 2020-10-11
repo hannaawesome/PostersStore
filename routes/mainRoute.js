@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const User = require("../models")("User");
-const Message = require("../models")("Message");
-const Order = require("../models")("Order");
-const Poster = require("../models")("Poster");
-const Chatroom=require("../models")("Chatroom");
-const connectEnsureLogin = require("connect-ensure-login");
+const {User} = require("../models/user");
+const {Message} = require("../models/message");
+const {Order} = require("../models/order");
+const {Poster} = require("../models/poster");
+const {Chatroom}=require("../models/chatroom");
 const passport = require("passport");
 const debug = require("debug")("router");
 const { catchErrors } = require("../handlers/errorHandlers");
@@ -28,7 +27,6 @@ function initPosters(){
             creator:"Lorde",
             img: "../../images/pexels-north-1407322.jpg",
             price: 50,
-            measurement:"",
             sizeList:["50X70","160X180","100X120"],
             tagList:["view"],
             amount:2,
@@ -40,7 +38,6 @@ function initPosters(){
             creator:"Hanna",
             img:"../../images/pexels-pixabay-326259.jpg",
             price: 20,
-            measurement:"",
             sizeList:["50X70","160X180"],
             tagList:["vehicle"],
             amount:4,
@@ -52,7 +49,6 @@ function initPosters(){
             creator:"George",
             img: "../images/pexels-eberhard-grossgasteiger-844297.jpg",
             price: 40,
-            measurement:"",
             sizeList:["100X120"],
             tagList:["music"],
             amount:7,
@@ -72,11 +68,11 @@ function initPosters(){
     );
 }
 
-router.get("/get_chatrooms", catchErrors(async function (req, res) {
+/*router.get("/get_chatrooms", catchErrors(async function (req, res) {
     const chatrooms = await Chatroom.find({});
 
     res.json(chatrooms);
-}));
+}));*/
 router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
     const { name } = req.body;
 
@@ -255,7 +251,6 @@ router.post("/add_order",  async function (req, res) {
             res.send(404)
         }
         let orderItemList = user.cartItems;
-        let address = req.body.shipmentAddress;
         let totalPrice = req.body.totalPrice;
         //calculate the order id
         let orders = await Order.REQUEST();
@@ -269,7 +264,7 @@ router.post("/add_order",  async function (req, res) {
             orderId,
             req.body.email,
             orderItemList,
-            address,
+            user.address,
             totalPrice
         ]);
         user.orderHistory.push({orderId:orderId});
@@ -279,68 +274,62 @@ router.post("/add_order",  async function (req, res) {
         debug(err);
         res.send(404);
     }});
-const storage = multer.diskStorage({
-    destination:"/app/uploads",
-    //filename:"hi"
-     filename: function(req, file, cb){
-         cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
-     }
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'in-posters/public/images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}_${file.originalname}`)
+    },
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        if (ext !== '.jpg' || ext !== '.png') {
+            return cb(res.status(400).end('only jpg, png are allowed'), false);
+        }
+        cb(null, true)
+    }
 });
 
-const upload = multer({
-    storage: storage,
-    limits:{fileSize: 1000000},
+var upload = multer({ storage: storage }).single("file")
 
-}).single('file');
-const obj =(req,res) => {
-    upload(req, res, () => {
-        let posters =  Poster.find({});
-        let posterId = 2;
-        console.log(posters.length);
-        if (posters !== undefined && posters.length) {
-            posterId = parseInt(posters[posters.length - 1]._id) + 1;
+
+
+router.post("/uploadImage", (req, res) => {
+
+    upload(req, res, err => {
+        if (err) {
+            console.log(err);
+            return res.json({ success: false, err })
         }
-        console.log("Request ---", req.body);
-        console.log("Request file ---", req.file);//Here you get file.
-        const file = new Poster();
-        file._id=posterId;
-        file.img = req.file;
-        file.save().then(()=>{
-            res.send({message:"uploaded successfully"})
-        })
-        /*Now do where ever you want to do*/
-    });
-};
-//does not work
-router.post("/add_poster", obj);
-/*router.post('/add_poster',upload.single('file'),(req,res)=>{
+        return res.json({ success: true, image: "../.."+res.req.file.path.substr(17), fileName: res.req.file.filename })
+    })
 
-        //console.log(req.body['data']);
-
+});
+router.post('/add_poster',async function (req,res){
         try {
-    let posters =  Poster.REQUEST;
+    let posters =  await Poster.find({}).exec();
     let posterId = 40000;
     if (posters !== undefined && posters.length) {
         posterId = parseInt(posters[posters.length - 1]._id) + 1;
     }
 
     //create the order in the DB
-    Poster.CREATE([
+     Poster.CREATE([
         posterId,
-       // req.body.name,
-      //  req.body.data.creator,
-        req.file,
-       // req.body.data.price,
-       // req.body.data.sizeList,
-       // req.body.data.tagList,
-      //  req.body.data.amount
+        req.body.name,
+       req.body.creator,
+        req.body.img,
+        req.body.price,
+        req.body.sizeList,
+        req.body.tagList,
+       req.body.amount
     ]);
-
-} catch (err) {
+            res.send(200);
+        } catch (err) {
     console.log(err);
     res.send(404);
 }
-});*/
+});
 
 router.post("/add_to_cart", async function (req, res) {
     try {
@@ -353,8 +342,6 @@ router.post("/add_to_cart", async function (req, res) {
             res.send(404)
         }
         let posterId = req.body.posterId;
-        let amount = req.body.amount;
-        let measurementChosen = req.body.measurement;
         let poster = await Poster.findOne({
             _id: posterId,
             active: true
@@ -374,8 +361,8 @@ router.post("/add_to_cart", async function (req, res) {
             //) {
             cart.push({
                 posterId: posterId,
-                amount: amount,
-                measurement:  measurementChosen
+                amount:1,
+                measurement:  req.body.measurement
             });
             user.cartItems = cart;
             user.likedItems=liked;
@@ -497,7 +484,6 @@ router.get("/get_liked_items", async function (req, res) {
                         creator: p.creator,
                         img: p.img,
                         price: p.price,
-                        measurement: p.measurement,
                         sizeList:p.sizeList,
                         tagList: p.tagList,
                     };
@@ -513,11 +499,7 @@ router.get("/get_orders", async function (req, res) {
                     _id: order._id,
                     user_email: order.user_email,
                     itemsInOrder:order.itemsInOrder,
-                    shipmentAddress:{
-                        street: order.shipmentAddress.street,
-                        city: order.shipmentAddress.city,
-                        houseNum: order.shipmentAddress.houseNum
-                    },
+                    shipmentAddress: order.shipmentAddress,
                     totalPrice: order.totalPrice,
                     createdAt: order.createdAt,
 
@@ -548,7 +530,6 @@ router.get("/get_posters", async function (req, res) {
                         creator: p.creator,
                         img: p.img,
                         price: p.price,
-                        measurement: p.measurement,
                         sizeList:p.sizeList,
                         tagList: p.tagList,
                         amount:p.amount
@@ -585,11 +566,8 @@ router.get("/get_user_orders", async function (req, res) {
                         return {
                             id: order._id,
                             itemsInOrder: order.itemsInOrder,
-                            shipmentAddress: {
-                                street: order.shipmentAddress.street,
-                                city: order.shipmentAddress.city,
-                                houseNum: order.shipmentAddress.houseNum
-                            },
+                            shipmentAddress: order.shipmentAddress,
+
                             totalPrice: order.totalPrice,
                             createdAt: order.createdAt,
                         };
@@ -623,7 +601,6 @@ router.post('/update_poster', async function(req, res,next) {
         creator: req.body.creator,
         img: req.body.img,
         price: req.body.price,
-        measurement:req.body.measurement,
         sizeList:req.body.sizeList,
         tagList:req.body.tagList,
         amount:req.body.amount,
@@ -707,7 +684,7 @@ router.post("/update_poster_cart_size",  async function (req, res) {
                 res.send(404);
             }
             else {
-                cart[poster].measurement=req.body.measurement;
+                cart[poster].measurementChosen=req.body.measurement;
                 user.cartItems = cart;
                 await User.UPDATE(user);
                 debug("successfully updated in cart");

@@ -1,21 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import "./styles/common.css";
-import "./styles/chatroom.css";
+import "./pages/chatRoom/common.css";
+import "./pages/chatRoom/chatroom.css";
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter } from 'react-router-dom';
 import InPosterApp from "./components";
 import CartContextProvider from "./contexts/CartContext";
+import { ThemeProvider } from '@material-ui/styles'
+import theme from './theme'
+
 ReactDOM.render(
   <React.StrictMode>
       <CartContextProvider>
-              <BrowserRouter>
+          <ThemeProvider theme={theme}>
+          <BrowserRouter>
                   <div>
                   <InPosterApp/>
               </div>
        </BrowserRouter>
+          </ThemeProvider>
        </CartContextProvider>
           <div>
 

@@ -105,7 +105,7 @@ const Login= (props) => {
         function addUserGoogle() {
             var data = {
                 e_mail: email,
-                password: password,
+                password: sha256(password+process.env.SALT_PASSWORD),
                 fullName: fullName};
             $.ajax({
                 type: "POST",
@@ -134,7 +134,7 @@ const Login= (props) => {
         responseGoogleSuccess,
         responseGoogleFailure,
         clientId,
-        isSignedIn: false,
+        isSignedIn: true,
         accessType: 'offline',
     });
 

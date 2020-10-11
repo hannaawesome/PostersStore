@@ -58,19 +58,19 @@ const Store = () => {
                 break;
             case "vehicle": //low to high
 postersToShow.filter(function(a) {
-    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "cars") === -1;});
+    return a.tags!==undefined&&a.tags!==[]&&a.tags.findIndex((item) => item.tag === "vehicle") === -1;});
                 break;
             case "people": //low to high
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "people") === -1;});
+                    return a.tags!==undefined&&a.tags!==[]&&a.tags.findIndex((item) => item.tag === "people") === -1;});
                 break;
             case "music": //low to high
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "music") === -1;});
+                    return a.tags!==undefined&&a.tags!==[]&&a.tags.findIndex((item) => item.tag === "music") === -1;});
                 break;
             case "view": //low to high
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "view") === -1;});
+                    return a.tags!==undefined&&a.tags!==[]&&a.tags.findIndex((item) => item.tag === "view") === -1;});
                 break;
             default:
                 break;

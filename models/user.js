@@ -2,16 +2,15 @@ const debug = require("debug")("mongo:models-user");
 const mongo = require("mongoose");
 let passportLocalMongoose = require('passport-local-mongoose');
 
-module.exports = db => {
+const userSchema = mongo.Schema({
     // create a schema
-    let schema = new mongo.Schema({
         _id:String,
         e_mail: { type: String, required: true, unique: true},
         fullName: String,
         phone: String,
         address:String,
         category: String,
-        cartItems:Array,//array of (PosterId,amount,measurement)
+        cartItems:Array,//array of (PosterId,amountChosen,measurementChosen)
         orderHistory:Array,//array of (OrderId)
         likedItems:Array,//array of (PostersId)
         active: {type: Boolean , default:true},
@@ -19,7 +18,7 @@ module.exports = db => {
         resetPasswordExpires:{ type: Date },
     }, { autoIndex: false });
 
-    schema.statics.CREATE = async function(user) {
+userSchema.statics.CREATE = async function(user) {
         return this.create({
             _id:user._id,
             password: user.password,
@@ -34,8 +33,8 @@ module.exports = db => {
             active:true
         });
     };
-	
-	schema.statics.REQUEST = async function() {
+
+userSchema.statics.REQUEST = async function() {
         // no arguments - bring all at once
         const args = Array.from(arguments); // [...arguments]
         if (args.length === 0) {
@@ -79,10 +78,10 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    schema.statics.FIND_ONE_USER = async function (email) {
+userSchema.statics.FIND_ONE_USER = async function (email) {
         return this.findOne({e_mail:email,active:true}).exec();
     };
-    schema.statics.DELETE = async function (email) {
+userSchema.statics.DELETE = async function (email) {
         const filter = { e_mail: email };
         const update = { active: false };
         // `doc` is the document _before_ `update` was applied
@@ -90,7 +89,7 @@ module.exports = db => {
         await doc.save();
         debug("user deleted");
     };
-    schema.statics.UPDATE = async function (updatedUser,password) {
+userSchema.statics.UPDATE = async function (updatedUser,password) {
         console.log(updatedUser.e_mail);
         let queryForUpdate;
         queryForUpdate= this.FIND_ONE_USER(updatedUser.e_mail);
@@ -111,10 +110,9 @@ module.exports = db => {
             console.log("Can't update: user does not exist!");
     };
 
-    schema.plugin(passportLocalMongoose, { usernameField: "e_mail" });
+userSchema.plugin(passportLocalMongoose, { usernameField: "e_mail" });
 
-    // the schema is useless so far
-    // we need to create a model using it
-    // db.model('User', schema, 'User'); // (model, schema, collection)
-    db.model('User', schema); // if model name === collection name
-};
+const User = mongo.model('User', userSchema);
+
+module.exports = { User };
+

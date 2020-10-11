@@ -7,7 +7,7 @@ import {
     FormLabel,
 
 } from "react-bootstrap";
-import "../../components/css/ForgotPassword.css";
+import "./ForgotPassword.css";
 import makeToast from "../../Toaster";
 import LoaderButton from "../../components/LoaderButton";
 import $ from "jquery";

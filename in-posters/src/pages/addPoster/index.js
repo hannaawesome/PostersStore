@@ -1,38 +1,32 @@
 import React, { useContext } from "react";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+//import Typography from "@material-ui/core/Typography";
 import ImageUploader from 'react-images-upload';
 //import { Multiselect } from 'multiselect-react-dropdown';
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-
+import { Typography } from 'antd';
+import {Input} from "@material-ui/core"
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import makeToast from "../../Toaster";
 import withRouter from "react-router-dom/es/withRouter";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
+//import Input from "@material-ui/core/Input";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Chip from "@material-ui/core/Chip";
 import axios from 'axios';
+import FileUpload from '../../helpers/FileUpload'
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100vw",
         height: "100vh",
-    },
-    image: {
-        backgroundImage: "url(https://source.unsplash.com/random/?phone)",
-        backgroundRepeat: "no-repeat",
-        backgroundColor:
-            theme.palette.type === "light"
-                ? theme.palette.grey[50]
-                : theme.palette.grey[900],
-        backgroundSize: "cover",
-        backgroundPosition: "center",
     },
     paper: {
         margin: theme.spacing(8, 4),
@@ -90,7 +84,7 @@ const constTagList = ["vehicle","people","music","view"];
 const AddPoster= () => {
     const [pName,setPName]=React.useState("");
     const [creator,setCreator]=React.useState("");
-    const [img,setImg]=React.useState(null);
+    const [img,setImg]=React.useState([]);
     const [price,setPrice]=React.useState(0);
     const [sizeList,setSizeList]=React.useState([]);
     const [tagList,setTagList]=React.useState([]);
@@ -100,12 +94,25 @@ const AddPoster= () => {
     const classes = useStyles();
     const theme = useTheme();
 
-const onDrop=(event)=> {
-    setImg(event.target.files);
+const onDrop=(newImages)=> {
+        setImg(newImages);
+    console.log(pName);
+    console.log(img);
+    console.log(price);
+    console.log(creator);
+
+
+
 };
+    const handleNameChange = (e) => setPName(e.target.value);
+    const handleCreatorChange = (e) => setCreator(e.target.value);
+    const handleAmountChange = (e) => setAmount(e.target.value);
+    const handlePriceChange = (e) => setPrice(e.target.value);
+    const handleTagListChange = (e) => setTagList(e.target.value);
+    const handleSizeListChange = (e) => setSizeList(e.target.value);
 
     const onSuccess = () => {
-        console.log("added poster");
+        makeToast("info","Poster added succefully!");
         history.push('/stock')
     };
     const onFailure = error => {
@@ -113,30 +120,18 @@ const onDrop=(event)=> {
         makeToast("error", error);
     };
     const onSubmitAddedHandler= (e) => {
-       /* if(img===null)
-        { makeToast("error","You must upload an image!");
-        return;}*/
         e.preventDefault();
-        const fd=new FormData();
-        fd.append('file',img);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-               // "Accept": "application/json"
-                //'Content-Type':'application/x-www-form-urlencoded'
 
-            }
-        };
-      /*  var data = {
+        var data = {
             name: pName,
             creator: creator,
+            img:img,
             price: price,
             sizeList: sizeList,
             tagList: tagList,
             amount: amount
-        };*/
-        //fd.set('data',data);
-        axios.post("/add_poster",fd,config).then(onSuccess)
+        };
+        axios.post("/add_poster",data).then(onSuccess)
             .catch(onFailure);
     };
 
@@ -158,15 +153,14 @@ const onDrop=(event)=> {
                     <Grid item xs={12} >
 
                         <TextField
-                            autoComplete="name"
-                            name="name"
+                            name="pName"
                             variant="outlined"
                             required
                             fullWidth
-                            id="name"
+                            id="pName"
                             label="Name"
                             autoFocus
-                            onChange={(e) => setPName(e.target.value)}
+                            onChange={handleNameChange}
                         />
                     </Grid>
                     <Grid item xs={12} >
@@ -177,8 +171,7 @@ const onDrop=(event)=> {
                             id="creator"
                             label="Creator"
                             name="creator"
-                            autoComplete="creator"
-                            onChange={e => {setCreator(e.target.value)}}
+                            onChange={handleCreatorChange}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>
@@ -189,9 +182,8 @@ const onDrop=(event)=> {
                             id="price"
                             label="Price"
                             name="price"
-                            autoComplete="price"
                             type="number"
-                            onChange={e => {setPrice(e.target.value)}}
+                            onChange={handlePriceChange}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>
@@ -199,10 +191,10 @@ const onDrop=(event)=> {
                             variant="outlined"
                             fullWidth
                             name="amount"
-                            label="amount"
+                            label="Amount"
                             id="amount"
-                            autoComplete="amount"
-                            onChange={e => {setAmount(e.target.value)}}
+                            type="number"
+                            onChange={(e )=> {setAmount(e.target.value)}}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -216,15 +208,17 @@ const onDrop=(event)=> {
                         singleImage={true}
                         withPreview={true}
                     />*/}
-                        <input type="file" onChange= {onDrop} />
+                          <FileUpload refreshFunction={onDrop} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                      <Grid item xs={12} sm={6}>
+                        <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-mutiple-chip-label">Available Sizes</InputLabel>
                         <Select
                             labelId="demo-mutiple-chip-label"
                             id="demo-mutiple-chip"
                             multiple
                             value={sizeList}
-                            onChange={(event) => {setSizeList(event.target.value);}}
+                            onChange={handleSizeListChange}
                             input={<Input id="select-multiple-chip" />}
                             renderValue={(selected) => (
                                 <div className={classes.chips}>
@@ -241,15 +235,17 @@ const onDrop=(event)=> {
                                 </MenuItem>
                             ))}
                         </Select>
-
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6} >
+                        <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-mutiple-chip-label">Tags</InputLabel>
                         <Select
                             labelId="mutiple-chip-label"
                             id="mutiple-chip"
                             multiple
                             value={tagList}
-                            onChange={(event) => {setTagList(event.target.value);}}
+                            onChange={handleTagListChange}
                             input={<Input id="select-multiple-chip" />}
                             renderValue={(selected) => (
                                 <div className={classes.chips}>
@@ -266,7 +262,7 @@ const onDrop=(event)=> {
                                 </MenuItem>
                             ))}
                         </Select>
-
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Button

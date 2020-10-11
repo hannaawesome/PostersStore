@@ -32,6 +32,7 @@ import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import makeToast from "../../Toaster";
+import PosterImage from "../../components/posterImage";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,15 +51,6 @@ function generate(element, listItem) {
         })
     );
 }
-
-const sizeList = [
-    { width:160,
-        length:180},
-    { width:100,
-        length:120},
-    { width:50,
-        length:70}
-];
 
 const styles = (theme) => ({
     root: {
@@ -84,8 +76,10 @@ class PosterData extends React.Component {
         this.state = {
             full: 0,
             poster: {},
+            measurement:""
         };
-        this.handleClick = this.handleHeartClick.bind(this);
+        this.handleHeartClick = this.handleHeartClick.bind(this);
+        this.handleMeasurement=this.handleMeasurement.bind(this);
     }
 
     async componentDidMount() {
@@ -103,9 +97,12 @@ class PosterData extends React.Component {
     }
 
    handleHeartClick() {
-        const {full, poster} = this.state;
+        const {full} = this.state;
         if (full) this.setState({full: 0});
         else this.setState({full: 1});
+    }
+    handleMeasurement(e) {
+        this.setState({measurement:e.target.value})
     }
 
     render() {
@@ -122,13 +119,13 @@ class PosterData extends React.Component {
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
                         <Grid item xs={6}>
-                            <img src={poster.img}/>
+                            <PosterImage detail={poster}/>
                         </Grid>
                         <Grid item xs={5}>
-
                             <Dropdown
-                                items={sizeList}
+                                items={poster.sizeList}
                                 maxWidth="xs"
+                                onSelect={this.handleMeasurement}
                             />
                         </Grid>
 
@@ -165,11 +162,11 @@ class PosterData extends React.Component {
                                         variant="contained"
                                         color="secondary"
                                         style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => {cartContext.addingPoster(poster);}}
+                                        onClick={() => {cartContext.addingPoster({poster,measurementChosen:this.state.measurement})}}
                                     >
                                         Add to cart
                                     </ButtonUp>
-                                    <IconButton
+                                     <IconButton
                                         onClick={this.handleClick}
                                         style={{maxWidth: "130px", maxHeight: "30px"}}
                                     >

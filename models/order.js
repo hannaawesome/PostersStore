@@ -1,24 +1,17 @@
 const debug = require("debug")("mongo:model-order");
 const mongo = require("mongoose");
 
-module.exports = db => {
-    // create a schema
-//address, payment
-    let schema = new mongo.Schema({
+const orderSchema = mongo.Schema({    // create a schema
         _id:String,
         user_id: String,
         itemsInOrder:Array,//array of (poster_id,amount,measurement)
-        shipmentAddress:{
-            houseNum:String,
-            street: String,
-            city: String
-        },
+        shipmentAddress:String,
         totalPrice:Number,
         createdAt: { type: Date, default: Date.now() },
         active:Boolean
     }, { autoIndex: false });
 
-    schema.statics.CREATE = async function (order) {
+    orderSchema.statics.CREATE = async function (order) {
 
         return this.create({
             _id:order[0],
@@ -29,13 +22,13 @@ module.exports = db => {
             active:true
         });
     };
-    schema.statics.FIND_ONE_ORDER = async function (_id) {
+    orderSchema.statics.FIND_ONE_ORDER = async function (_id) {
         let poster={
             _id:_id
         };
         return this.findOne(poster).exec();
     };
-    schema.statics.DELETE = async function (order) {
+    orderSchema.statics.DELETE = async function (order) {
         const filter = { _id: order._id };
         const update = { active: false };
         // `doc` is the document _before_ `update` was applied
@@ -44,7 +37,7 @@ module.exports = db => {
         debug("order deleted");
 
     };
-    schema.statics.UPDATE = async function (updatedOrder) {
+    orderSchema.statics.UPDATE = async function (updatedOrder) {
         let queryForUpdate;
         queryForUpdate= this.FIND_ONE_CART(updatedOrder._id);
         let orderToUpdate;
@@ -52,18 +45,14 @@ module.exports = db => {
         if(orderToUpdate) {
             orderToUpdate.user_id=updatedOrder.user_id;
             orderToUpdate.itemsInOrder=updatedOrder.itemsInOrder;
-            orderToUpdate.shipmentAddress.street= updatedOrder.shipmentAddress.street;
-            orderToUpdate.shipmentAddress.city= updatedOrder.shipmentAddress.city;
-            orderToUpdate.shipmentAddress.houseNum= updatedOrder.shipmentAddress.houseNum;
-            orderToUpdate.measurement.width = updatedOrder.width;
-            orderToUpdate.measurement.length = updatedOrder.length;
+            orderToUpdate.shipmentAddress= updatedOrder.shipmentAddress;
             orderToUpdate.totalPrice=updatedOrder.totalPrice;
             orderToUpdate.save();
         }
         else
             console.log("Can't update: order does not exist!");
     };
-    schema.statics.REQUEST = async function () {
+    orderSchema.statics.REQUEST = async function () {
         // no arguments - bring all at once
         const args = Array.from(arguments); // [...arguments]
         if (args.length === 0) {
@@ -107,5 +96,7 @@ module.exports = db => {
         return this.find(...args).exec();
     };
 
-    db.model('Order', schema); // if model name === collection name
-};
+
+    const Order = mongo.model('Order', orderSchema);
+
+    module.exports = { Order };

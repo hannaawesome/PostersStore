@@ -69,20 +69,20 @@ const PosterViewInCart=({ poster }) => {
                 <p className="mb-1">Price: {poster.price} </p>
             </div>
             <div className="col-sm-2 p-2 text-center ">
-                <p className="mb-0">Qty: {poster.quantity}</p>
+                <p className="mb-0">Quantity: {poster.amountChosen}</p>
             </div>
             <div className="col-sm-4 p-2 text-right">
-                <IconButton aria-label="delete" onClick={() => increase(poster)}>
+                <IconButton aria-label="add" onClick={() => increase(poster)}>
                     <AddCircleOutlinedIcon />
                 </IconButton>
 
-                {poster.quantity > 1 && (
+                {poster.amountChosen > 1 && (
                     <IconButton aria-label="delete" onClick={() => decrease(poster)}>
                         <RemoveCircleIcon />
                     </IconButton>
                 )}
 
-                {poster.quantity === 1 && (
+                {poster.amountChosen === 1 && (
                     <IconButton
                         aria-label="delete"
                         onClick={() => removePoster(poster)}

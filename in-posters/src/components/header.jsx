@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "./components_images/unicorn.svg";
+import logo from "./components_images/Wolf.svg";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Button} from "tabler-react";
 import {Form,FormControl} from "react-bootstrap";
@@ -28,7 +28,7 @@ export default function Header() {
                         src={logo}
                         className={styles.logoImg}
                     />{' '}
-                    inPoster
+                    inPosters
                 </Navbar.Brand>
 
             </Navbar>

@@ -15,16 +15,12 @@ import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
-import Rating from "@material-ui/lab/Rating";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
-import EditIcon from "@material-ui/icons/Edit";
 import Grid from "@material-ui/core/Grid";
+import PosterImage from "../../components/posterImage";
+import Col from "antd/es/grid/col";
+import Row from "antd/es/descriptions/Row";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PosterViewInStock({ poster, renderStore }) {
+export default function PosterViewInStock({ poster, renderStock }) {
     let history = useHistory();
     const redirectPosterEdit = () => {
         history.push("poster_edit");
@@ -59,7 +55,9 @@ export default function PosterViewInStock({ poster, renderStore }) {
             type: "POST",
             url: "/delete_poster?id="+poster._id,
         })
-            .done(function(data) {})
+            .done(function(data) {
+                renderStock(poster._id);
+            })
             .fail(function(jqXhr) {});
     };
     const classes = useStyles();
@@ -70,6 +68,27 @@ export default function PosterViewInStock({ poster, renderStore }) {
          history.push("/poster_edit?id="+poster._id);
     }
     return (
+        <div className="postPage" style={{ width: '100%', padding: '3rem 4rem' }}>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <h1>{poster.name}</h1>
+            </div>
+
+            <br />
+
+            <Row gutter={[16, 16]} >
+                <Col lg={12} xs={24}>
+                    <PosterImage detail={poster} />
+                </Col>
+                <Col lg={12} xs={24}>
+                    <ProductInfo
+                        delete={handlePosterDelete}
+                        detail={poster} />
+                </Col>
+            </Row>
+        </div>
+    );
+   /* return (
         <Card className={classes.root}>
             <CardHeader
                 title={poster.name}
@@ -77,11 +96,8 @@ export default function PosterViewInStock({ poster, renderStore }) {
             />
 
             {poster !== undefined && poster.img !== undefined && (
-            <CardMedia
-                    className={classes.media}
-                    image={poster.img}
-                    title=""
-                /> )}
+                <PosterImage detail={poster}/>
+            )}
             <CardContent>
                {poster.price}
             </CardContent>
@@ -92,7 +108,7 @@ export default function PosterViewInStock({ poster, renderStore }) {
                     onClick={handlePosterEdit}
                 >
                     <EditIcon/>
-                </IconButton>*/}
+                </IconButton>}
                 <IconButton
                     aria-label="Delete"
                     onClick={handlePosterDelete}
@@ -102,5 +118,6 @@ export default function PosterViewInStock({ poster, renderStore }) {
                 </Grid>
             </CardActions>
         </Card>
-    );
+    );*/
+
 }

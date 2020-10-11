@@ -18,7 +18,6 @@ import Store from "../pages/Store";
 import UpdateUserDetails from "../pages/updateUserDetails";
 import OrderList from "../pages/orderLists";
 import Stock from "../pages/stock";
-import Checkout from "../pages/checkout";
 import PosterData from "../pages/poster";
 //import ForgotPassword from "../pages/forgotPassword";
 import UsersData from "../pages/users";
@@ -69,137 +68,126 @@ export default function App(props: Props): React.Node {
         <div>
             <Header/>
             <Switch>
-                <Route exact from="/" render={(props) => <div><Toolbar>
+                <Route exact from="/" render={(props) => <div>
                     <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                </Toolbar>
+                
                     <HomePage{...props}/>
                 </div>}/>
                 <Route exact path="/account" render={(props) =>
                     <div>
-                        <Toolbar>
+                        
                              <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                          <Account{...props} />
                     </div>}/>
                 <Route exact from="/register" render={() =>
                     <div>
-                        <Toolbar>
+                        
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                         <Register setupSocket={setupSocket}/>
                     </div> } />
                     <Route exact from="/cart" render={(props) =>
                         <div>
-                        <Toolbar>
+                        
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                               <Cart{...props} />
                         </div>} />
                     <Route path="/log_in" render={() =><div>
-                        <Toolbar>
+                        
                             <NavigationBar/>
-                        </Toolbar>
+                        
                          <Login setupSocket={setupSocket} />
                     </div>} exact/>
                     <Route exact from="/liked" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                               <Liked{...props} />
                         </div>} />
                     <Route exact from="/contact" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                             <Contact {...props} />
                         </div> }/>
                     <Route exact from="/store" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                              <Store{...props} />
                         </div>} />
                     <Route exact from="/users" render={(props) =>
                         <div>
-                            <Toolbar>
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
                              <UsersData{...props} />
                         </div>} />
                     <Route exact from="/user_edit" render={(props) =>
                         <div>
-                            <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
                             <UpdateUserDetails{...props} />
                         </div>} />
                     <Route exact from="/order_list" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                             <OrderList{...props} />
                         </div>} />
                     <Route exact from="/stock" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                             <Stock{...props} />
-                        </div>} />
-                    <Route exact from="/checkout" render={(props) =>
-                        <div>
-                            <Toolbar>
-                                <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
-                              <Checkout{...props} />} />
                         </div>} />
                     <Route exact from="/poster/:posterId" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                               <PosterData{...props} />
                         </div>} />} />
                     <Route exact from="/forgot_password" render={(props) =>
                         <div>
-                            <Toolbar>
+                            
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                            </Toolbar>
+                            
                             <ForgotPassword{...props} />
                         </div>} />
                     <Route path="/groups_menu" render={() =>
                         <div>
-                        <Toolbar>
+                        
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                             <GroupsMenu socket={socket} />
                         </div>
                         } exact/>
                     <Route path="/chatroom/:id" render={() =>
                         <div>
-                        <Toolbar>
+                        
                         <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                              <Chatroom socket={socket} />
                         </div>}
                     exact/>
                 <Route path="/add_poster" render={() =>
                     <div>
-                        <Toolbar>
+                        
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                          <AddPoster />
                     </div>}
                        exact/>
                 <Route path="/add_user" render={() =>
                     <div>
-                        <Toolbar>
+                        
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                        </Toolbar>
+                        
                          <RegisterByAdmin socket={socket} />
                     </div>}
                        exact/>

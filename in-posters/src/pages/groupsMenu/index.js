@@ -26,7 +26,7 @@ const GroupsMenu = (props) => {
     };
 
     React.useEffect(() => {
-        getChatrooms();
+      //  getChatrooms();
         // eslint-disable-next-line
     }, []);
     const registerChatroom = (props) => {

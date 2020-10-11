@@ -1,39 +1,37 @@
 const debug = require("debug")("mongo:models-poster");
 const mongo = require("mongoose");
 
-module.exports = db => {
     // create a schema
-    let schema = new mongo.Schema({
-        _id:String,
-        name: { type: String},
+    const posterSchema = mongo.Schema({
+        _id: String,
+        name: {type: String},
         creator: String,
-        img: {},
-    price: Number,
-        measurement:{type:String,default:"50X70"},
-        sizeList:Array,//array of string
-        tagList:Array,
-        amount:Number,
-        amountChosen:Number,
-        active:Boolean
-    }, { autoIndex: false });
+        img: {
+            type: Array,
+            default: []
+        },
+        price: Number,
+        sizeList: Array,//array of string
+        tagList: Array,
+        amount: Number,
+        active: Boolean
+    }, {autoIndex: false});
 
-    schema.statics.CREATE = async function(poster) {
+    posterSchema.statics.CREATE = async function (poster) {
         return this.create({
-            _id:poster[0],
+            _id: poster[0],
             name: poster[1],
-            creator:poster[2],
-			img: poster[3],
+            creator: poster[2],
+            img: poster[3],
             price: poster[4],
-            measurement:"",
-            sizeList:poster[5],
-            tagList:poster[6],
-            amount:poster[7],
-            amountChosen:0,
-            active:true
+            sizeList: poster[5],
+            tagList: poster[6],
+            amount: poster[7],
+            active: true
         });
     };
 
-	schema.statics.REQUEST = async function() {
+    posterSchema.statics.REQUEST = async function () {
         // no arguments - bring all at once
         const args = Array.from(arguments); // [...arguments]
         if (args.length === 0) {
@@ -45,24 +43,29 @@ module.exports = db => {
         let callback = arguments[arguments.length - 1];
         if (callback instanceof Function) {
             let asynch = callback.constructor.name === 'AsyncFunction';
-            debug(`request: with ${asynch?'async':'sync'} callback`);
+            debug(`request: with ${asynch ? 'async' : 'sync'} callback`);
             args.pop();
             let cursor, poster;
             try {
                 cursor = await this.find(...args).cursor();
-            } catch (err) { throw err; }
+            } catch (err) {
+                throw err;
+            }
             try {
                 while (null !== (poster = await cursor.next())) {
                     if (asynch) {
                         try {
                             await callback(poster);
-                        } catch (err) { throw err; }
-                    }
-                    else {
+                        } catch (err) {
+                            throw err;
+                        }
+                    } else {
                         callback(poster);
                     }
                 }
-            } catch (err) { throw err; }
+            } catch (err) {
+                throw err;
+            }
             return;
         }
 
@@ -76,40 +79,27 @@ module.exports = db => {
         debug(`request: without callback: ${JSON.stringify(args)}`);
         return this.find(...args).exec();
     };
-    schema.statics.FIND_ONE_POSTER = async function (_id) {
-        let poster={
-            _id:_id
+    posterSchema.statics.FIND_ONE_POSTER = async function (_id) {
+        let poster = {
+            _id: _id
         };
         return this.findOne(poster).exec();
     };
-    schema.statics.DELETE = async function (pid) {
-        const filter = { _id: pid };
-        const update = { active: false };
-        // `doc` is the document _before_ `update` was applied
+    posterSchema.statics.DELETE = async function (pid) {
+        const filter = {_id: pid};
+        const update = {active: false};
         let doc = await this.findOneAndUpdate(filter, update);
         await doc.save();
         debug("poster deleted");
     };
-    schema.statics.UPDATE = async function (updatedPoster) {
-        let queryForUpdate;
-        queryForUpdate= this.FIND_ONE_POSTER(updatedPoster._id);
-        let posterToUpdate;
-        [posterToUpdate]=await Promise.all([queryForUpdate]);
-        if(posterToUpdate) {
-            posterToUpdate.name=updatedPoster.name;
-            posterToUpdate.creator = updatedPoster.creator;
-            posterToUpdate.img= updatedPoster.img;
-            posterToUpdate.price=updatedPoster.price;
-            posterToUpdate.measurement=updatedPoster.measurement;
-            posterToUpdate.sizeList=updatedPoster.sizeList;
-            posterToUpdate.tagList=updatedPoster.tagList;
-            posterToUpdate.amount=updatedPoster.amount;
-            posterToUpdate.amountChosen=updatedPoster.amountChosen;
-            posterToUpdate.save();
-        }
-        else
-            console.log("Can't update: poster does not exist!");
+    posterSchema.statics.UPDATE = async function (updatedPoster) {
+        const filter = {_id: updatedPoster._id};
+        let doc = await this.findOneAndUpdate(filter, updatedPoster);
+        await doc.save();
+
     };
 
-    db.model('Poster', schema); // if model name === collection name
-};
+    const Poster = mongo.model('Poster', posterSchema);
+
+    module.exports = { Poster };
+

@@ -5,6 +5,8 @@ import { CartContext } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import $ from "jquery";
+import makeToast from "../../Toaster";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Cart = () => {
     const classes = useStyles();
-    let history = useHistory();
     const {
         totalPrice,
         cartItems,
@@ -30,12 +31,20 @@ const Cart = () => {
     const [email] = React.useState(
         sessionStorage.getItem("userEmail")
     );
-    function redirectCheckOut(e) {
-            if (email!==""&&email!==null)
-                history.push("/checkout");
-
-            else history.push("/log_in", { from: 'checkout' } )
-
+    function onCheckout(){
+        var data={
+            email:email,
+            totalPrice:totalPrice
+        };
+        $.ajax({
+            type: "POST",
+            url: "/add_order",
+            data: data,
+        })
+            .done(function(data) {})
+            .fail(function(jqXhr) {});
+        handleCheckout();
+        makeToast("info","Checked out succefully!");
     }
     return (
         <div>
@@ -88,7 +97,7 @@ const Cart = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary mb-2"
-                                    onClick={redirectCheckOut}
+                                    onClick={onCheckout}
                                 >
                                     CHECKOUT
                                 </button>

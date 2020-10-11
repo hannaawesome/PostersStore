@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import "tabler-react/dist/Tabler.css";
 import {Navbar,Nav} from "react-bootstrap"
 import heart from "./components_images/heart.png";
-import exit from "./components_images/exit.png";
-import shoppingCart from "./components_images/shopping-cart.png";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import {useGoogleLogout} from "react-google-login";
 
 
@@ -100,8 +100,8 @@ export default function NavigationBar({category}) {
     switch (category) {
         case "Admin":
             return (
-                <React.Fragment>
-                    <Navbar bg="light">
+                <React.Fragment style={{display: 'flex'}}>
+                    <Navbar bg="dark" varient="dark" justify-content="space-around" display="flex">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
@@ -111,15 +111,15 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectUsers}>Users</Nav.Link>
                             <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
-                            <Nav.Link onClick={redirectLiked}>
+                            {/*} <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>
+                            </Nav.Link>*/}
                             <Nav.Link onClick={redirectCart}>
-                                <img alt="" src={shoppingCart} height={20} width={20}/>
+                                <ShoppingCartOutlinedIcon style={{fill: "white"}}/>
                             </Nav.Link>
 
                             <Nav.Link onClick={onLogout}>
-                                <img alt="" src={exit} height={20} width={20}/>
+                               <ExitToAppIcon style={{fill: "white"}}/>
                             </Nav.Link>
                         </Nav>
                     </Navbar>
@@ -128,7 +128,7 @@ export default function NavigationBar({category}) {
         case "Employee":
             return (
                 <React.Fragment>
-                    <Navbar bg="light">
+                    <Navbar bg="dark" varient="dark" justify-content="space-around" display="flex">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
@@ -137,15 +137,15 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
-                            <Nav.Link onClick={redirectLiked}>
+                            {/* <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>
+                            </Nav.Link>*/}
                             <Nav.Link onClick={redirectCart}>
-                                <img alt="" src={shoppingCart} height={20} width={20}/>
+                                <ShoppingCartOutlinedIcon/>
                             </Nav.Link>
 
                             <Nav.Link onClick={onLogout}>
-                                <img alt="" src={exit} height={20} width={20}/>
+                                <ExitToAppIcon style={{fill: "white"}}/>
                             </Nav.Link>
                         </Nav>
                     </Navbar>
@@ -154,21 +154,21 @@ export default function NavigationBar({category}) {
         case"Customer":
             return (
                 <React.Fragment>
-                    <Navbar bg="light">
+                    <Navbar bg="dark" varient="dark" justify-content="space-around" display="flex">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
                             <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
-                            <Nav.Link onClick={redirectLiked}>
+                            {/*} <Nav.Link onClick={redirectLiked}>
                                 <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>
+                            </Nav.Link>*/}
                             <Nav.Link onClick={redirectCart}>
-                                <img alt="" src={shoppingCart} height={20} width={20}/>
+                                <ShoppingCartOutlinedIcon/>
                             </Nav.Link>
                             <Nav.Link onClick={onLogout}>
-                                <img alt="" src={exit} height={20} width={20}/>
+                                <ExitToAppIcon style={{fill: "white"}}/>
                             </Nav.Link>
                         </Nav>
                     </Navbar>
@@ -177,14 +177,14 @@ export default function NavigationBar({category}) {
         default:
             return (
                 <div>
-                    <Navbar bg="light">
+                    <Navbar bg="dark" varient="dark" justify-content="space-around" display="flex">
                         <Nav className="mr-auto">
                             <Nav.Link onClick={redirectHome}>Home</Nav.Link>
                             <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectCart}>
-                                <img alt="" src={shoppingCart} height={20} width={20}/>
+                                <ShoppingCartOutlinedIcon/>
                             </Nav.Link>
                         </Nav>
                     </Navbar>
