@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Typography from "@material-ui/core/Typography";
-import PosterView from "./posterViewInCart";
+import PosterViewInCart from "./posterViewInCart";
 import { CartContext } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -59,8 +59,8 @@ const Cart = () => {
                 <div className="col-sm-9 p-3">
                     {cartItems.length > 0 ? (
                         <div className="card card-body border-0">
-                            {cartItems !== undefined &&cartItems.map((product) => (
-                                <PosterView key={product.id} product={product} />
+                            {cartItems !== undefined &&cartItems.map((poster) => (
+                                <PosterViewInCart key={poster._id} poster={poster} />
                             ))}
                         </div>
                     ) : (
@@ -70,7 +70,7 @@ const Cart = () => {
                     {checkout && (
                         <div className="p-3 text-center text-success">
                             <p>Checkout successful</p>
-                            <Link to="/" className="btn btn-outline-success btn-sm">
+                            <Link to="/shop" className="btn btn-outline-success btn-sm">
                                 BUY MORE
                             </Link>
                         </div>

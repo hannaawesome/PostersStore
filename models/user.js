@@ -81,7 +81,7 @@ module.exports = db => {
     };
 
     schema.statics.FIND_ONE_USER = async function (email) {
-        return this.findOne({e_mail:email}).exec();
+        return this.findOne({e_mail:email,active:true}).exec();
     };
     schema.statics.DELETE = async function (email) {
         const filter = { e_mail: email };

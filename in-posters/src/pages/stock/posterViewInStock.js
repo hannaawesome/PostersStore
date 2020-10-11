@@ -77,12 +77,11 @@ export default function PosterViewInStock({ poster, renderStore }) {
             />
 
             {poster !== undefined && poster.img !== undefined && (
-                <img src={poster.img}/>)}
-            {/*<CardMedia
+            <CardMedia
                     className={classes.media}
                     image={poster.img}
                     title=""
-                />*/}
+                /> )}
             <CardContent>
                {poster.price}
             </CardContent>

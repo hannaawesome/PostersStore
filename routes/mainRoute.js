@@ -20,6 +20,58 @@ const path = require("path");
 passport.use("User",User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+function initPosters(){
+    var posters = [
+        {
+            _id:40000,
+            name: "Sky",
+            creator:"Lorde",
+            img: "../../images/pexels-north-1407322.jpg",
+            price: 50,
+            measurement:"",
+            sizeList:["50X70","160X180","100X120"],
+            tagList:["view"],
+            amount:2,
+            active:true
+        },
+        {
+            _id:40001,
+            name: "Car",
+            creator:"Hanna",
+            img:"../../images/pexels-pixabay-326259.jpg",
+            price: 20,
+            measurement:"",
+            sizeList:["50X70","160X180"],
+            tagList:["vehicle"],
+            amount:4,
+            active:true
+        },
+        {
+            _id:40002,
+            name: "Guitar",
+            creator:"George",
+            img: "../images/pexels-eberhard-grossgasteiger-844297.jpg",
+            price: 40,
+            measurement:"",
+            sizeList:["100X120"],
+            tagList:["music"],
+            amount:7,
+            active:true
+        }];
+    posters.forEach((element) =>
+        Poster.CREATE([
+            element._id,
+            element.name,
+            element.creator,
+            element.img,
+            element.price,
+            element.sizeList,
+            element.tagList,
+            element.amount,
+        ])
+    );
+}
+
 router.get("/get_chatrooms", catchErrors(async function (req, res) {
     const chatrooms = await Chatroom.find({});
 
@@ -47,7 +99,7 @@ router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
     });
 }));
 router.get("/get_messages", catchErrors(async function (req, res) {
-    const messages = await Message.find({});
+    const messages = await Message.find({chatroom:req.query.chatroom});
 
     res.json(messages);
 }));
@@ -99,7 +151,7 @@ router.post("/update_like_to_message" ,catchErrors(async function (req, res) {
                 debug("successfully added to liked");
                 res.send(200);
 }));
-router.post("/add_user",connectEnsureLogin.ensureLoggedIn(),catchErrors(async function (req, res) {
+router.post("/add_user",catchErrors(async function (req, res) {
     const emailRegex = /@gmail.com|@yahoo.com|@hotmail.com|@live.com|@g.jct.ac.il/;
 
     if (!emailRegex.test(req.body.e_mail)) throw "Email is not supported from your domain.";
@@ -173,6 +225,7 @@ router.post("/register", catchErrors(async function (req, res) {
     }), 6000);
 }));
 router.post("/login", (req, res, next) => {
+   // initPosters();
     passport.authenticate("User", (err, user, info) => {
         if (err) {
             console.log("ERROR " + err);
@@ -194,7 +247,7 @@ router.post("/login", (req, res, next) => {
         }
     })(req, res, next);
 });
-router.post("/add_order", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/add_order",  async function (req, res) {
     try {
 
         let user = await User.findone({
@@ -429,7 +482,7 @@ router.post("/delete_from_cart", async function (req, res) {
 
 router.get("/get_liked_items", async function (req, res) {
     let user = await User.findOne({
-        e_mail: req.body.email,
+        e_mail: req.query.email,
         active: true,
     }).exec();
     if (user === undefined) {
@@ -451,26 +504,12 @@ router.get("/get_liked_items", async function (req, res) {
                         measurement: p.measurement,
                         sizeList:p.sizeList,
                         tagList: p.tagList,
-                        liked: true
                     };
-                else {
-                    return {
-                        _id: p._id,
-                        name: p.name,
-                        creator: p.creator,
-                        img: p.img,
-                        price: p.price,
-                        measurement: p.measurement,
-                        sizeList:p.sizeList,
-                        tagList: p.tagList,
-                        liked: false
-                    };
-                }
             })
         );
     }
 });
-router.get("/get_orders",connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_orders", async function (req, res) {
         let orders = await Order.find({active: true}).exec();
         res.json(
             orders.map((order) => {
@@ -532,7 +571,7 @@ router.get("/get_user", async function (req, res) {
     }
 );
 
-router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_user_orders", async function (req, res) {
     let user = await User.findOne({
         e_mail: req.body.email,
         active: true,
@@ -562,7 +601,7 @@ router.get("/get_user_orders", connectEnsureLogin.ensureLoggedIn(), async functi
             ));
     }
 });
-router.get("/get_users",connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.get("/get_users", async function (req, res) {
         let users = await User.find({active: true}).exec();
         if (users === undefined||users === ""||users===null) {
             debug("no users found");
@@ -583,7 +622,7 @@ router.get("/get_users",connectEnsureLogin.ensureLoggedIn(), async function (req
                 }));
     }
 );
-router.post('/update_poster',connectEnsureLogin.ensureLoggedIn(), async function(req, res,next) {
+router.post('/update_poster', async function(req, res,next) {
     let update_poster = {
         _id:req.body._id,
         name: req.body.name,
@@ -601,7 +640,7 @@ router.post('/update_poster',connectEnsureLogin.ensureLoggedIn(), async function
     } catch (err) {  console.log("could not update poster price "+err) }
     setTimeout((function() {res.status(200).send()}), 1000);
 });
-router.post("/update_poster_cart_amount", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/update_poster_cart_amount",  async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
@@ -643,7 +682,7 @@ router.post("/update_poster_cart_amount", connectEnsureLogin.ensureLoggedIn(), a
         res.send(404);
     }
 });
-router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/update_poster_cart_size",  async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
@@ -686,7 +725,7 @@ router.post("/update_poster_cart_size", connectEnsureLogin.ensureLoggedIn(), asy
         res.send(404);
     }
 });
-router.post("/update_user", connectEnsureLogin.ensureLoggedIn(),async function (req, res) {
+router.post("/update_user", async function (req, res) {
     let user = {
         fullName: {
             fName: req.body.fName,
@@ -714,7 +753,7 @@ router.post("/update_user", connectEnsureLogin.ensureLoggedIn(),async function (
         res.status(200).send()
     }), 6000);
 });
-router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function (req, res) {
+router.post("/cancel_order",  async function (req, res) {
     try {
         let user = await User.findOne({
             e_mail: req.body.email,
@@ -755,7 +794,7 @@ router.post("/cancel_order", connectEnsureLogin.ensureLoggedIn(), async function
         res.send(404);
     }
 });
-router.post('/delete_user',connectEnsureLogin.ensureLoggedIn(),async function(req, res,next) {
+router.post('/delete_user',async function(req, res,next) {
     try {
         await User.DELETE(req.query.email);
     }
@@ -764,7 +803,7 @@ router.post('/delete_user',connectEnsureLogin.ensureLoggedIn(),async function(re
     }
     setTimeout((function() {res.status(200).send()}), 1000);
 });
-router.post('/delete_poster',connectEnsureLogin.ensureLoggedIn(),async function(req, res,next) {
+router.post('/delete_poster',async function(req, res,next) {
     try {
         await Poster.DELETE(req.query.id);
     }

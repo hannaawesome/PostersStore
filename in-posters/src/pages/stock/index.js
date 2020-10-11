@@ -61,9 +61,9 @@ const Stock = () => {
         switch (event.target.value) {
             case "all": //high to low
                 break;
-            case "cars": //low to high
+            case "vehicle": //low to high
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "cars") === -1;});
+                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "vehicle") === -1;});
                 break;
             case "view": //low to high
                 postersToShow.filter(function(a) {
@@ -165,7 +165,7 @@ const Stock = () => {
                                             autoWidth
                                         >
                                             <MenuItem value={"all"}>All</MenuItem>
-                                            <MenuItem value={"cars"}>Cars</MenuItem>
+                                            <MenuItem value={"vehicle"}>Vehicle</MenuItem>
                                             <MenuItem value={"people"}>People</MenuItem>
                                             <MenuItem value={"view"}>View</MenuItem>
                                             <MenuItem value={"music"}>Music</MenuItem>

@@ -83,12 +83,11 @@ const Liked = () => {
                     {/* End hero unit */}
 
                     <Grid container spacing={4}>
-                        {
-                        posters.map((poster, index) => (
+                        {posters.length?posters.map((poster, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
                                 <PosterViewInShop key={index} poster={poster} />
                             </Grid>
-                        ))}
+                        )):null}
                     </Grid>
                 </Container>
             </main>

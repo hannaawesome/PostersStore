@@ -14,7 +14,6 @@ const Chatroom = ({ match, socket }) => {
 
   const chatroomId = match.params.id;
   const [messages, setMessages] = React.useState([]);
-  //messagesToShow
   const messageRef = React.useRef();
   const [userEmail, setUserEmail] = React.useState("");
   const [like, setLike] = React.useState(false);
@@ -62,7 +61,17 @@ const Chatroom = ({ match, socket }) => {
     };
     //eslint-disable-next-line
   }, []);
-
+  // React.useEffect(() => {
+  //   async function fetchMessages() {
+  //     const fullResponse = await fetch(
+  //         "/get_messages?chatroom="+chatroomId
+  //     );
+  //     const responseJson = await fullResponse.json();
+  //     setMessages(responseJson);
+  //   }
+  //
+  //   fetchMessages().then(r => console.log("got"));
+  // }, []);
   // function postLike(messageId){
   //   var data = {
   //     massageId: messageId,

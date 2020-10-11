@@ -31,6 +31,7 @@ import {Dropdown} from "react-bootstrap";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
+import makeToast from "../../Toaster";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -73,7 +74,6 @@ const styles = (theme) => ({
         color: theme.palette.error.main,
     },
 });
-//added to cart
 class PosterData extends React.Component {
     static contextType = CartContext;
 
@@ -121,7 +121,8 @@ class PosterData extends React.Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
-                        <Grid item xs={1}><img src={poster.img}/>
+                        <Grid item xs={6}>
+                            <img src={poster.img}/>
                         </Grid>
                         <Grid item xs={5}>
 
@@ -167,7 +168,7 @@ class PosterData extends React.Component {
                                         variant="contained"
                                         color="secondary"
                                         style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => cartContext.addingPoster(poster)}
+                                        onClick={() => {cartContext.addingPoster(poster);}}
                                     >
                                         Add to cart
                                     </ButtonUp>
@@ -201,31 +202,9 @@ class PosterData extends React.Component {
                                 })};
                             </List>
                         </Grid>
-                        {/* <Grid item xs={12} sm={6} >
-                            <Select
-                                labelId="mutiple-chip-label"
-                                id="mutiple-chip"
-                                multiple
-                                value={tagList}
-                                onChange={(event) => {setTagList(event.target.value);}}
-                                input={<Input id="select-multiple-chip" />}
-                                renderValue={(selected) => (
-                                    <div className={classes.chips}>
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} className={classes.chip} />
-                                        ))}
-                                    </div>
-                                )}
-                                MenuProps={MenuProps}
-                            >
-                                {constTagList.map((tag) => (
-                                    <MenuItem key={tag} value={tag} style={getStyles(tag, tagList, theme)}>
-                                        {tag}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                         <Grid item xs={12} sm={6} >
 
-                        </Grid>*/}
+                        </Grid>
                     </Grid>
                 </div>
             </div>

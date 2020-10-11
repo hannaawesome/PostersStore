@@ -53,7 +53,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     const [liked, setLiked] = React.useState(false);
     const handlePosterChangedSaved = () => {
         var data = {
-            e_mail: sessionStorage.getItem("userEmail"),
+            email: sessionStorage.getItem("userEmail"),
             posterId: poster.id,
             state: !liked,
         };
@@ -88,7 +88,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
     function ViewPosterItemHandler(e) {
         //var self;
         e.preventDefault();
-         history.push("/poster/:"+poster._id);
+         history.push("/poster/"+poster._id);
     }
     return (
 

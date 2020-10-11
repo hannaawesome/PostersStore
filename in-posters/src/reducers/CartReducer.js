@@ -1,14 +1,12 @@
 import $ from "jquery";
+import makeToast from "../Toaster";
 
-const handleAddItem = (posterId,amount,width,length) => {
+const handleAddItem = (posterId,amount,measurement) => {
     var data = {
         email: sessionStorage.getItem("userEmail"),
         posterId: posterId,
-        amount,
-        measurement:{
-            width:width,
-            length:length
-        }
+        amount:amount,
+        measurement:measurement
     };
 
     // Submit form via jQuery/AJAX
@@ -17,7 +15,7 @@ const handleAddItem = (posterId,amount,width,length) => {
         url: "/add_to_cart",
         data: data,
     })
-        .done(function(data) {})
+        .done(function(data) {makeToast("info","Added to Cart!")})
         .fail(function(jqXhr) {});
 };
 

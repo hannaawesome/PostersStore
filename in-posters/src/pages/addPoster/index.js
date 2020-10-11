@@ -86,7 +86,7 @@ const MenuProps = {
     },
 };
 const constSizeList = ["50X70","160X180","100X120"];
-const constTagList = ["cars","people","music","view"];
+const constTagList = ["vehicle","people","music","view"];
 const AddPoster= () => {
     const [pName,setPName]=React.useState("");
     const [creator,setCreator]=React.useState("");

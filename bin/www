@@ -124,22 +124,25 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chatroomMessage", async ({chatroomId, message}) => {
+
     if (message.trim().length > 0) {
-      const user = await User.findOne({e_mail: socket.userId});
+      console.log("hellllp");
+      console.log(socket.userId);
+      const user = await User.FIND_ONE_USER(socket.userId);
       console.log(user.name);
       const newMessage = new Message({
         chatroom: chatroomId,
         user: socket.userId,
-        message
-        //likes: [],
-        //unlikes: []
+        message,
+        likes: [],
+        unlikes: []
       });
       io.to(chatroomId).emit("newMessage", {
         message,
         name: user.name,
         userId: socket.userId,
-        // likes:[],
-        // unlikes:[]
+         likes:[],
+         unlikes:[]
       });
       await newMessage.save();
     }

@@ -159,10 +159,10 @@ const UserData = () => {
                                             onChange={handleChangeRole}
                                             autoWidth
                                         >
-                                            <MenuItem value={"All"}>All</MenuItem>
-                                            <MenuItem value={"Admin"}>Cars</MenuItem>
-                                            <MenuItem value={"Customer"}>People</MenuItem>
-                                            <MenuItem value={"Employee"}>View</MenuItem>
+                                            <MenuItem value={"all"}>All</MenuItem>
+                                            <MenuItem value={"vehicle"}>Vehicle</MenuItem>
+                                            <MenuItem value={"people"}>People</MenuItem>
+                                            <MenuItem value={"view"}>View</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>

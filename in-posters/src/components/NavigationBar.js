@@ -83,6 +83,7 @@ export default function NavigationBar({category}) {
            if(JSON.parse(localStorage.getItem("checked"))) {
                localStorage.setItem("userEmail", "");
                localStorage.setItem("userCategory", "");
+               localStorage.setItem("password", "");
            }
 
            if(JSON.parse(localStorage.getItem("connectedByGoogle")))

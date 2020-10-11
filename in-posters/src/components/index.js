@@ -48,7 +48,7 @@ export default function App(props: Props): React.Node {
 
             newSocket.on("disconnect", () => {
                 setSocket(null);
-                setTimeout(setupSocket, 1000);
+                setTimeout(setupSocket, 3000);
                 makeToast("error", "Socket Disconnected!");
             });
 
@@ -60,10 +60,10 @@ export default function App(props: Props): React.Node {
         }
     };
 
-    React.useEffect(() => {
-        setupSocket();
-        //eslint-disable-next-line
-    }, []);
+    // React.useEffect(() => {
+    //     setupSocket();
+    //     //eslint-disable-next-line
+    // }, []);
    if( sessionStorage.getItem("userCategory")===undefined)
         sessionStorage.setItem("userCategory","");
     return (
@@ -165,7 +165,7 @@ export default function App(props: Props): React.Node {
                             </Toolbar>
                               <Checkout{...props} />} />
                         </div>} />
-                    <Route exact from="/poster/:id" render={(props) =>
+                    <Route exact from="/poster/:posterId" render={(props) =>
                         <div>
                             <Toolbar>
                                 <NavigationBar category={sessionStorage.getItem("userCategory")}/>
