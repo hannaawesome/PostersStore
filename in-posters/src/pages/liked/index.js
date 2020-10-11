@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 const Liked = () => {
     const classes = useStyles();
 
-    const [posters, postersSet] = React.useState([]);
+    const [posters, setPosters] = React.useState([]);
 
     React.useEffect(() => {
         async function fetchPosters() {
@@ -54,7 +54,7 @@ const Liked = () => {
                 "/get_liked_items?email=" + sessionStorage.getItem("userEmail")
             );
             const responseJson = await fullResponse.json();
-            postersSet(responseJson);
+            setPosters(responseJson);
         }
 
         fetchPosters();
@@ -83,11 +83,11 @@ const Liked = () => {
                     {/* End hero unit */}
 
                     <Grid container spacing={4}>
-                        {posters.length?posters.map((poster, index) => (
+                        {posters!==undefined&&posters.length>0?(posters.map((poster, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
                                 <PosterViewInShop key={index} poster={poster} />
                             </Grid>
-                        )):null}
+                        ))):null}
                     </Grid>
                 </Container>
             </main>

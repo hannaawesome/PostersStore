@@ -62,8 +62,7 @@ const Login= (props) => {
     const [password, setPassword] = React.useState(
         localStorage.getItem("password")
     );
-    const [fName, setFName] = React.useState("");
-     const [lName, setLName] = React.useState("");
+    const [fullName, setFullName] = React.useState("");
     const [checkedRemember, setChecked] = React.useState(
         JSON.parse(localStorage.getItem("checked"))
     );
@@ -85,8 +84,7 @@ const Login= (props) => {
         console.log('Login Success: currentUser:', res.profileObj);
         setEmail(res.profileObj.email);
         setPassword(res.profileObj.googleId);//isn't really necessary
-        setFName(res.profileObj.name);
-        setLName(res.profileObj.familyName);
+        setFullName(res.profileObj.name+ ' '+res.profileObj.familyName);
         console.log(email);
         $.ajax({
             type: "GET",
@@ -108,10 +106,7 @@ const Login= (props) => {
             var data = {
                 e_mail: email,
                 password: password,
-                fullName: {
-                 fName: fName,
-                 lName: lName
-             }};
+                fullName: fullName};
             $.ajax({
                 type: "POST",
                 url: "/register",

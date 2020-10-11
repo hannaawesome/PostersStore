@@ -65,23 +65,26 @@ const useStyles = makeStyles((theme) => ({
 
 const RegisterByAdmin= (props) => {
     const classes = useStyles();
-
-    const [fname, setFname] = React.useState("");
-    const [lname, setLname] = React.useState("");
+const history=useHistory();
+    const [fullName, setFullName] = React.useState("");
+    const [phone, setPhone] = React.useState("");
+    const [address,setAddress]=React.useState("");
     const [email, setEmail] = React.useState("");
 
-     const [category, setCategory] = React.useState("");
+     const [category, setCategory] = React.useState("Customer");
     const [password, setPassword] = React.useState("");
     const onChangeEmailHandler  = email => {
         setEmail(email.target.value);
     };
     const onChangePasswordHandler = (e) => setPassword( e.target.value);
-    const onChangeFName = (e) => setFname( e.target.value);
-    const onChangeLName = (e) => setLname( e.target.value);
+    const onChangeName = (e) => setFullName( e.target.value);
+    const onChangePhone = (e) => setPhone( e.target.value);
+    const onChangeAddress = (e) => setAddress( e.target.value);
     const onChangeCategory = (e) => setCategory( e.target.value);
 
     const onSuccess = () => {
         console.log("user added");
+        history.push("/users");
     };
     const onFailure = error => {
         makeToast("error", error.response.data.message);
@@ -92,10 +95,9 @@ const RegisterByAdmin= (props) => {
         var data = {
             e_mail: email,
             password: sha256(password+process.env.SALT_PASSWORD),
-            fullName: {
-                fName: fname,
-                lName: lname
-            },
+            fullName: fullName,
+            phone:phone,
+            address:address,
             category:category}
         ;
 
@@ -129,27 +131,15 @@ const RegisterByAdmin= (props) => {
                     <Grid item xs={12} sm={6}>
 
                         <TextField
-                            autoComplete="fName"
-                            name="firstName"
+                            autoComplete="fullName"
+                            name="fullName"
                             variant="outlined"
                             required
                             fullWidth
-                            id="firstName"
-                            label="First Name"
+                            id="fullName"
+                            label="Name"
                             autoFocus
-                            onChange={onChangeFName}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            autoComplete="lName"
-                            onChange={onChangeLName}
+                            onChange={onChangeName}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -177,6 +167,31 @@ const RegisterByAdmin= (props) => {
                             onChange={onChangePasswordHandler}
                         />
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="phone"
+                            label="Phone Number"
+                            name="phone"
+                            type="number"
+                            autoComplete="phone"
+                            onChange={onChangePhone}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="address"
+                            label="Address"
+                            name="address"
+                            autoComplete="address"
+                            onChange={onChangeAddress}
+                        />
+                    </Grid>
                 </Grid>
                 <Button
                     type="submit"
@@ -197,7 +212,7 @@ const RegisterByAdmin= (props) => {
                                 label="Category"
                             >
                                 <MenuItem value="">
-                                    <em>None</em>
+                                    <em>Customer</em>
                                 </MenuItem>
                                 <MenuItem value={"Admin"}>Admin</MenuItem>
                                 <MenuItem value={"Customer"}>Customer</MenuItem>

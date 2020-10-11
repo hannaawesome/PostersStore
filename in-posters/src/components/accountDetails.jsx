@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: red[500],
     },
 }));
-export default function AccountDetails({ user }) {
+export default function AccountDetails() {
 
     // constructor() {
     //     super();
@@ -50,7 +50,17 @@ export default function AccountDetails({ user }) {
     //     };
     //     this.EditUserItemHandler = this.EditUserItemHandler.bind(this);
     // }
+    const [user,setUser] = React.useState({});
 
+
+    React.useEffect(() => {  async function fetchUser() {const fullResponse = await fetch(
+        "/get_user?email="+sessionStorage.getItem("userEmail")
+    );
+        const responseJson = await fullResponse.json();
+        setUser(responseJson)}
+        fetchUser().then(r => {
+            console.log("got user");
+        })}, []);
     const classes = useStyles();
     let history = useHistory();
 
@@ -61,7 +71,7 @@ export default function AccountDetails({ user }) {
         return (
             <Card className={classes.cardStl}>
                 <CardHeader className={classes.headerStl}
-                            title={user.fullName.fName}
+                            title={user.fullName}
                             subheader={user.e_mail}
                 />
                 <CardActions disableSpacing>

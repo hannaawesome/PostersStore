@@ -130,7 +130,6 @@ class PosterData extends React.Component {
                                 items={sizeList}
                                 maxWidth="xs"
                             />
-                            )}
                         </Grid>
 
                         <Grid item xs={3} className="text-left ml-5">
@@ -142,12 +141,10 @@ class PosterData extends React.Component {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={3} className="mt-3">
-                                        <Chip
-                                            variant="outlined"
-                                            size="madium"
-                                            label={poster.creator}
-                                        />
-                                        )}
+                                        <Typography gutterBottom variant="h5">
+                                            {poster.creator}
+                                        </Typography>
+
                                     </Grid>
                                 </Grid>
                                 <Grid item xs>
@@ -156,7 +153,7 @@ class PosterData extends React.Component {
                                         gutterBottom
                                         className={classes.price}
                                     >
-                                        {poster.price}
+                                        {poster.price}$
                                     </Typography>
                                     <br/>
                                     <br/>
@@ -199,7 +196,7 @@ class PosterData extends React.Component {
                                             tag={item}
                                         />
                                     );
-                                })};
+                                })}
                             </List>
                         </Grid>
                          <Grid item xs={12} sm={6} >

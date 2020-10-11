@@ -7,11 +7,9 @@ module.exports = db => {
     let schema = new mongo.Schema({
         _id:String,
         e_mail: { type: String, required: true, unique: true},
-        fullName: {
-            fName: String,
-            lName : String
-        },
+        fullName: String,
         phone: String,
+        address:String,
         category: String,
         cartItems:Array,//array of (PosterId,amount,measurement)
         orderHistory:Array,//array of (OrderId)
@@ -25,7 +23,8 @@ module.exports = db => {
         return this.create({
             _id:user._id,
             password: user.password,
-            fullName: user.fullName,
+            fullName:user.fullName,
+            address:user.address,
             phone: user.phone,
             e_mail: user.e_mail,
             category:user.category,
@@ -98,8 +97,8 @@ module.exports = db => {
         let userToUpdate;
         [userToUpdate]=await Promise.all([queryForUpdate]);
         if(userToUpdate) {
-            userToUpdate.fullName.fName= updatedUser.fullName.fName;
-            userToUpdate.fullName.lName= updatedUser.fullName.lName;
+            userToUpdate.fullName= updatedUser.fullName;
+            userToUpdate.address= updatedUser.address;
             userToUpdate.phone=updatedUser.phone;
             userToUpdate.cartItems= updatedUser.cartItems;
             userToUpdate.orderHistory= updatedUser.orderHistory;

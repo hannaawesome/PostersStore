@@ -5,16 +5,7 @@ import {Error404Page} from "tabler-react";
 import {withStyles} from "@material-ui/core/styles";
 
 export default function Account(){
-    const [userD, userDSet] = React.useState({});
 
-    React.useEffect(() => {  async function fetchUser() {const fullResponse = await fetch(
-            "/get_user?email="+sessionStorage.getItem("userEmail")
-        );
-        const responseJson = await fullResponse.json();
-        userDSet(responseJson);}
-        fetchUser().then(r => {
-            console.log("got user");
-    })}, []);
 
     // constructor() {
     //     super();
@@ -40,7 +31,7 @@ export default function Account(){
     // render() {
         return (<div>
                 <h5>MyAccount</h5>
-                {<AccountDetails user={userD}/>}
+                {<AccountDetails/>}
                 <h5>OrderList</h5>
                 <OrderListUser/>
             </div>

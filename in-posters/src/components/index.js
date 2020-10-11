@@ -15,7 +15,6 @@ import Login from "../pages/login";
 import Liked from "../pages/liked";
 import Contact from "../pages/contact";
 import Store from "../pages/Store";
-import PosterEdit from "../pages/posterEdit";
 import UpdateUserDetails from "../pages/updateUserDetails";
 import OrderList from "../pages/orderLists";
 import Stock from "../pages/stock";
@@ -60,10 +59,10 @@ export default function App(props: Props): React.Node {
         }
     };
 
-    // React.useEffect(() => {
-    //     setupSocket();
-    //     //eslint-disable-next-line
-    // }, []);
+    React.useEffect(() => {
+        setupSocket();
+        //eslint-disable-next-line
+    }, []);
    if( sessionStorage.getItem("userCategory")===undefined)
         sessionStorage.setItem("userCategory","");
     return (
@@ -123,13 +122,6 @@ export default function App(props: Props): React.Node {
                             </Toolbar>
                              <Store{...props} />
                         </div>} />
-                     <Route exact from="/poster_edit" render={(props) =>
-                         <div>
-                             <Toolbar>
-                                <NavigationBar category={sessionStorage.getItem("userCategory")}/>
-                             </Toolbar>
-                               <PosterEdit{...props} />
-                         </div>} />
                     <Route exact from="/users" render={(props) =>
                         <div>
                             <Toolbar>

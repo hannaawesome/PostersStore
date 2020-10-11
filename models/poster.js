@@ -13,6 +13,7 @@ module.exports = db => {
         sizeList:Array,//array of string
         tagList:Array,
         amount:Number,
+        amountChosen:Number,
         active:Boolean
     }, { autoIndex: false });
 
@@ -27,6 +28,7 @@ module.exports = db => {
             sizeList:poster[5],
             tagList:poster[6],
             amount:poster[7],
+            amountChosen:0,
             active:true
         });
     };
@@ -102,6 +104,7 @@ module.exports = db => {
             posterToUpdate.sizeList=updatedPoster.sizeList;
             posterToUpdate.tagList=updatedPoster.tagList;
             posterToUpdate.amount=updatedPoster.amount;
+            posterToUpdate.amountChosen=updatedPoster.amountChosen;
             posterToUpdate.save();
         }
         else

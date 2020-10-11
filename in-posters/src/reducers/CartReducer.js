@@ -52,14 +52,11 @@ const handleChangeAmountItem = (posterId, amount) => {
         .fail(function(jqXhr) {});
 };
 
-const handleChangeSizeItem = (posterId, width,length) => {
+const handleChangeSizeItem = (posterId,measurement) => {
     var data = {
         email: sessionStorage.getItem("userEmail"),
         posterId: posterId,
-        measurement:{
-            width:width,
-            length:length
-        }
+        measurement:measurement
     };
 
     // Submit form via jQuery/AJAX
@@ -97,9 +94,9 @@ export const CartReducer = (state, action) => {
             if (!state.cartItems.find((item) => item.id === action.payload.id)) {
                 state.cartItems.push({
                     ...action.payload,
-                    quantity: action.payload.amount,
+                    quantity: action.payload.amountChosen,
                 });
-                handleAddItem(action.payload.id,action.payload.amount,action.payload.width,action.payload.length);
+                handleAddItem(action.payload.id,action.payload.amountChosen,action.payload.measurement);
             }
 
             return {
@@ -122,7 +119,7 @@ export const CartReducer = (state, action) => {
             state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
                 ].quantity++;
-            handleChangeAmountItem(action.payload.id, action.payload.amount);
+            handleChangeAmountItem(action.payload.id, action.payload.amountChosen);
             return {
                 ...state,
                 ...sumItems(state.cartItems),
@@ -132,7 +129,7 @@ export const CartReducer = (state, action) => {
            state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
                 ].quantity--;
-            handleChangeAmountItem(action.payload.id,action.payload.amount );
+            handleChangeAmountItem(action.payload.id,action.payload.amountChosen );
             return {
                 ...state,
                 ...sumItems(state.cartItems),
@@ -141,8 +138,8 @@ export const CartReducer = (state, action) => {
         case "CHANGE_AMOUNT":
             state.cartItems[
                 state.cartItems.findIndex((item) => item.id === action.payload.id)
-                ].quantity=action.payload.amount;
-            handleChangeAmountItem(action.payload.id,action.payload.amount );
+                ].quantity=action.payload.amountChosen;
+            handleChangeAmountItem(action.payload.id,action.payload.amountChosen );
             return {
                 ...state,
                 ...sumItems(state.cartItems),
@@ -150,7 +147,7 @@ export const CartReducer = (state, action) => {
             };
         case "CHANGE_SIZE":
 
-            handleChangeSizeItem(action.payload.id,action.payload.width,action.payload.length );
+            handleChangeSizeItem(action.payload.id,action.payload.measurement );
             return {
                 ...state,
                 ...sumItems(state.cartItems),

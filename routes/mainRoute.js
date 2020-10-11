@@ -161,11 +161,9 @@ router.post("/add_user",catchErrors(async function (req, res) {
     let usersList = await User.REQUEST();
     let user = {
         _id: usersList.length.toString(),
-        fullName: {
-            fName: req.body.fullName.fName,
-            lName: req.body.fullName.lName
-        },
-        phone:-1,
+        fullName: req.body.fullName,
+        phone:req.body.phone,
+        address:req.body.address,
         e_mail: req.body.e_mail,
         category: req.body.category,
         cartItems: [],
@@ -198,11 +196,9 @@ router.post("/register", catchErrors(async function (req, res) {
     let usersList = await User.REQUEST();
     let user = {
         _id: usersList.length.toString(),
-        fullName: {
-            fName: req.body.fullName.fName,
-            lName: req.body.fullName.lName
-        },
-        phone:"",
+        fullName: req.body.fullName,
+        phone:req.body.phone,
+        address:req.body.address,
         e_mail: req.body.e_mail,
         category: usersList.length?'Customer':"Admin",
         cartItems: [],
@@ -284,7 +280,7 @@ router.post("/add_order",  async function (req, res) {
         res.send(404);
     }});
 const storage = multer.diskStorage({
-    destination:"../in-posters/src/uploads",
+    destination:"/app/uploads",
     //filename:"hi"
      filename: function(req, file, cb){
          cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
@@ -315,7 +311,7 @@ const obj =(req,res) => {
         /*Now do where ever you want to do*/
     });
 };
-
+//does not work
 router.post("/add_poster", obj);
 /*router.post('/add_poster',upload.single('file'),(req,res)=>{
 
@@ -573,7 +569,7 @@ router.get("/get_user", async function (req, res) {
 
 router.get("/get_user_orders", async function (req, res) {
     let user = await User.findOne({
-        e_mail: req.body.email,
+        e_mail: req.query.email,
         active: true,
     }).exec();
     if (user === undefined) {
@@ -612,11 +608,9 @@ router.get("/get_users", async function (req, res) {
                 users.map((user) => {
                     return {
                         e_mail: user.e_mail,
-                        fullName: {
-                            fName: user.fullName.fName,
-                            lName: user.fullName.lName
-                        },
+                        fullName:user.fullName,
                         phone: user.phone,
+                        address:user.address,
                         category: user.category
                     };
                 }));
@@ -670,7 +664,7 @@ router.post("/update_poster_cart_amount",  async function (req, res) {
                 res.send(404);
             }
             else {
-                cart[poster].amount = amount;
+                cart[poster].amountChosen = amount;
                 user.cartItems = cart;
                 await User.UPDATE(user);
                 debug("successfully updated in cart");
@@ -727,11 +721,9 @@ router.post("/update_poster_cart_size",  async function (req, res) {
 });
 router.post("/update_user", async function (req, res) {
     let user = {
-        fullName: {
-            fName: req.body.fName,
-            lName: req.body.lName
-        },
+        fullName:  req.body.fullName,
         phone:req.body.phone,
+        address:req.body.address,
         e_mail: req.body.e_mail,
         category: req.body.category,
         cartItems: req.body.cartItems,

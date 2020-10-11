@@ -130,13 +130,13 @@ const Chatroom = ({ match, socket }) => {
                 userEmail === message.userEmail ? "ownMessage" : "otherMessage"
                }
            >
-                {message.name}:
+                {message.user}:
               </span>{" "}
             <Grid container spacing={3}>
               <Grid item xs={5}>
                 {message.message}
               </Grid>
-               <Grid item xs={5}>
+              <Grid item xs={5}>
                 {message.likes.length}
                 <IconButton onClick={handleLike(message._id)}>
                   <ThumbUpIcon/>
