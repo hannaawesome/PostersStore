@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import Grid from "@material-ui/core/Grid";
-
+import $ from "jquery"
 const Chatroom = ({ match, socket }) => {
   let history = useHistory();
 
