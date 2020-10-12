@@ -119,7 +119,7 @@ export default function PosterViewInShop({ poster, renderStore }) {
                             {poster !== undefined && poster.img !== undefined && (
                                 <CardMedia
                                     className={classes.media}
-                                    items={poster.img}
+                                    src={poster.img}
                                     title=""
                                 />
                             )}

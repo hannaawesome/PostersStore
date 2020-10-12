@@ -27,8 +27,8 @@ const CartContextProvider = ({ children }) => {
     };const changeSize = payload => {
         dispatch({ type: "CHANGE_SIZE", payload });
     };
-    const addingPoster = payload => {
-        dispatch({ type: "ADD_ITEM", payload });
+    const addingPoster = (payload ,measurement)=> {
+        dispatch({ type: "ADD_ITEM", payload ,measurement});
     };
 
     const removePoster = payload => {

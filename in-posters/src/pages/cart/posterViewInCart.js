@@ -26,7 +26,7 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import useTheme from "@material-ui/core/styles/useTheme";
 const PosterViewInCart=(props) => {
-    const { increase, decrease ,removeItem} = useContext(CartContext);
+    const { increase, decrease ,removePoster} = useContext(CartContext);
 const renderCartImage = (images) => {
     if(images&&images.length > 0) {
         let image = images[0];
@@ -39,13 +39,13 @@ const renderItems = () => (
         <tr key={poster.posterId}>
             <td>
                 <img style={{ width: '70px' }} alt="poster"
-                     src={renderCartImage(poster.posterId.img)} />
+                     src={renderCartImage(poster.img)} />
             </td>
             <td>{poster.amountChosen} </td>
-            <td>$ {poster.posterId.price} </td>
+            <td>$ {poster.price} </td>
             <td>{poster.measurementChosen} </td>
             <td><IconButton
-                onClick={()=> removeItem(poster)}
+                onClick={()=> removePoster(poster)}
             ><DeleteIcon/> </IconButton> </td>
             <IconButton aria-label="add" onClick={() => increase(poster)}>
                 <AddCircleOutlinedIcon />

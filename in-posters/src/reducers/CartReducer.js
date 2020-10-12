@@ -1,10 +1,11 @@
 import $ from "jquery";
 import makeToast from "../Toaster";
 
-const handleAddItem = (posterId) => {
+const handleAddItem = (posterId,measurement) => {
     var data = {
         email: sessionStorage.getItem("userEmail"),
         posterId: posterId,
+        chosenMeasurement:measurement
     };
 
     // Submit form via jQuery/AJAX
@@ -81,7 +82,7 @@ export const sumItems = (cartItems) => {
         0
     );
     let totalPrice = cartItems
-        .reduce((totalPrice, poster) => totalPrice + poster.price * poster.amountChosen, 0)
+        .reduce((totalPrice, poster) => totalPrice + poster.poster.price * poster.amountChosen, 0)
         .toFixed(2);
     return { itemCount, totalPrice };
 };
@@ -93,9 +94,9 @@ export const CartReducer = (state, action) => {
                 state.cartItems.push({
                     ...action.payload,
                     amountChosen: 1,
-                    measurementChosen:action.payload.measurement
+                    measurementChosen:action.measurement
                 });
-                handleAddItem(action.payload.idt);
+                handleAddItem(action.payload.id);
             }
 
             return {
@@ -156,6 +157,7 @@ export const CartReducer = (state, action) => {
                 cartItems: [],
                 ...sumItems([]),
             };
+
         default:
             return state;
     }

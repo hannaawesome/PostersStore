@@ -167,7 +167,7 @@ class PosterData extends React.Component {
                                         variant="contained"
                                         color="secondary"
                                         style={{maxWidth: "160px", maxHeight: "30px"}}
-                                        onClick={() => {cartContext.addingPoster({poster,measurementChosen:this.state.measurement})}}
+                                        onClick={() => {cartContext.addingPoster(poster,this.state.measurement)}}
                                     >
                                         Add to cart
                                     </ButtonUp>

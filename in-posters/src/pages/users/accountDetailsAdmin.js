@@ -39,7 +39,7 @@ export default function AccountDetailsAdmin({user}) {
                 <Card.Header>{user.fullName?user.fullName:""}</Card.Header>
                 <Card.Meta>{user.category?user.category:""}</Card.Meta>
                 <Card.Description>
-                    <List>
+                     <List>
                         <ListItem>
                             <ListItemAvatar>
                                 <Avatar>

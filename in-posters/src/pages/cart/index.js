@@ -9,6 +9,8 @@ import $ from "jquery";
 import makeToast from "../../Toaster";
 import Empty from "antd/es/empty";
 import Result from "antd/es/result";
+import Button from "antd/es/button";
+import Grid from "@material-ui/core/Grid";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,13 +72,13 @@ const Cart = () => {
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
-            <h1>My Cart</h1>
+            <h1>Cart</h1>
             <div>
 
                 <PosterViewInCart
                     products={cartItems}
                 />
-                {totalPrice ?
+                {totalPrice?
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total price: ${totalPrice} </h2>
                         <h2>Total posters: {itemCount} </h2>
@@ -99,90 +101,32 @@ const Cart = () => {
                 }
             </div>
 
-            {checkout &&
 
+{totalPrice>0&&<Grid xs={2}>
             <Paypal
                 toPay={totalPrice}
                 onSuccess={transactionSuccess}
                 transactionError={transactionError}
                 transactionCanceled={transactionCanceled}
             />
-
-            }
-
+            <Button
+                type="button"
+                className="btn btn-outlineprimary btn-sm"
+                onClick={onCheckout}
+            >
+                Development pay instead of paypal
+            </Button> </Grid>}
+            <Button
+                type="button"
+                className="btn btn-outlineprimary btn-sm"
+                onClick={clearCart}
+            >
+                Clear Cart
+            </Button>
 
 
         </div>)
-   /* return (
-        <div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <Typography
-                component="h1"
-                variant="h2"
-                align="center"
-                color="textPrimary"
-                gutterBottom
-            >
-                Cart
-            </Typography>
 
-            <div className="row no-gutters justify-content-center">
-                <div className="col-sm-9 p-3">
-                    {cartItems.length > 0 ? (
-                        <div className="card card-body border-0">
-                            {cartItems !== undefined &&cartItems.map((poster) => (
-                                <PosterViewInCart key={poster._id} poster={poster} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-3 text-center text-muted">Your cart is empty</div>
-                    )}
-
-                    {checkout && (
-                        <div className="p-3 text-center text-success">
-                            <p>Checkout successful</p>
-                            <Link to="/shop" className="btn btn-outline-success btn-sm">
-                                BUY MORE
-                            </Link>
-                        </div>
-                    )}
-                </div>
-                {cartItems.length > 0 && (
-                    <div className="col-sm-3 p-3">
-                        <div className="card card-body">
-                            <p className="mb-1">Total Items</p>
-                            <h4 className=" mb-3 txt-right">{itemCount}</h4>
-                            <p className="mb-1">Total Payment</p>
-                            <h3 className="m-0 txt-right">{totalPrice}</h3>
-                            <hr className="my-4" />
-                            <div className="text-center">
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mb-2"
-                                    onClick={onCheckout}
-                                >
-                                    CHECKOUT
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-outlineprimary btn-sm"
-                                    onClick={clearCart}
-                                >
-                                    CLEAR
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );*/
 };
 
 export default Cart;
