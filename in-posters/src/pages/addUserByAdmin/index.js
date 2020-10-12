@@ -1,29 +1,18 @@
 import React, {useState, useEffect, Component} from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+
 import {makeStyles, withStyles} from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
+
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import {Route, Switch, withRouter} from "react-router-dom";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
-import HomePage from "../home";
 import makeToast from "../../Toaster";
 import {sha256} from "js-sha256";
-import {Dropdown} from "react-bootstrap";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -101,7 +90,6 @@ const history=useHistory();
             category:category}
         ;
 
-        // Submit form via jQuery/AJAX
         $.ajax({
             type: "POST",
             url: "/add_user",

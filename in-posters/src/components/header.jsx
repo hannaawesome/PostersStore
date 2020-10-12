@@ -1,8 +1,6 @@
 import React from "react";
 import logo from "./components_images/Wolf.svg";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {Button} from "tabler-react";
-import {Form,FormControl} from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import {useHistory} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({

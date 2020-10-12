@@ -28,12 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 export default function AccountDetails() {
-
-    // const [email,setEmail] = React.useState(sessionStorage.getItem("userEmail"));
-    // const [phone,setPhone] = React.useState("");
-    // const [fullName,setFullName] = React.useState("");
-    // const [address,setAddress] = React.useState("");
-    // const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
     const [user, setUser] = React.useState({});
     React.useEffect(() => {
         async function fetchUser() {
@@ -46,22 +40,6 @@ export default function AccountDetails() {
 
         fetchUser();
     }, []);
-    // React.useEffect(() => {  async function fetchUser() {const fullResponse = await fetch(
-    //     "/get_user?email="+sessionStorage.getItem("userEmail")
-    // );
-    //     const responseJson = await fullResponse.json();
-    //     if(responseJson!==undefined) {
-    //         setPhone(responseJson.phone);
-    //         setFullName(responseJson.fullName);
-    //         setAddress(responseJson.address);
-    //         console.log(phone);
-    //
-    //     }
-    //
-    // }
-    //     fetchUser().then(r => {
-    //         console.log("got user");
-    //     })}, []);
     const classes = useStyles();
     let history = useHistory();
 
@@ -104,46 +82,4 @@ export default function AccountDetails() {
                         </IconButton>
                     </CardActions>
                 </Card>);
-                {/*  <Card.Content>
-                    <Card.Header>{fullName}</Card.Header>
-                    <Card.Meta>{category}</Card.Meta>
-                    <Card.Description>
-                         <List className={classes.root}>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <MailOutlineIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                               <Typography>{email}</Typography>}
-                            </ListItem>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <PhoneIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <Typography>{phone}</Typography> />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <PublicIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                               <Typography>{address}</Typography>
-                            </ListItem>
-                        </List>}
-                    </Card.Description>
-                </Card.Content>
-                <CardActions disableSpacing>
-                    <IconButton
-                        aria-label="Edit"
-                        onClick={EditUserItemHandler}>
-                        <EditIcon/>
-                    </IconButton>
-                </CardActions>
-            </Card>*/}
-
-
 };

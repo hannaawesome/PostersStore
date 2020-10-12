@@ -41,7 +41,6 @@ export default function App(props: Props): React.Node {
         if (token && !socket) {
             const newSocket = io(window.location.href, {
                 query: {
-                    //token: sessionStorage.getItem("userCategory"),
                     userId: sessionStorage.getItem("userEmail")
                 },
             });

@@ -51,61 +51,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "in-posters", "build")));
-
- // app.use(
- //     "/account",
- //     express.static(path.join(__dirname, "in-posters", "build"))
- // );
-// app.use(
-//     "/store",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-// app.use(
-//     "/register",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-// app.use(
-//     "/log_in",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-// app.use(
-//     "/cart",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-// app.use(
-//     "/liked",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-// app.use(
-//     "/contact",
-//     express.static(path.join(__dirname, "in-posters", "build"))
-// );
-
-// function redirectPosterEdit(e) {
-//     history.push("/poster_edit");
-// }
-//
-// function redirectUsers(e) {
-//     history.push("/users");
-// }
-//
-// function redirectUserEdit(e) {
-//     history.push("/user_edit");
-// }
-//
-// function redirectOrderList(e) {
-//     history.push("/order_list");
-// }
-//
-// function redirectStock(e) {
-//     history.push("/stock");
-// }
-//
-// function redirectCheckout(e) {
-//     history.push("/checkout");
-// }
-
-//app.use("/", basicRouter);
 app.use(routes);
 
 // catch 404 and forward to error handler

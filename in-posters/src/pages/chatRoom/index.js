@@ -57,43 +57,35 @@ const Chatroom = ({ match, socket }) => {
     };
     //eslint-disable-next-line
   }, []);
-  // React.useEffect(() => {
-  //   async function fetchMessages() {
-  //     const fullResponse = await fetch(
-  //         "/get_messages?chatroom="+chatroomId
-  //     );
-  //     const responseJson = await fullResponse.json();
-  //     setMessages(responseJson);
-  //   }
-  //
-  //   fetchMessages().then(r => console.log("got"));
-  // }, []);
-  // function postLike(messageId){
-  //   var data = {
-  //     massageId: messageId,
-  //     userAdded: sessionStorage.getItem("userEmail"),
-  //     likeStatus: like,
-  //     unlikeStatus: unlike
-  //   };
-  //   // Submit form via jQuery/AJAX
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "/update_like_to_message",
-  //     data: data,
-  //   })
-  //       .done(function(data) {})
-  //       .fail(function() {});
-  //   // React.useEffect(() => {
-  //   //   if (socket) {
-  //   //     socket.on("updateMessage", (message) => {
-  //   //       const uMessages = [...messages, message];
-  //   //       setMessages(uMessages);
-  //   //     });
-  //   //   }
-  //   //   //eslint-disable-next-line
-  //   // }, [messages]);
-  //
-  // }
+  React.useEffect(() => {
+    async function fetchMessages() {
+      const fullResponse = await fetch(
+          "/get_messages?chatroom="+chatroomId
+      );
+      const responseJson = await fullResponse.json();
+      setMessages(responseJson);
+    }
+
+    fetchMessages().then(r => console.log("got"));
+  }, []);
+  function postLike(messageId){
+    var data = {
+      massageId: messageId,
+      userAdded: sessionStorage.getItem("userEmail"),
+      likeStatus: like,
+      unlikeStatus: unlike
+    };
+    // Submit form via jQuery/AJAX
+    $.ajax({
+      type: "POST",
+      url: "/update_like_to_message",
+      data: data,
+    })
+        .done(function(data) {})
+        .fail(function() {});
+
+
+  }
   function handleLike(e,message) {
     if(like)
       setLike(false);
@@ -101,7 +93,7 @@ const Chatroom = ({ match, socket }) => {
       setUnlike(false);
       setLike(true);
     }
-    //postLike(message);
+    postLike(message);
   }
 
   function handleUnlike(e,message) {
@@ -111,7 +103,7 @@ const Chatroom = ({ match, socket }) => {
       setUnlike(true);
       setLike(false);
     }
-   // postLike(message);
+    postLike(message);
   }
   const backToGroups = () => {history.push("/groups_menu"); };
   return (

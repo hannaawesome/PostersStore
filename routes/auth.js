@@ -1,4 +1,3 @@
-const jwt = require("jwt-then");
 
 module.exports = async (req, res, next) => {
   try {

@@ -12,11 +12,8 @@ import BorderHeartIcon from "@material-ui/icons/FavoriteBorder";
 export default function NavigationBar({category}) {
     let history = useHistory();
         const [checkedRemember] =React.useState(JSON.parse(localStorage.getItem("checked")));
-        const [connectByGoogle]=React.useState(JSON.parse(localStorage.getItem("connectedByGoogle")));
-       // const [category,setCategory] = React.useState(sessionStorage.getItem("userCategory"));
-   // const [email] = React.useState(sessionStorage.getItem("userEmail"));
+
         if(checkedRemember){
-           // setCategory(localStorage.getItem("userCategory"));
              category=localStorage.getItem("userCategory");
         sessionStorage.setItem("userCategory",category);
             sessionStorage.setItem("userEmail", localStorage.getItem("userEmail"));
@@ -98,7 +95,6 @@ export default function NavigationBar({category}) {
         onFailure,
     });
         console.log(category);
-    //connectByGoogle?logOutGoogle:
     switch (category) {
         case "Admin":
             return (
@@ -143,7 +139,7 @@ export default function NavigationBar({category}) {
                                  <BorderHeartIcon style={{fill: "white"}}/>
                             </Nav.Link>
                             <Nav.Link onClick={redirectCart}>
-                                <ShoppingCartOutlinedIcon/>
+                                <ShoppingCartOutlinedIcon style={{fill: "white"}}/>
                             </Nav.Link>
 
                             <Nav.Link onClick={onLogout}>
@@ -167,7 +163,7 @@ export default function NavigationBar({category}) {
                                  <BorderHeartIcon style={{fill: "white"}}/>
                             </Nav.Link>
                             <Nav.Link onClick={redirectCart}>
-                                <ShoppingCartOutlinedIcon/>
+                                <ShoppingCartOutlinedIcon style={{fill: "white"}}/>
                             </Nav.Link>
                             <Nav.Link onClick={onLogout}>
                                 <ExitToAppIcon style={{fill: "white"}}/>
@@ -186,7 +182,7 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectCart}>
-                                <ShoppingCartOutlinedIcon/>
+                                <ShoppingCartOutlinedIcon style={{fill: "white"}}/>
                             </Nav.Link>
                         </Nav>
                     </Navbar>
