@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PosterViewInStock({ poster, renderStock }) {
+export default function PosterViewInStock({ poster ,renderStock}) {
     let history = useHistory();
     const redirectPosterEdit = () => {
         history.push("poster_edit");
@@ -57,7 +57,7 @@ export default function PosterViewInStock({ poster, renderStock }) {
             url: "/delete_poster?id="+poster._id,
         })
             .done(function(data) {
-                renderStock(poster._id);
+renderStock(poster._id);
             })
             .fail(function(jqXhr) {});
     };

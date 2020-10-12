@@ -13,23 +13,11 @@ import Button from "antd/es/button";
 import Grid from "@material-ui/core/Grid";
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    fullScreen: {
-        width: "100vw",
-        height: "100vh",
-    },
-}));
-
 const Cart = () => {
-    //const classes = useStyles();
     const {
         cartItems,
         itemCount,
         clearCart,
-        checkout,
         handleCheckout,
         totalPrice,
     } = useContext(CartContext);
@@ -52,12 +40,10 @@ const Cart = () => {
     }
 
     const [showSuccess, setShowSuccess] = React.useState(false);
-   // const [showTotal, setShowTotal] = React.useState(false)
 
     const transactionSuccess = (data) => {
                     onCheckout();
                     setShowSuccess(true);
-                    //setShowTotal(false);
                     clearCart();
 
     };

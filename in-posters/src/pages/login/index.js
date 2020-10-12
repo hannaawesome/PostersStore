@@ -60,7 +60,7 @@ const Login= (props) => {
 
     const responseGoogleSuccess = (res) => {
         console.log('Login Success: currentUser:', res.profileObj);
-        setEmail(res.profileObj.email);
+        /*  setEmail(res.profileObj.email);
         setPassword(res.profileObj.googleId);//isn't really necessary
         setFullName(res.profileObj.name+ ' '+res.profileObj.familyName);
         console.log(email);
@@ -69,7 +69,7 @@ const Login= (props) => {
             url: "/get_user?email="+email,
         })
             .then(res => {
-                if(res!==undefined){
+                if(res!==undefined||res!==null){
                 sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
                 localStorage.setItem("connectedByGoogle","true");
@@ -82,7 +82,7 @@ const Login= (props) => {
                 else
                     addUserGoogle();
             })
-            .catch(addUserGoogle)};
+            .catch(addUserGoogle)*/};
         function addUserGoogle() {
             var data = {
                 e_mail: email,

@@ -120,7 +120,7 @@ class PosterData extends React.Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
-                        <img src={poster.img}/>
+                        <img src={'../'+poster.img}/>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="age-native-simple">Size</InputLabel>
                         <Select

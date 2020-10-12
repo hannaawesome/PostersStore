@@ -82,7 +82,7 @@ export const sumItems = (cartItems) => {
         0
     );
     let totalPrice = cartItems
-        .reduce((totalPrice, poster) => totalPrice + poster.poster.price * poster.amountChosen, 0)
+        .reduce((totalPrice, poster) => totalPrice + poster.price * poster.amountChosen, 0)
         .toFixed(2);
     return { itemCount, totalPrice };
 };

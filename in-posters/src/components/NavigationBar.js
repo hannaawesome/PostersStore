@@ -81,6 +81,7 @@ export default function NavigationBar({category}) {
     function onLogout(e) {
            sessionStorage.setItem("userEmail","");
            sessionStorage.setItem("userCategory","");
+           localStorage.setItem("cart",[]);
            if(JSON.parse(localStorage.getItem("checked"))) {
                localStorage.setItem("userEmail", "");
                localStorage.setItem("userCategory", "");

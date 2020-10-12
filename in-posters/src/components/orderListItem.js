@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import {makeStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 
@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 export default function OrderListItem({ order }) {
     const classes = useStyles();
 
-//change icon to say that it means finish
     function FinishOrderItemHandler(e) {
 
     }
@@ -50,10 +49,10 @@ export default function OrderListItem({ order }) {
             />
             <CardActions disableSpacing>
                 <IconButton
-                    aria-label="Edit"
+                    aria-label="Delete"
                     onClick={FinishOrderItemHandler}
                 >
-                    <EditIcon/>
+                    <DeleteIcon/>
                 </IconButton>
 
             </CardActions>

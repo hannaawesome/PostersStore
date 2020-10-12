@@ -4,10 +4,6 @@ import IconButton from "@material-ui/core/IconButton";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import Grid from "@material-ui/core/Grid";
-import {Dropdown} from "react-bootstrap";
-import $ from "jquery";
-import PosterViewInShop from "../Store/posterViewInShop";
-import MessageView from "./messageView";
 
 const Chatroom = ({ match, socket }) => {
   let history = useHistory();

@@ -20,6 +20,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FullHeartIcon from "@material-ui/icons/Favorite";
 import BorderHeartIcon from "@material-ui/icons/FavoriteBorder";
 import {useHistory} from "react-router-dom";
+import PosterViewInShop from "../Store/posterViewInShop";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -178,8 +179,17 @@ const Stock = () => {
                         {postersToShow !== undefined &&
                         postersToShow.map((poster, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
-                                <PosterViewInStock key={index} poster={poster} />
-                            </Grid>
+                                <PosterViewInStock
+                                    key={index}
+                                    poster={poster}
+                                    renderStoke={(posterID) => {
+                                        postersSet(
+                                            posters.filter((item) => {
+                                                return item.id !== posterID;
+                                            })
+                                        );
+                                    }}
+                                />                            </Grid>
                         ))}
                     </Grid>
                 </Container>

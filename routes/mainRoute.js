@@ -94,9 +94,25 @@ router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
     });
 }));
 router.get("/get_messages", catchErrors(async function (req, res) {
-    const messages = await Message.find({chatroom:req.query.chatroom});
+    try {
+        // Get last(latest) 10 messages
+        const messages = await Message.find({chatroom:req.query.chatroom})
+            .select('-updatedAt -__v -_id')
+            .sort({ createdAt: -1 })
+            .limit(10);
+        if (!messages) {
+            const error = new Error('Failed to fetch messages');
+            error.statusCode = 404;
+            throw error
+        }
+        res.status(200).json(messages)
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500
+        }
+        next(err)
+    }
 
-    res.json(messages);
 }));
 router.post("/update_like_to_message" ,catchErrors(async function (req, res) {
     const { massageId,userAdded,likeStatus,unlikeStatus} = req.body;
@@ -359,7 +375,7 @@ router.post("/add_to_cart", async function (req, res) {
             //   cart.findIndex((item) => item.posterId === posterId) === -1
             //) {
             cart.push({
-                posterId: poster,
+                posterId: posterId,
                 chosenAmount:1,
                 chosenMeasurement:  req.body.measurement
             });
@@ -485,7 +501,18 @@ router.get("/get_liked_items", async function (req, res) {
                         price: p.price,
                         sizeList:p.sizeList,
                         tagList: p.tagList,
+                        liked:true
                     };
+                else return {
+                    _id: p._id,
+                    name: p.name,
+                    creator: p.creator,
+                    img: p.img,
+                    price: p.price,
+                    sizeList:p.sizeList,
+                    tagList: p.tagList,
+                    liked:false
+                };
             })
         );
     }
@@ -621,7 +648,7 @@ router.post("/update_poster_cart_amount",  async function (req, res) {
             res.send(404)
         }
         let posterId = req.body.posterId;
-        let amount = req.body.amount;
+        let amount = req.body.amountChosen;
         let poster = await Poster.findOne({
             _id: posterId,
             active: true
@@ -631,12 +658,12 @@ router.post("/update_poster_cart_amount",  async function (req, res) {
         if (poster === undefined) {
             res.send(404);
         } else {
-            let poster = cart.findIndex((item) => item.posterId === posterId);
+            let posterin = cart.findIndex((item) => item.posterId === posterId);
             if (
                 cart === [] ||
-                poster === -1
+                posterin === -1
             ) {
-                debug("ERROR no such poster in cart");
+                console.log("ERROR no such poster in cart");
                 res.send(404);
             }
             else {

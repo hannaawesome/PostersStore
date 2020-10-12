@@ -1,21 +1,16 @@
 import React, { useContext } from "react";
 import Grid from "@material-ui/core/Grid";
-//import Typography from "@material-ui/core/Typography";
-import ImageUploader from 'react-images-upload';
-//import { Multiselect } from 'multiselect-react-dropdown';
 
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Typography } from 'antd';
 import {Input} from "@material-ui/core"
-import $ from "jquery";
 import { useHistory } from "react-router-dom";
 import makeToast from "../../Toaster";
 import withRouter from "react-router-dom/es/withRouter";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-//import Input from "@material-ui/core/Input";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Chip from "@material-ui/core/Chip";
 import axios from 'axios';
@@ -96,13 +91,6 @@ const AddPoster= () => {
 
 const onDrop=(newImages)=> {
         setImg(newImages);
-    console.log(pName);
-    console.log(img);
-    console.log(price);
-    console.log(creator);
-
-
-
 };
     const handleNameChange = (e) => setPName(e.target.value);
     const handleCreatorChange = (e) => setCreator(e.target.value);
@@ -194,20 +182,10 @@ const onDrop=(newImages)=> {
                             label="Amount"
                             id="amount"
                             type="number"
-                            onChange={(e )=> {setAmount(e.target.value)}}
+                            onChange={handleAmountChange}
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        {/*<ImageUploader
-                        withIcon={true}
-                        buttonText='Choose image'
-                        onChange={onDrop}
-                        maxFileSize={5242880}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif','.svg','.ico']}
-                        label="Max of 5mb, excepted extensions are: .jpg , .gif, .png, .gif, .svg, .ico"
-                        singleImage={true}
-                        withPreview={true}
-                    />*/}
                           <FileUpload refreshFunction={onDrop} />
                     </Grid>
                       <Grid item xs={12} sm={6}>

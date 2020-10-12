@@ -81,7 +81,19 @@ const Liked = () => {
                     <Grid container spacing={4}>
                         {posters!==undefined&&posters.length>0?(posters.filter((poster) => poster.liked === true).map((poster, index) => (
                             <Grid item key={index} xs={12} sm={6} md={4}>
-                                <PosterViewInShop key={index} poster={poster} />
+                                <Grid item key={index} xs={12} sm={6} md={4}>
+                                    <PosterViewInShop
+                                        key={index}
+                                        poster={poster}
+                                        renderStore={(posterID) => {
+                                            postersSet(
+                                                posters.filter((item) => {
+                                                    return item.id !== posterID;
+                                                })
+                                            );
+                                        }}
+                                    />
+                                </Grid>
                             </Grid>
                         ))):null}
                     </Grid>
