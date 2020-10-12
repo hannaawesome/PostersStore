@@ -11,7 +11,7 @@ const GroupsMenu = (props) => {
     const nameRef = React.createRef();
     const getChatrooms = () => {
         axios
-            .get("/get_chatrooms", //{
+            .get("/get_chatrooms" //{
                 //headers: {
                  //   Authorization: "Bearer " + sessionStorage.getItem("userCategory"),
                // },
@@ -26,7 +26,7 @@ const GroupsMenu = (props) => {
     };
 
     React.useEffect(() => {
-      //  getChatrooms();
+        getChatrooms();
         // eslint-disable-next-line
     }, []);
     const registerChatroom = (props) => {

@@ -13,7 +13,7 @@ const handleAddItem = (posterId) => {
         url: "/add_to_cart",
         data: data,
     })
-        .done(function(data) {makeToast("info","Added to Cart!")})
+        .done(function(data) {makeToast("success","Added to Cart!")})
         .fail(function(jqXhr) {});
 };
 

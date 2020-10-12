@@ -23,16 +23,6 @@ const useStyles = makeStyles((theme) => ({
         width: "100vw",
         height: "100vh",
     },
-    image: {
-        backgroundImage: "url(https://source.unsplash.com/random/?phone)",
-        backgroundRepeat: "no-repeat",
-        backgroundColor:
-            theme.palette.type === "light"
-                ? theme.palette.grey[50]
-                : theme.palette.grey[900],
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-    },
     paper: {
         margin: theme.spacing(8, 4),
         display: "flex",
@@ -57,7 +47,6 @@ const Login= (props) => {
     let history = useHistory();
 
     const [email, setEmail] = React.useState(localStorage.getItem("userEmail"));
-    //const [category, setCategory] = React.useState(localStorage.getItem("userCategory"));
 
     const [password, setPassword] = React.useState(
         localStorage.getItem("password")
@@ -68,18 +57,7 @@ const Login= (props) => {
     );
     const classes = useStyles();
 
-    // async function fetchUserId() {
-    //     const fullResponse = await fetch(
-    //         "/get_user_id_by_email?e_mail=" + email);
-    //     const responseJson = await fullResponse.json();
-    //     setUId(responseJson);
-    // }
-    // async function fetchUserCategory() {
-    //     const fullResponse = await fetch(
-    //         "/get_user?id=" + uId);
-    //     const responseJson = await fullResponse.json();
-    //     setCategory(responseJson.category);
-    // }
+
     const responseGoogleSuccess = (res) => {
         console.log('Login Success: currentUser:', res.profileObj);
         setEmail(res.profileObj.email);
@@ -91,6 +69,7 @@ const Login= (props) => {
             url: "/get_user?email="+email,
         })
             .then(res => {
+                if(res!==undefined){
                 sessionStorage.setItem("userCategory",res.category);
                 sessionStorage.setItem("userEmail", email);
                 localStorage.setItem("connectedByGoogle","true");
@@ -99,7 +78,9 @@ const Login= (props) => {
                 if(history.location.state.from==="checkout")
                     history.push('/checkout');
                 else
-                    history.push('/');
+                    history.push('/');}
+                else
+                    addUserGoogle();
             })
             .catch(addUserGoogle)};
         function addUserGoogle() {

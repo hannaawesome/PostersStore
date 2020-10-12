@@ -12,3 +12,9 @@
     from { transform: scale(1) rotate(0deg); }
     to { transform: scale(1) rotate(360deg); }
 }
+.myNavBar{
+    font-size: 18px;
+    justify-content:space-around;
+    display:flex;
+    color:white
+}

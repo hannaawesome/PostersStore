@@ -127,23 +127,23 @@ const Chatroom = ({ match, socket }) => {
                 <div key={i} className="message">
            <span
                className={
-                userEmail === message.userEmail ? "ownMessage" : "otherMessage"
+                userEmail === message.userId ? "ownMessage" : "otherMessage"
                }
            >
-                {message.user}:
+                {message.name}:
               </span>{" "}
             <Grid container spacing={3}>
               <Grid item xs={5}>
                 {message.message}
               </Grid>
               <Grid item xs={5}>
-                {message.likes.length}
+                {message.likes!==undefined?message.likes.length:0}
                 <IconButton onClick={handleLike(message._id)}>
                   <ThumbUpIcon/>
                 </IconButton>
               </Grid>
               <Grid item xs={5}>
-                {message.unlikes.length}
+                {message.unlikes!==undefined?message.likes.length:0}
                 <IconButton onClick={handleUnlike(message._id)}>
                   <ThumbDownIcon/>
                 </IconButton>

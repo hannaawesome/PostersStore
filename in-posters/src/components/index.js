@@ -29,6 +29,8 @@ import About from "./about";
 import ForgotPassword from "../pages/forgotPassword";
 import AddPoster from "../pages/addPoster";
 import RegisterByAdmin from "../pages/addUserByAdmin";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
 
 export default function App(props: Props): React.Node {
 
@@ -39,14 +41,14 @@ export default function App(props: Props): React.Node {
         if (token && !socket) {
             const newSocket = io(window.location.href, {
                 query: {
-                    token: sessionStorage.getItem("userCategory"),
+                    //token: sessionStorage.getItem("userCategory"),
                     userId: sessionStorage.getItem("userEmail")
                 },
             });
 
             newSocket.on("disconnect", () => {
                 setSocket(null);
-                setTimeout(setupSocket, 3000);
+                setTimeout(setupSocket, 1000);
                 makeToast("error", "Socket Disconnected!");
             });
 
@@ -66,7 +68,11 @@ export default function App(props: Props): React.Node {
         sessionStorage.setItem("userCategory","");
     return (
         <div>
+            <Grid>
+                <Grid>
             <Header/>
+                </Grid>
+                <Grid>
             <Switch>
                 <Route exact from="/" render={(props) => <div>
                     <NavigationBar category={sessionStorage.getItem("userCategory")}/>
@@ -188,12 +194,19 @@ export default function App(props: Props): React.Node {
                         
                             <NavigationBar category={sessionStorage.getItem("userCategory")}/>
                         
-                         <RegisterByAdmin socket={socket} />
+                         <RegisterByAdmin setupSocket={setupSocket} />
                     </div>}
                        exact/>
                     <Route render={(props) =><Error404Page/>} />
                     </Switch>
-                    <About/>
+                    </Grid>
+                {/* <Grid>
+                            <Box pt={4}>
+                                <About />
+                            </Box>
+                            </Grid>*/}
+            </Grid>
                     </div>
+
                     );
                     }

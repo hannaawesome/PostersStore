@@ -1,7 +1,7 @@
 var bodyParser = require("body-parser");
 const passport = require("passport");
 var favicon = require("serve-favicon");
-const cors = require('cors')
+const cors = require('cors');
 
 const secret="thiserycischhbaesrfinaldfftproject";
 const expressSession = require("express-session")({
@@ -29,7 +29,7 @@ const publicPath = path.join(__dirname, "..", "in-posters", "public");
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 const mongoose = require("mongoose");
-const URI=require("./mongoConfig")
+const URI=require("./mongoConfig");
 const connect = mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err));
@@ -46,8 +46,8 @@ app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(logger("dev"));
-//app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", express.static(path.join(__dirname, "in-posters", "build")));

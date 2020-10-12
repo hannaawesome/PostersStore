@@ -112,7 +112,7 @@ const onDrop=(newImages)=> {
     const handleSizeListChange = (e) => setSizeList(e.target.value);
 
     const onSuccess = () => {
-        makeToast("info","Poster added succefully!");
+        makeToast("success","Poster added succefully!");
         history.push('/stock')
     };
     const onFailure = error => {

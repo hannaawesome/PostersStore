@@ -1,42 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Descriptions } from 'antd';
+import Chip from "@material-ui/core/Chip";
+import DeleteIcon from '@material-ui/icons/Delete';
+function PosterInfo(props) {
 
-function ProductInfo(props) {
-
-    const [Product, setProduct] = useState({})
+    const [poster, setPoster] = useState({});
 
     useEffect(() => {
 
-        setProduct(props.detail)
+        setPoster(props.detail)
 
-    }, [props.detail])
+    }, [props.detail]);
 
     const deleteHandler = () => {
-        props.de(props.detail._id)
-    }
+        props.deletePoster(props.detail._id)
+    };
 
 
     return (
         <div>
             <Descriptions title={poster.creator}>
-                <Descriptions.Item label="Price"> {Product.price}</Descriptions.Item>
-                <Descriptions.Item label="Sold">{Product.sold}</Descriptions.Item>
-                <Descriptions.Item label="View"> {Product.views}</Descriptions.Item>
-                <Descriptions.Item label="Description"> {Product.description}</Descriptions.Item>
+                <Descriptions.Item label="Price"> {poster.price}</Descriptions.Item>
+                <Descriptions.Item label="Amount">{poster.amount}</Descriptions.Item>
+                <Descriptions.Item label="Tags"> {poster.tagList!==undefined&&poster.tagList!==[]?poster.tagList.map((s)=>(<Chip key={s} label={s}/>)):null}</Descriptions.Item>
+                <Descriptions.Item label="Sizes">  {poster.sizeList!==undefined&&poster.tagList!==[]?poster.sizeList.map((s)=>(<Chip key={s} label={s}/>)):null}</Descriptions.Item>
             </Descriptions>
 
             <br />
             <br />
             <br />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button size="large" shape="round" type="danger"
-                        onClick={addToCarthandler}
+                <Button size="large" shape="round"
+                        onClick={deleteHandler}
                 >
-                    Add to Cart
+                    <DeleteIcon/>
                 </Button>
             </div>
         </div>
     )
 }
 
-export default ProductInfo
+export default PosterInfo

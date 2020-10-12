@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=ABeeZee");
 
 * {
-  font-family: Montserrat;
+   font-family: 'ABeeZee';
   box-sizing: border-box;
   color: #333;
 }
@@ -14,10 +14,11 @@ body {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   border-radius: 4px;
   padding: 1rem;
-  position: relative;
   left: 50%;
   top: 50%;
-  width: 25vw;
+  width: 50vw;
+
+  position: fixed;
   transform: translate(-50%, -50%);
 }
 

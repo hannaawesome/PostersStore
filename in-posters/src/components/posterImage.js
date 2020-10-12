@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react'
 import ImageGallery from 'react-image-gallery';
 
 function PosterImage(props) {
-    const [Images, setImages] = useState([])
+    const [Images, setImages] = useState([]);
 
     useEffect(() => {
-        if (props.detail.img && props.detail.img.length > 0) {
+        if (props.detail.img&& props.detail.img.length > 0) {
             let images = [];
 
-            props.detail.img && props.detail.img.map(item => {
+            props.detail.img.map(item => {
                 images.push({
                     original: item,
                     thumbnail: item
                 })
-            })
+            });
             setImages(images)
         }
-    }, [props.detail])
+    }, [props.detail]);
 
     return (
         <div>

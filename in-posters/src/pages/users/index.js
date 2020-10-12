@@ -1,26 +1,21 @@
 import React from "react";
-//import { ProductsContext } from "../../contexts/ProductsContext";
-//import styles from './ProductsGrid.module.scss';
 
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-
+import { Card, Feed } from 'semantic-ui-react'
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
-import AccountDetails from "../../components/accountDetails";
 import {useHistory} from "react-router-dom";
 import AccountDetailsAdmin from "./accountDetailsAdmin";
-
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import IconButton from "@material-ui/core/IconButton";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AddIcon from '@material-ui/icons/Add';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -29,21 +24,12 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2),
     },
-    heroContent: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(8, 0, 6),
-    },
-    heroButtons: {
-        marginTop: theme.spacing(4),
-    },
+
     cardGrid: {
         paddingTop: theme.spacing(8),
         paddingBottom: theme.spacing(8),
     },
-    footer: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(6),
-    },
+
 }));
 
 const UserData = () => {
@@ -56,25 +42,12 @@ const UserData = () => {
 
     const handleChangeRole = (event) => {
         setRole(event.target.value);
-        console.log(event.target.value);
-        switch (event.target.value) {
-            case "All":
-                break;
-            case "Admin":
-                usersToShow.filter(function(a) {
-                    return a.category!==""&&a.category === "Admin" });
-                break;
-            case "Customer":
-                usersToShow.filter(function(a) {
-                    return a.category!==""&&a.category === "Customer" });
-                break;
-            case "Employee":
-                usersToShow.filter(function(a) {
-                    return a.category!==""&&a.category === "Employee" });
-                break;
-            default:
-                break;
-        }
+        if(role!=="All")
+                usersToShowSet(users.filter(function(a) {
+                    return a.category!==""&&a.category === role;}));
+        else
+            usersToShowSet(users);
+
     };
 
     const handleSearchChange = (event, newInputValue) => {
@@ -106,6 +79,8 @@ const UserData = () => {
 
         fetchUsers();
     }, []);
+
+
     return (
         <React.Fragment>
             <CssBaseline />
@@ -113,9 +88,8 @@ const UserData = () => {
             <br />
             <br />
             <main>
-                {/* Hero unit */}
                 <div className={classes.heroContent}>
-                    <Container maxWidth="sm">
+                    <Card.Group maxWidth="sm">
                         <div className={classes.heroButtons}>
                             <Grid container spacing={2} justifyContent="center">
                                 <Grid item>
@@ -166,10 +140,9 @@ const UserData = () => {
                                 </Grid>
                             </Grid>
                         </div>
-                    </Container>
+                    </Card.Group>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    {/* End hero unit */}
 
                     <Grid container spacing={4}>
                         {usersToShow !== undefined &&

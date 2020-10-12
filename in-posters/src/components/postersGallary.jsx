@@ -11,7 +11,7 @@ class PostersGallary extends Component {
         };
     }//change to get posters and then show our gallery
     getData (){
-        axios.get(`https://picsum.photos/v2/list?limit=6`, {})
+        axios.get(`https://picsum.photos/v2/list?limit=10`, {})
             .then(res => {
                 const data = res.data;
                 const img = data.map(m =>

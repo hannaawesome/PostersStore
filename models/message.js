@@ -20,4 +20,6 @@ const messageSchema = new mongoose.Schema({
     unlikes:Array,//array of (userEmail)
 });
 
-module.exports = mongoose.model("Message", messageSchema);
+const Message = mongoose.model('Message', messageSchema);
+
+module.exports = { Message };

@@ -10,28 +10,18 @@ import Card from "@material-ui/core/Card";
 import { useHistory } from "react-router-dom";
 
 import {red} from "@material-ui/core/colors";
-
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import PhoneIcon from '@material-ui/icons/Phone';
+import PublicIcon from '@material-ui/icons/Public';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import List from "@material-ui/core/List";
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
-    },
-    media: {
-        height: 0,
-        paddingTop: "80.25%", // 16:9
-    },
-    expand: {
-        transform: "rotate(0deg)",
-        marginLeft: "auto",
-        transition: theme.transitions.create("transform", {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: "rotate(180deg)",
-    },
-    avatar: {
-        backgroundColor: red[500],
-    },
+    }
 }));
 export default function AccountDetailsAdmin({user}) {
 
@@ -44,16 +34,43 @@ export default function AccountDetailsAdmin({user}) {
         history.push("/user_edit");
     };
     return (
-        <Card className={classes.cardStl}>
-            <CardHeader className={classes.headerStl}
-                        title={user.fullName}
-                        subheader={user.e_mail}
-            />
+        <Card>
+            <Card.Content>
+                <Card.Header>{user.fullName?user.fullName:""}</Card.Header>
+                <Card.Meta>{user.category?user.category:""}</Card.Meta>
+                <Card.Description>
+                    <List>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <MailOutlineIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Email" secondary={user.e_mail?user.e_mail:""} />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PhoneIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Phone" secondary={user.phone?user.phone:""} />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PublicIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Address" secondary={user.address?user.address:""} />
+                        </ListItem>
+                    </List>
+                </Card.Description>
+            </Card.Content>
             <CardActions disableSpacing>
                 <IconButton
                     aria-label="Edit"
-                    onClick={EditUserItemHandler}
-                >
+                    onClick={EditUserItemHandler}>
                     <EditIcon/>
                 </IconButton>
             </CardActions>

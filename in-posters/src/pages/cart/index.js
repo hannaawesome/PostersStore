@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Typography from "@material-ui/core/Typography";
+ import Paypal from '../../helpers/Paypal';
 import PosterViewInCart from "./posterViewInCart";
 import { CartContext } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
@@ -7,6 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
 import makeToast from "../../Toaster";
+import Empty from "antd/es/empty";
+import Result from "antd/es/result";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,14 +22,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cart = () => {
-    const classes = useStyles();
+    //const classes = useStyles();
     const {
-        totalPrice,
         cartItems,
         itemCount,
         clearCart,
         checkout,
         handleCheckout,
+        totalPrice,
     } = useContext(CartContext);
     const [email] = React.useState(
         sessionStorage.getItem("userEmail")
@@ -44,9 +47,73 @@ const Cart = () => {
             .done(function(data) {})
             .fail(function(jqXhr) {});
         handleCheckout();
-        makeToast("info","Checked out succefully!");
     }
+
+    const [showSuccess, setShowSuccess] = React.useState(false);
+   // const [showTotal, setShowTotal] = React.useState(false)
+
+    const transactionSuccess = (data) => {
+                    onCheckout();
+                    setShowSuccess(true);
+                    //setShowTotal(false);
+                    clearCart();
+
+    };
+
+    const transactionError = () => {
+        console.log('Paypal error')
+    };
+
+    const transactionCanceled = () => {
+        console.log('Transaction canceled')
+    };
+
     return (
+        <div style={{ width: '85%', margin: '3rem auto' }}>
+            <h1>My Cart</h1>
+            <div>
+
+                <PosterViewInCart
+                    products={cartItems}
+                />
+                {totalPrice ?
+                    <div style={{ marginTop: '3rem' }}>
+                        <h2>Total price: ${totalPrice} </h2>
+                        <h2>Total posters: {itemCount} </h2>
+                    </div>
+                    :
+                    showSuccess ?
+                        <Result
+                            status="success"
+                            title="Successfully Purchased Items"
+                        /> :
+                        <div style={{
+                            width: '100%', display: 'flex', flexDirection: 'column',
+                            justifyContent: 'center'
+                        }}>
+                            <br />
+                            <Empty description={false} />
+                            <p>No Items In the Cart</p>
+
+                        </div>
+                }
+            </div>
+
+            {checkout &&
+
+            <Paypal
+                toPay={totalPrice}
+                onSuccess={transactionSuccess}
+                transactionError={transactionError}
+                transactionCanceled={transactionCanceled}
+            />
+
+            }
+
+
+
+        </div>)
+   /* return (
         <div>
             <br />
             <br />
@@ -115,7 +182,7 @@ const Cart = () => {
                 )}
             </div>
         </div>
-    );
+    );*/
 };
 
 export default Cart;

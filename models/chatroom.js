@@ -6,5 +6,10 @@ const chatroomSchema = new mongoose.Schema({
     required: "Name is required!",
   },
 });
+chatroomSchema.statics.FIND_ONE_CHATROOM = async function (name) {
+  return this.findOne({name:name}).exec();
+};
 
-module.exports = mongoose.model("Chatroom", chatroomSchema);
+const Chatroom = mongoose.model('Chatroom', chatroomSchema);
+
+module.exports = { Chatroom };

@@ -6,6 +6,7 @@ import heart from "./components_images/heart.png";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import {useGoogleLogout} from "react-google-login";
+import BorderHeartIcon from "@material-ui/icons/FavoriteBorder";
 
 
 export default function NavigationBar({category}) {
@@ -101,19 +102,19 @@ export default function NavigationBar({category}) {
         case "Admin":
             return (
                 <React.Fragment style={{display: 'flex'}}>
-                    <Navbar bg="dark" varient="dark" justify-content="space-around" display="flex">
-                        <Nav className="mr-auto">
-                            <Nav.Link onClick={redirectHome}>Home</Nav.Link>
-                            <Nav.Link onClick={redirectStore}>Shop</Nav.Link>
+                    <Navbar bg="dark" className="myNavBar">
+                        <Nav className="myNav" >
+                            <Nav.Link color="white" onClick={redirectHome}>Home</Nav.Link>
+                            <Nav.Link color="white" onClick={redirectStore}>Shop</Nav.Link>
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
                             <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectUsers}>Users</Nav.Link>
                             <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
-                            {/*} <Nav.Link onClick={redirectLiked}>
-                                <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>*/}
+                             <Nav.Link onClick={redirectLiked}>
+                                <BorderHeartIcon style={{fill: "white"}}/>
+                            </Nav.Link>
                             <Nav.Link onClick={redirectCart}>
                                 <ShoppingCartOutlinedIcon style={{fill: "white"}}/>
                             </Nav.Link>
@@ -137,9 +138,9 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
                             <Nav.Link onClick={redirectOrderList}>Orders</Nav.Link>
                             <Nav.Link onClick={redirectStock}>Stock</Nav.Link>
-                            {/* <Nav.Link onClick={redirectLiked}>
-                                <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>*/}
+                             <Nav.Link onClick={redirectLiked}>
+                                 <BorderHeartIcon style={{fill: "white"}}/>
+                            </Nav.Link>
                             <Nav.Link onClick={redirectCart}>
                                 <ShoppingCartOutlinedIcon/>
                             </Nav.Link>
@@ -161,9 +162,9 @@ export default function NavigationBar({category}) {
                             <Nav.Link onClick={redirectAccount}>Account</Nav.Link>
                             <Nav.Link onClick={redirectChat}>Chat</Nav.Link>
                             <Nav.Link onClick={redirectContact}>Contact</Nav.Link>
-                            {/*} <Nav.Link onClick={redirectLiked}>
-                                <img alt="" src={heart} height={20} width={20}/>
-                            </Nav.Link>*/}
+                             <Nav.Link onClick={redirectLiked}>
+                                 <BorderHeartIcon style={{fill: "white"}}/>
+                            </Nav.Link>
                             <Nav.Link onClick={redirectCart}>
                                 <ShoppingCartOutlinedIcon/>
                             </Nav.Link>

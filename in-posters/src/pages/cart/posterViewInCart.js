@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
-//import { formatNumber } from "../../helpers/utils";
 
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -26,72 +25,126 @@ import AddCircleOutlinedIcon from "@material-ui/icons/AddCircleOutlined";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import useTheme from "@material-ui/core/styles/useTheme";
+const PosterViewInCart=(props) => {
+    const { increase, decrease ,removeItem} = useContext(CartContext);
+const renderCartImage = (images) => {
+    if(images&&images.length > 0) {
+        let image = images[0];
+        return image
+    }
+};
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: 345,
-    },
-    media: {
-        height: 0,
-        paddingTop: "80.25%", // 16:9
-    },
-    expand: {
-        transform: "rotate(0deg)",
-        marginLeft: "auto",
-        transition: theme.transitions.create("transform", {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: "rotate(180deg)",
-    },
-    avatar: {
-        backgroundColor: red[500],
-    },
-}));
+const renderItems = () => (
+    props.products && props.products.map(poster => (
+        <tr key={poster.posterId}>
+            <td>
+                <img style={{ width: '70px' }} alt="poster"
+                     src={renderCartImage(poster.posterId.img)} />
+            </td>
+            <td>{poster.amountChosen} </td>
+            <td>$ {poster.posterId.price} </td>
+            <td>{poster.measurementChosen} </td>
+            <td><IconButton
+                onClick={()=> removeItem(poster)}
+            ><DeleteIcon/> </IconButton> </td>
+            <IconButton aria-label="add" onClick={() => increase(poster)}>
+                <AddCircleOutlinedIcon />
+            </IconButton>
 
-const PosterViewInCart=({ poster }) => {
-    const { increase, decrease, removePoster } = useContext(CartContext);
-    const theme = useTheme();
-    return (
-        <div className="row no-gutters py-2 ">
-            <div className="col-sm-2 p-2">
-                {poster !== undefined && poster.img !== undefined && (
-                    <img
-                        style={{ margin: "0 auto", maxHeight: "50px" }}
-                        src={poster.img}
-                        className="img-fluid d-block"
-                    />
-                )}
-            </div>
-            <div className="col-sm-4 p-2">
-                <h5 className="mb-1">{poster.name}</h5>
-                <p className="mb-1">Price: {poster.price} </p>
-            </div>
-            <div className="col-sm-2 p-2 text-center ">
-                <p className="mb-0">Quantity: {poster.amountChosen}</p>
-            </div>
-            <div className="col-sm-4 p-2 text-right">
-                <IconButton aria-label="add" onClick={() => increase(poster)}>
-                    <AddCircleOutlinedIcon />
+            {poster.amountChosen > 1 && (
+                <IconButton aria-label="delete" onClick={() => decrease(poster)}>
+                    <RemoveCircleIcon />
                 </IconButton>
+            )}
+        </tr>
+    ))
+);
 
-                {poster.amountChosen > 1 && (
-                    <IconButton aria-label="delete" onClick={() => decrease(poster)}>
-                        <RemoveCircleIcon />
-                    </IconButton>
-                )}
 
-                {poster.amountChosen === 1 && (
-                    <IconButton
-                        aria-label="delete"
-                        onClick={() => removePoster(poster)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                )}
-            </div>
-        </div>
-    );
+
+return (
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>Poster Image</th>
+                <th>Poster Quantity</th>
+                <th>Poster Price</th>
+                <th>Remove from Cart</th>
+            </tr>
+            </thead>
+            <tbody>
+            {renderItems()}
+            </tbody>
+        </table>
+    </div>
+)
 };
 export default PosterViewInCart;
+
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         maxWidth: 345,
+//     },
+//     media: {
+//         height: 0,
+//         paddingTop: "80.25%", // 16:9
+//     },
+//     expand: {
+//         transform: "rotate(0deg)",
+//         marginLeft: "auto",
+//         transition: theme.transitions.create("transform", {
+//             duration: theme.transitions.duration.shortest,
+//         }),
+//     },
+//     expandOpen: {
+//         transform: "rotate(180deg)",
+//     },
+//     avatar: {
+//         backgroundColor: red[500],
+//     },
+// }));
+// const PosterViewInCart=({ poster }) => {
+//     const { increase, decrease, removePoster } = useContext(CartContext);
+//     const theme = useTheme();
+//     return (
+//         <div className="row no-gutters py-2 ">
+//             <div className="col-sm-2 p-2">
+//                 {poster !== undefined && poster.img !== undefined && (
+//                     <img
+//                         style={{ margin: "0 auto", maxHeight: "50px" }}
+//                         src={poster.img}
+//                         className="img-fluid d-block"
+//                     />
+//                 )}
+//             </div>
+//             <div className="col-sm-4 p-2">
+//                 <h5 className="mb-1">{poster.name}</h5>
+//                 <p className="mb-1">Price: {poster.price} </p>
+//             </div>
+//             <div className="col-sm-2 p-2 text-center ">
+//                 <p className="mb-0">Quantity: {poster.amountChosen}</p>
+//             </div>
+//             <div className="col-sm-4 p-2 text-right">
+//                 <IconButton aria-label="add" onClick={() => increase(poster)}>
+//                     <AddCircleOutlinedIcon />
+//                 </IconButton>
+//
+//                 {poster.amountChosen > 1 && (
+//                     <IconButton aria-label="delete" onClick={() => decrease(poster)}>
+//                         <RemoveCircleIcon />
+//                     </IconButton>
+//                 )}
+//
+//                 {poster.amountChosen === 1 && (
+//                     <IconButton
+//                         aria-label="delete"
+//                         onClick={() => removePoster(poster)}
+//                     >
+//                         <DeleteIcon />
+//                     </IconButton>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };

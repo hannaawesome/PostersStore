@@ -37,10 +37,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(8),
         paddingBottom: theme.spacing(8),
     },
-    footer: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(6),
-    },
+
 }));
 
 const Liked = () => {
@@ -80,7 +77,6 @@ const Liked = () => {
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
-                    {/* End hero unit */}
 
                     <Grid container spacing={4}>
                         {posters!==undefined&&posters.length>0?(posters.map((poster, index) => (

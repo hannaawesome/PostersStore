@@ -68,11 +68,11 @@ function initPosters(){
     );
 }
 
-/*router.get("/get_chatrooms", catchErrors(async function (req, res) {
+router.get("/get_chatrooms", catchErrors(async function (req, res) {
     const chatrooms = await Chatroom.find({});
 
     res.json(chatrooms);
-}));*/
+}));
 router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
     const { name } = req.body;
 
@@ -80,14 +80,13 @@ router.post("/add_chatroom",auth ,catchErrors(async function (req, res) {
 
     if (!nameRegex.test(name)) throw "Chatroom name can contain only alphabets.";
 
-    const chatroomExists = await Chatroom.findOne({ name });
+    const chatroomExists = await Chatroom.FIND_ONE_CHATROOM( name );
 
     if (chatroomExists) throw "Chatroom with that name already exists!";
 
     const chatroom = new Chatroom({
         name,
     });
-
     await chatroom.save();
 
     res.json({
@@ -290,7 +289,7 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage }).single("file")
+var upload = multer({ storage: storage }).single("file");
 
 
 
@@ -360,9 +359,9 @@ router.post("/add_to_cart", async function (req, res) {
             //   cart.findIndex((item) => item.posterId === posterId) === -1
             //) {
             cart.push({
-                posterId: posterId,
-                amount:1,
-                measurement:  req.body.measurement
+                posterId: poster,
+                chosenAmount:1,
+                chosenMeasurement:  req.body.measurement
             });
             user.cartItems = cart;
             user.likedItems=liked;

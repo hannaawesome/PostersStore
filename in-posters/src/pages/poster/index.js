@@ -33,6 +33,8 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import makeToast from "../../Toaster";
 import PosterImage from "../../components/posterImage";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -118,17 +120,20 @@ class PosterData extends React.Component {
                     <Grid container spacing={3}>
                         <Grid item xs={12}/>
                         <Grid item xs={12}></Grid>
-                        <Grid item xs={6}>
-                            <PosterImage detail={poster}/>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <Dropdown
-                                items={poster.sizeList}
-                                maxWidth="xs"
-                                onSelect={this.handleMeasurement}
-                            />
-                        </Grid>
-
+                        <img src={poster.img}/>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="age-native-simple">Size</InputLabel>
+                        <Select
+                            native
+                            value={this.state.measurement}
+                            onChange={this.state.handleMeasurement}
+                            inputProps={{
+                                name: 'size',
+                                id: 'age-native-simple',
+                            }}>
+                            { poster.sizeList?poster.sizeList.map(s=><option value={s}>{s}</option>):null}
+                        </Select>
+                        </FormControl>
                         <Grid item xs={3} className="text-left ml-5">
                             <Grid container direction="column">
                                 <Grid container spacing={2}>
@@ -186,8 +191,8 @@ class PosterData extends React.Component {
                                 </Typography>
                             </div>
                             <List>
-                                {poster.tags !== undefined &&
-                                poster.tags.map((item, index) => {
+                                {poster.tagList !== undefined &&
+                                poster.tagList.map((item, index) => {
                                     return (
                                         <ListItemText
                                             tag={item}

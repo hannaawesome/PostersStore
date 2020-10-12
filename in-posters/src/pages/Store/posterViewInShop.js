@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
         margin: '8px 24px',
         display: 'inline-block'
     }
-}))
+}));
 
 export default function PosterViewInShop({ poster, renderStore }) {
     let history = useHistory();
@@ -100,13 +100,6 @@ export default function PosterViewInShop({ poster, renderStore }) {
 
     const classes = useStyles();
 
-
-    const { addingPoster, cartItems, increase } = useContext(CartContext);
-
-    const isInCart = (poster) => {
-        return !!cartItems.find((item) => item.id === poster.id);
-    };
-
     function ViewPosterItemHandler(e) {
         //var self;
         e.preventDefault();
@@ -116,14 +109,20 @@ export default function PosterViewInShop({ poster, renderStore }) {
 
         <div className={classes.root}>
             <Grid container spacing={10}>
-                <Grid item xs={7} sm={7}>
+            <Grid item xs={7} sm={7}>
                     <Card className={classes.card}>
                         <CardHeader
                             title={poster.name}
                             subheader={poster.amount <= 0?'Out of Stock':null }
                         />
                         <div className={classes.flex}>
-                            <PosterImage detail={poster}/>
+                            {poster !== undefined && poster.img !== undefined && (
+                                <CardMedia
+                                    className={classes.media}
+                                    items={poster.img}
+                                    title=""
+                                />
+                            )}
                             <Typography component="p" variant="subtitle1" className={classes.subheading}>
                                 {poster.name}<br/>
                                 <span className={classes.price}>$ {poster.price}</span>

@@ -40,10 +40,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(8),
         paddingBottom: theme.spacing(8),
     },
-    footer: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(6),
-    },
+
 }));
 
 const Stock = () => {
@@ -59,23 +56,23 @@ const Stock = () => {
         setGenre(event.target.value);
         console.log(event.target.value);
         switch (event.target.value) {
-            case "all": //high to low
+            case "all":
                 break;
-            case "vehicle": //low to high
-                postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "vehicle") === -1;});
+            case "vehicle":
+                postersToShow.filter((a) =>{
+                    return a.tagList!==[]&&a.tagList.findIndex((item) => item === "vehicle") === -1;});
                 break;
-            case "view": //low to high
+            case "view":
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "view") === -1;});
+                    return a.tagList!==[]&&a.tagList.findIndex((item) => item === "view") === -1;});
                 break;
-            case "people": //low to high
+            case "people":
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "people") === -1;});
+                    return a.tagList!==[]&&a.tagList.findIndex((item) => item === "people") === -1;});
                 break;
-            case "music": //low to high
+            case "music":
                 postersToShow.filter(function(a) {
-                    return a.tags!==[]&&a.tags.findIndex((item) => item.tag === "music") === -1;});
+                    return a.tagList!==[]&&a.tagList.findIndex((item) => item === "music") === -1;});
                 break;
             default:
                 break;
@@ -120,8 +117,8 @@ const Stock = () => {
             <br />
             <br />
             <main>
-                {/* Hero unit */}
                 <div className={classes.heroContent}>
+                    <h1>Stock</h1>
                     <Container maxWidth="sm">
                         <div className={classes.heroButtons}>
                             <Grid container spacing={2} justifyContent="center">
@@ -140,7 +137,7 @@ const Stock = () => {
                                         <Autocomplete
                                             value={searchValue}
                                             onChange={handleSearchChange}
-                                            options={posters.map((option) => option.name)}
+                                            options={posters!==undefined&&posters.map((option) => option.name)}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}

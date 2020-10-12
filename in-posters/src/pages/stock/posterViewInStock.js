@@ -21,6 +21,7 @@ import Grid from "@material-ui/core/Grid";
 import PosterImage from "../../components/posterImage";
 import Col from "antd/es/grid/col";
 import Row from "antd/es/descriptions/Row";
+import PosterInfo from "../../components/posterInfo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,16 +77,16 @@ export default function PosterViewInStock({ poster, renderStock }) {
 
             <br />
 
-            <Row gutter={[16, 16]} >
+            <Grid gutter={[16, 16]}>
                 <Col lg={12} xs={24}>
-                    <PosterImage detail={poster} />
+                    <img src={poster.img}  alt=""/>
                 </Col>
                 <Col lg={12} xs={24}>
-                    <ProductInfo
-                        delete={handlePosterDelete}
+                      <PosterInfo
+                        deletePoster={handlePosterDelete}
                         detail={poster} />
                 </Col>
-            </Row>
+            </Grid>
         </div>
     );
    /* return (
